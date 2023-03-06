@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  Copyright (c) 2015, 2019, Gluon and/or its affiliates.
+  All rights reserved. Use is subject to license terms.
+
+  This file is available and licensed under the following license:
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions
+  are met:
+
+  - Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+  - Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in
+    the documentation and/or other materials provided with the distribution.
+  - Neither the name of Oracle Corporation nor the names of its
+    contributors may be used to endorse or promote products derived
+    from this software without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+
+<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.MainPageCtrl">
+  <children>
+    <SplitPane focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+      <items>
+            <VBox>
+               <children>
+                  <StackPane VBox.vgrow="NEVER">
+                     <VBox.margin>
+                        <Insets bottom="-10.0" />
+                     </VBox.margin>
+                     <children>
+                        <TextField fx:id="boardName" alignment="CENTER" style="-fx-background-color: none;" text="Board name" StackPane.alignment="CENTER">
+                           <font>
+                              <Font size="30.0" />
+                           </font>
+                        </TextField>
+                     </children>
+                  </StackPane>
+                  <Separator>
+                     <VBox.margin>
+                        <Insets left="15.0" right="15.0" />
+                     </VBox.margin>
+                  </Separator>
+                  <HBox VBox.vgrow="ALWAYS">
+                     <children>
+                        <ScrollPane fitToHeight="true" fitToWidth="true" pannable="true" vbarPolicy="NEVER" HBox.hgrow="ALWAYS">
+                           <content>
+                              <HBox maxWidth="1.7976931348623157E308">
+                                 <children>
+                                    <VBox blendMode="OVERLAY" minWidth="-Infinity" prefWidth="200.0" style="-fx-border-color: #30363d; -fx-border-radius: 5;">
+                                       <HBox.margin>
+                                          <Insets bottom="5.0" left="10.0" top="5.0" />
+                                       </HBox.margin>
+                                       <children>
+                                          <StackPane style="-fx-border-width: 0px;" VBox.vgrow="NEVER">
+                                             <VBox.margin>
+                                                <Insets />
+                                             </VBox.margin>
+                                             <children>
+                                                <TextField alignment="CENTER" style="-fx-background-color: none;" text="List 1">
+                                                   <font>
+                                                      <Font size="26.0" />
+                                                   </font>
+                                                   <StackPane.margin>
+                                                      <Insets bottom="-15.0" />
+                                                   </StackPane.margin>
+                                                </TextField>
+                                             </children>
+                                          </StackPane>
+                                          <Separator VBox.vgrow="NEVER" />
+                                          <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="NEVER" VBox.vgrow="ALWAYS">
+                                             <content>
+                                                <VBox>
+                                                   <children>
+                                                      <StackPane alignment="TOP_CENTER" prefHeight="80.0" style="-fx-border-color: #30363d; -fx-border-radius: 5;" VBox.vgrow="NEVER">
+                                                         <VBox.margin>
+                                                            <Insets bottom="15.0" top="15.0" />
+                                                         </VBox.margin>
+                                                         <children>
+                                                            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="First Card">
+                                                               <StackPane.margin>
+                                                                  <Insets top="3.0" />
+                                                               </StackPane.margin>
+                                                               <font>
+                                                                  <Font size="16.0" />
+                                                               </font>
+                                                            </Text>
+                                                            <Button fx:id="deleteCardButton" alignment="CENTER" cancelButton="true" contentDisplay="CENTER" style="-fx-border-color: #da3633; -fx-border-radius: 3;" StackPane.alignment="BOTTOM_RIGHT">
+                                                               <styleClass>
+                                                                  <String fx:value="button-icon" />
+                                                                  <String fx:value="flat" />
+                                                                  <String fx:value="danger" />
+                                                               </styleClass>
+                                                               <StackPane.margin>
+                                                                  <Insets bottom="5.0" right="5.0" />
+                                                               </StackPane.margin>
+                                                            </Button>
+                                                         </children>
+                                                      </StackPane>
+                                                   </children>
+                                                </VBox>
+                                             </content>
+                                          </ScrollPane>
+                                          <StackPane VBox.vgrow="NEVER">
+                                             <VBox.margin>
+                                                <Insets />
+                                             </VBox.margin>
+                                             <children>
+                                                <Button fx:id="addCardButton" mnemonicParsing="false" style="-fx-border-color: #238636; -fx-border-radius: 3;" StackPane.alignment="BOTTOM_CENTER">
+                                                   <StackPane.margin>
+                                                      <Insets left="5.0" />
+                                                   </StackPane.margin>
+                                                   <styleClass>
+                                                      <String fx:value="success" />
+                                                      <String fx:value="flat" />
+                                                      <String fx:value="button-icon" />
+                                                   </styleClass>
+                                                </Button>
+                                                <Button fx:id="deleteListButton" alignment="CENTER" cancelButton="true" contentDisplay="CENTER" style="-fx-border-radius: 3; -fx-border-color: #da3633;" StackPane.alignment="BOTTOM_RIGHT">
+                                                   <StackPane.margin>
+                                                      <Insets />
+                                                   </StackPane.margin>
+                                                   <styleClass>
+                                                      <String fx:value="button-icon" />
+                                                      <String fx:value="flat" />
+                                                      <String fx:value="danger" />
+                                                   </styleClass>
+                                                </Button>
+                                             </children>
+                                             <padding>
+                                                <Insets bottom="5.0" />
+                                             </padding>
+                                          </StackPane>
+                                       </children>
+                                       <padding>
+                                          <Insets left="5.0" right="5.0" />
+                                       </padding>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                           </content>
+                        </ScrollPane>
+                        <StackPane prefWidth="150.0" HBox.hgrow="NEVER">
+                           <children>
+                              <Button fx:id="addListButton" style="-fx-border-color: #238636; -fx-border-radius: 5;" StackPane.alignment="CENTER">
+                                 <graphic>
+                                    <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../icons/plusIconGreen.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                                 <styleClass>
+                                    <String fx:value="button-icon" />
+                                    <String fx:value="flat" />
+                                    <String fx:value="success" />
+                                 </styleClass></Button>
+                           </children>
+                        </StackPane>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+      </items>
+    </SplitPane>
+  </children>
+</VBox>
