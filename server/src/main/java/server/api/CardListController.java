@@ -15,7 +15,7 @@ public class CardListController {
 
     private CardListRepository cardListRepository;
 
-    public CardListController(CardListRepository cardListRepository, CardRepository cardRepository){
+    public CardListController(CardListRepository cardListRepository){
         this.cardListRepository = cardListRepository;
     }
 
