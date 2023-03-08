@@ -76,7 +76,7 @@
                            <content>
                               <HBox maxWidth="1.7976931348623157E308">
                                  <children>
-                                    <VBox blendMode="OVERLAY" minWidth="-Infinity" prefWidth="200.0" style="-fx-border-color: #30363d; -fx-border-radius: 5;">
+                                    <VBox fx:id="list" blendMode="OVERLAY" minWidth="-Infinity" prefWidth="200.0" style="-fx-border-color: #30363d; -fx-border-radius: 5;">
                                        <HBox.margin>
                                           <Insets bottom="5.0" left="10.0" top="5.0" />
                                        </HBox.margin>
@@ -101,7 +101,8 @@
                                              <content>
                                                 <VBox>
                                                    <children>
-                                                      <StackPane alignment="TOP_CENTER" prefHeight="80.0" style="-fx-border-color: #30363d; -fx-border-radius: 5;" VBox.vgrow="NEVER">
+<!--                                                      this from here is one card-->
+                                                      <StackPane fx:id="card" alignment="TOP_CENTER" prefHeight="80.0" style="-fx-border-color: #30363d; -fx-border-radius: 5;" VBox.vgrow="NEVER">
                                                          <VBox.margin>
                                                             <Insets bottom="15.0" top="15.0" />
                                                          </VBox.margin>
@@ -126,6 +127,7 @@
                                                             </Button>
                                                          </children>
                                                       </StackPane>
+<!--                                                      this up to here is one card-->
                                                    </children>
                                                 </VBox>
                                              </content>
@@ -135,7 +137,7 @@
                                                 <Insets />
                                              </VBox.margin>
                                              <children>
-                                                <Button fx:id="addCardButton" mnemonicParsing="false" style="-fx-border-color: #238636; -fx-border-radius: 3;" StackPane.alignment="BOTTOM_CENTER">
+                                                <Button fx:id="addCardButton" mnemonicParsing="false" onMouseClicked="#addCardButtonPress" style="-fx-border-color: #238636; -fx-border-radius: 3;" StackPane.alignment="BOTTOM_CENTER">
                                                    <StackPane.margin>
                                                       <Insets left="5.0" />
                                                    </StackPane.margin>

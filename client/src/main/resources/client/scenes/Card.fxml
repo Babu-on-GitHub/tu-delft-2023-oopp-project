@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.text.Font?>
+<!--<AnchorPane xmlns="http://javafx.com/javafx"-->
+<!--            xmlns:fx="http://javafx.com/fxml"-->
+<!--            fx:controller="client.scenes.MainPageCtrl"-->
+<!--            prefHeight="400.0" prefWidth="600.0">-->
+    <StackPane fx:id="card" alignment="TOP_CENTER" prefHeight="80.0"
+           style="-fx-border-color: #30363d; -fx-border-radius: 5;" VBox.vgrow="NEVER"
+           xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+           fx:controller="client.scenes.MainPageCtrl">
+        <VBox.margin>
+            <Insets bottom="15.0" top="15.0" />
+        </VBox.margin>
+        <children>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="First Card">
+                <StackPane.margin>
+                    <Insets top="3.0" />
+                </StackPane.margin>
+                <font>
+                    <Font size="16.0" />
+                </font>
+            </Text>
+            <Button fx:id="deleteCardButton" alignment="CENTER" cancelButton="true" contentDisplay="CENTER" style="-fx-border-color: #da3633; -fx-border-radius: 3;" StackPane.alignment="BOTTOM_RIGHT">
+                <styleClass>
+                    <String fx:value="button-icon" />
+                    <String fx:value="flat" />
+                    <String fx:value="danger" />
+                </styleClass>
+                <StackPane.margin>
+                    <Insets bottom="5.0" right="5.0" />
+                </StackPane.margin>
+            </Button>
+        </children>
+    </StackPane>
+
+<!--</AnchorPane>-->
