@@ -159,6 +159,12 @@ public class TestBoardRepository implements BoardRepository {
     }
 
     @Override
+    public Board getReferenceById(Long id) {
+        call("getReferenceById");
+        return find(id).get();
+    }
+
+    @Override
     public <S extends Board> Optional<S> findOne(Example<S> example) {
         return Optional.empty();
     }
