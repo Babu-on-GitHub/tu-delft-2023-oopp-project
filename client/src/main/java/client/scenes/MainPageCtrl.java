@@ -10,8 +10,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import org.kordamp.ikonli.feather.Feather;
-import org.kordamp.ikonli.javafx.FontIcon;
 import javafx.event.ActionEvent;
 import java.io.IOException;
 import java.net.URL;
@@ -38,7 +36,7 @@ public class MainPageCtrl implements Initializable {
     private StackPane card;
 
     @FXML
-    private VBox list;
+    private VBox listStartsHere;
 
     @FXML
     private HBox board;
@@ -56,11 +54,11 @@ public class MainPageCtrl implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         boardName.setText("Default board");
 
-        deleteListButton.setGraphic(new FontIcon(Feather.TRASH));
-        deleteCardButton.setGraphic(new FontIcon(Feather.TRASH));
+        //deleteListButton.setGraphic(new FontIcon(Feather.TRASH));
+        //deleteCardButton.setGraphic(new FontIcon(Feather.TRASH));
 
-        addCardButton.setGraphic(new FontIcon(Feather.PLUS));
-        addListButton.setGraphic(new FontIcon(Feather.PLUS));
+        //addCardButton.setGraphic(new FontIcon(Feather.PLUS));
+        //addListButton.setGraphic(new FontIcon(Feather.PLUS));
     }
 
     public void refresh() {
@@ -71,30 +69,29 @@ public class MainPageCtrl implements Initializable {
     public void addCardButtonPress(ActionEvent event) throws IOException {
         System.out.println("test button click");
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("client/src/main/resources/client/scenes/Card.fxml"));
-        StackPane newCard = loader.load();
 
-        //StackPane originalCard = (StackPane) loader.getNamespace().get("#card");
-
-        list.getChildren().add(newCard);
-    }
-
-    public StackPane duplicateStackPaneCard(StackPane original) {
-        StackPane card = new StackPane();
-
-        card.setAlignment(original.getAlignment());
-        card.setBlendMode(original.getBlendMode());
-        card.setMinWidth(original.getMinWidth());
-        card.setPrefWidth(original.getPrefWidth());
-        card.setStyle(original.getStyle());
-
-        return card;
+//        FXMLLoader loader = new FXMLLoader(new URL("client/src/main/resources/client/scenes/Card.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass()
+                .getResource(("Card.fxml")));
+        listStartsHere.getChildren().add(loader.load());
 
     }
+
+    @FXML
+    public void addListButtonPress(ActionEvent event) throws IOException {
+        System.out.println("test button click add card");
+
+//        FXMLLoader loader = new FXMLLoader(getClass()
+//                .getResource("client/src/main/resources/client/scenes/Card.fxml"));
+//        StackPane newCard = loader.load();
+//
+//        //StackPane originalCard = (StackPane) loader.getNamespace().get("#card");
+//
+//        listStartsHere.getChildren().add(newCard);
+    }
+
     // TODO: 08/03/2023  this is for the purpose of duplicating cards
     // a new class that will take care of duplicating cards is needed
-    // each component of the stack pane has to be separately duplicated, in the way that is done above
-    // maybe duplicators for buttons in the card would be useful
 
 
 }

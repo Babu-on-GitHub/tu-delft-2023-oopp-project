@@ -42,7 +42,8 @@ public class Main extends Application {
 
         Application.setUserAgentStylesheet(new PrimerDark().getUserAgentStylesheet());
         System.out.println("st");
-        var mainPage = FXML.load(MainPageCtrl.class, "client", "scenes", "MainPage.fxml");
+        var mainPage= FXML.load(MainPageCtrl.class,
+                "client", "scenes", "MainPage.fxml");
 
         System.out.println("ba");
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);

@@ -25,6 +25,7 @@ public class MainCtrl {
     private Stage primaryStage;
 
     private MainPageCtrl mainPageCtrl;
+
     private Scene mainPage;
 
     public void initialize(Stage primaryStage, Pair<MainPageCtrl, Parent> mainPage) {
@@ -37,7 +38,7 @@ public class MainCtrl {
     }
 
     public void showMainPage() {
-        primaryStage.setTitle("Quotes: Overview");
+        primaryStage.setTitle("Board Overview");
         primaryStage.setScene(mainPage);
         mainPageCtrl.refresh();
     }
