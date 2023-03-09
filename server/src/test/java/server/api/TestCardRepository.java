@@ -1,7 +1,6 @@
 package server.api;
 
 import commons.Card;
-import commons.Quote;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -102,7 +101,11 @@ public class TestCardRepository implements CardRepository {
 
     @Override
     public Optional<Card> findById(Long aLong) {
-        return Optional.empty();
+        try {
+            return find(aLong);
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 
     @Override

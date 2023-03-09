@@ -1,6 +1,5 @@
 package server.api;
 
-import commons.Card;
 import commons.CardList;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
@@ -100,7 +99,11 @@ public class TestCardListRepository implements CardListRepository {
 
     @Override
     public Optional<CardList> findById(Long aLong) {
-        return Optional.empty();
+        try {
+            return find(aLong);
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 
     @Override

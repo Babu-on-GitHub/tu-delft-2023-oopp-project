@@ -100,7 +100,11 @@ public class TestBoardRepository implements BoardRepository {
 
     @Override
     public Optional<Board> findById(Long aLong) {
-        return Optional.empty();
+        try {
+            return find(aLong);
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 
     @Override
