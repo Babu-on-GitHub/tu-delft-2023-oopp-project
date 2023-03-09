@@ -1,5 +1,7 @@
 package server.api;
 
+import commons.Board;
+import commons.Card;
 import commons.CardList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -77,5 +79,52 @@ public class CardListControllerTest {
         assertEquals(2, all.size());
         assertEquals(first, all.get(0));
         assertEquals(second, all.get(1));
+    }
+
+    @Test
+    public void removeTest(){
+        var first = new CardList();
+        first.setTitle("test");
+        controller.add(first);
+
+        var all = controller.getAll();
+        assertEquals(1, all.size());
+        assertEquals(all.get(0),first);
+
+        var removed = controller.remove(0L);
+        assertEquals(HttpStatus.OK, removed.getStatusCode());
+
+        all=controller.getAll();
+        assertEquals(0, all.size());
+
+        removed = controller.remove(123L);
+        assertEquals(HttpStatus.BAD_REQUEST, removed.getStatusCode());
+
+        removed = controller.remove(null);
+        assertEquals(HttpStatus.BAD_REQUEST, removed.getStatusCode());
+    }
+
+    @Test
+    public void updateTest(){
+        var first = new CardList();
+        first.setTitle("test");
+        controller.add(first);
+
+        var all = controller.getAll();
+        assertEquals(1, all.size());
+        assertEquals(all.get(0),first);
+        assertEquals(all.get(0).getId(),0);
+
+        var second = new CardList();
+        second.setTitle("changed title");
+
+        var updated = controller.update(second,0L);
+        assertEquals(HttpStatus.OK, updated.getStatusCode());
+
+        all = controller.getAll();
+        assertEquals(1, all.size());
+        assertEquals(all.get(0).getId(),0);
+        assertEquals(all.get(0).getTitle(),"changed title");
+
     }
 }
