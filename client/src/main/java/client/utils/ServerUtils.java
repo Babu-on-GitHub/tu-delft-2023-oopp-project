@@ -37,7 +37,7 @@ public class ServerUtils {
                 .target(SERVER).path("api/card") //
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
-                .get(new GenericType<List<Card>>() {});
+                .get(new GenericType<>() {});
     }
 
     public Card addCard(Card card) {
@@ -64,12 +64,12 @@ public class ServerUtils {
                 .put(Entity.entity(card, APPLICATION_JSON), Card.class);
     }
 
-    public CardList getCardLists() {
+    public List<CardList> getCardLists() {
         return ClientBuilder.newClient(new ClientConfig()) //
                 .target(SERVER).path("api/list") //
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
-                .get(new GenericType<CardList>() {});
+                .get(new GenericType<>() {});
     }
 
     public CardList addCardList(CardList list) {
@@ -96,12 +96,12 @@ public class ServerUtils {
                 .put(Entity.entity(list, APPLICATION_JSON), CardList.class);
     }
 
-    public Board getBoard() {
+    public List<Board> getBoard() {
         return ClientBuilder.newClient(new ClientConfig()) //
                 .target(SERVER).path("api/board") //
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
-                .get(new GenericType<Board>() {});
+                .get(new GenericType<>() {});
     }
 
     public Board addBoard(Board board) {
@@ -122,7 +122,7 @@ public class ServerUtils {
 
     public Board updateBoardById(long id, Board board) {
         return ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path("api/board/update" + id) //
+                .target(SERVER).path("api/board/update/" + id) //
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
                 .put(Entity.entity(board, APPLICATION_JSON), Board.class);
