@@ -156,6 +156,12 @@ public class TestCardRepository implements CardRepository {
     }
 
     @Override
+    public Card getReferenceById(Long id) {
+        call("getReferenceById");
+        return find(id).get();
+    }
+
+    @Override
     public <S extends Card> Optional<S> findOne(Example<S> example) {
         return Optional.empty();
     }
