@@ -39,18 +39,18 @@ public class BoardController {
         return ResponseEntity.ok(saved);
     }
 
-    @DeleteMapping(path = "/remove")
-    public ResponseEntity<?> remove(@RequestBody Long id) {
-        if(id == null || !boardRepository.existsById(id)){
+    @DeleteMapping(path = "/remove/{id}")
+    public ResponseEntity<Boolean> remove(@PathVariable("id") long id) {
+        if(!boardRepository.existsById(id)){
             return ResponseEntity.badRequest().build();
         }
         boardRepository.deleteById(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(true);
     }
 
-    @PutMapping(path = "/update")
-    public ResponseEntity<Board> update(@RequestBody Board board, @RequestBody Long id) {
-        if(board == null || id == null || !boardRepository.existsById(id)) {
+    @PutMapping(path = "/update/{id}")
+    public ResponseEntity<Board> update(@RequestBody Board board, @PathVariable("id") long id) {
+        if(board == null || !boardRepository.existsById(id)) {
             return ResponseEntity.badRequest().build();
         }
         boardRepository.deleteById(id);

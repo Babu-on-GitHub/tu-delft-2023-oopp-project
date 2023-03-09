@@ -39,18 +39,18 @@ public class CardController {
         return ResponseEntity.ok(saved);
     }
 
-    @DeleteMapping(path = "/remove")
-    public ResponseEntity<?> remove(@RequestBody Long id) {
-        if(id == null || !cardRepository.existsById(id)){
+    @DeleteMapping(path = "/remove/{id}")
+    public ResponseEntity<Boolean> remove(@PathVariable("id") long id) {
+        if(!cardRepository.existsById(id)){
             return ResponseEntity.badRequest().build();
         }
         cardRepository.deleteById(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(true);
     }
 
-    @PutMapping(path = "/update")
-    public ResponseEntity<Card> update(@RequestBody Card card, @RequestBody Long id) {
-        if(card == null || id == null || !cardRepository.existsById(id)) {
+    @PutMapping(path = "/update/{id}")
+    public ResponseEntity<Card> update(@RequestBody Card card, @PathVariable("id") long id) {
+        if(card == null || !cardRepository.existsById(id)) {
             return ResponseEntity.badRequest().build();
         }
         cardRepository.deleteById(id);
