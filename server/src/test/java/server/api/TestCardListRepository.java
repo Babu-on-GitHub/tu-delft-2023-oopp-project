@@ -1,6 +1,5 @@
 package server.api;
 
-import commons.Card;
 import commons.CardList;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
@@ -181,7 +180,9 @@ public class TestCardListRepository implements CardListRepository {
     }
 
     @Override
-    public <S extends CardList, R> R findBy(Example<S> example, Function<FluentQuery.FetchableFluentQuery<S>, R> queryFunction) {
+    public <S extends CardList, R> R findBy(Example<S> example,
+                                            Function<FluentQuery.FetchableFluentQuery<S>,
+                                                    R> queryFunction) {
         return null;
     }
 }

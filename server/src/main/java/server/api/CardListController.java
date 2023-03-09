@@ -1,11 +1,9 @@
 package server.api;
 
-import commons.Card;
 import commons.CardList;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import server.database.CardListRepository;
-import server.database.CardRepository;
 
 import java.util.List;
 
