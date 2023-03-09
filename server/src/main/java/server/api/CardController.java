@@ -39,7 +39,7 @@ public class CardController {
         return ResponseEntity.ok(saved);
     }
 
-    @PostMapping(path = "/remove")
+    @DeleteMapping(path = "/remove")
     public ResponseEntity<?> remove(@RequestBody Long id) {
         if(id == null || !cardRepository.existsById(id)){
             return ResponseEntity.badRequest().build();
@@ -48,7 +48,7 @@ public class CardController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping(path = "/update")
+    @PutMapping(path = "/update")
     public ResponseEntity<Card> update(@RequestBody Card card, @RequestBody Long id) {
         if(card == null || id == null || !cardRepository.existsById(id)) {
             return ResponseEntity.badRequest().build();

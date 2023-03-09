@@ -30,7 +30,7 @@ public class CardListController {
         return ResponseEntity.ok(cardListRepository.findById(id).get());
     }
 
-    @PostMapping(path = { "", "/" })
+    @PostMapping(path = "/")
     public ResponseEntity<CardList> add(@RequestBody CardList cardList) {
         if(cardList == null){
             return ResponseEntity.badRequest().build();
@@ -39,7 +39,7 @@ public class CardListController {
         return ResponseEntity.ok(saved);
     }
 
-    @PostMapping(path = "/remove")
+    @DeleteMapping(path = "/remove")
     public ResponseEntity<?> remove(@RequestBody Long id) {
         if(id == null || !cardListRepository.existsById(id)){
             return ResponseEntity.badRequest().build();
@@ -48,7 +48,7 @@ public class CardListController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping(path = "/update")
+    @PutMapping(path = "/update")
     public ResponseEntity<CardList> update(@RequestBody CardList cardList, @RequestBody Long id) {
         if(cardList == null || id == null || !cardListRepository.existsById(id)) {
             return ResponseEntity.badRequest().build();

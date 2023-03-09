@@ -39,7 +39,7 @@ public class BoardController {
         return ResponseEntity.ok(saved);
     }
 
-    @PostMapping(path = "/remove")
+    @DeleteMapping(path = "/remove")
     public ResponseEntity<?> remove(@RequestBody Long id) {
         if(id == null || !boardRepository.existsById(id)){
             return ResponseEntity.badRequest().build();
@@ -48,7 +48,7 @@ public class BoardController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping(path = "/update")
+    @PutMapping(path = "/update")
     public ResponseEntity<Board> update(@RequestBody Board board, @RequestBody Long id) {
         if(board == null || id == null || !boardRepository.existsById(id)) {
             return ResponseEntity.badRequest().build();
