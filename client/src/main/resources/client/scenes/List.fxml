@@ -1,14 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="client.scenes.ListController"
-            prefHeight="400.0" prefWidth="600.0">
+<VBox blendMode="OVERLAY" minWidth="-Infinity" prefHeight="500.0" prefWidth="200.0" style="-fx-border-color: #30363d; -fx-border-radius: 5;" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <TextField alignment="CENTER" prefHeight="47.0" prefWidth="198.0" text="List Name">
+         <font>
+            <Font size="25.0" />
+         </font>
+      </TextField>
+      <Separator prefHeight="6.0" prefWidth="198.0" />
+      <ScrollPane hbarPolicy="NEVER" prefHeight="401.0" prefWidth="198.0" vbarPolicy="ALWAYS">
+         <content>
+            <VBox prefHeight="302.0" prefWidth="185.0">
+               <fx:include source="Card.fxml">
 
-</AnchorPane>
+               </fx:include>
+               <padding>
+                  <Insets left="5.0" right="5.0" />
+               </padding>
+            </VBox>
+         </content></ScrollPane>
+      <HBox alignment="CENTER" prefHeight="46.0" prefWidth="198.0" spacing="50">
+         <children>
+            <Button mnemonicParsing="false" text="Button 1" textAlignment="CENTER" />
+            <Button alignment="TOP_LEFT" mnemonicParsing="false" text="Button 2" />
+         </children></HBox>
+   </children>
+</VBox>
