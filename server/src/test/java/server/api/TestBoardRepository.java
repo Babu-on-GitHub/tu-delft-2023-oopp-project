@@ -61,8 +61,12 @@ public class TestBoardRepository implements BoardRepository {
     }
 
     @Override
-    public void deleteById(Long aLong) {
-
+    public void deleteById(Long id) {
+        var toDelete = find(id);
+        if (toDelete.isEmpty())
+            return;
+        boolean deleted = boards.remove(toDelete.get());
+        if(deleted) call("deleteById");
     }
 
     @Override
