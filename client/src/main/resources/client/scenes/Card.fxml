@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<!--<AnchorPane xmlns="http://javafx.com/javafx"-->
+<!--            xmlns:fx="http://javafx.com/fxml"-->
+<!--            fx:controller="client.scenes.MainPageCtrl"-->
+<!--            prefHeight="400.0" prefWidth="600.0">-->
+<!--</AnchorPane>-->
+
+<StackPane fx:id="card" prefHeight="80.0" prefWidth="219.0" style="-fx-border-color: #30363d; -fx-border-radius: 5;" VBox.vgrow="NEVER" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.MainPageCtrl">
+        <VBox.margin>
+            <Insets bottom="15.0" top="15.0" />
+        </VBox.margin>
+   <children>
+      <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
+         <children>
+            <CheckBox mnemonicParsing="false" prefHeight="16.0" prefWidth="13.0">
+               <font>
+                  <Font size="14.0" />
+               </font>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+            </CheckBox>
+            <TextField prefHeight="35.0" prefWidth="151.0" text="Card name">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </TextField>
+            <VBox alignment="CENTER_LEFT" prefHeight="95.0" prefWidth="59.0" spacing="20">
+               <children>
+                  <Button mnemonicParsing="false" text="Delete" />
+                  <Button alignment="CENTER" mnemonicParsing="false" text="Details" />
+               </children>
+            </VBox>
+         </children>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+      </HBox>
+   </children>
+    </StackPane>
