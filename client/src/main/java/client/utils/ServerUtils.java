@@ -63,7 +63,7 @@ public class ServerUtils {
 
     public Card updateCardById(long id, Card card) {
         return ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path("api/card/update") //
+                .target(SERVER).path("api/card/update/" + id) //
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
                 .put(Entity.entity(card, APPLICATION_JSON), Card.class);
@@ -87,7 +87,7 @@ public class ServerUtils {
 
     public boolean deleteCardListById(long id) {
         return ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path("api/list/remove" + id) //
+                .target(SERVER).path("api/list/remove/" + id) //
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
                 .delete(Boolean.class);
@@ -95,7 +95,7 @@ public class ServerUtils {
 
     public CardList updateCardListById(long id, CardList list) {
         return ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path("api/list/update") //
+                .target(SERVER).path("api/list/update/" + id) //
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
                 .put(Entity.entity(list, APPLICATION_JSON), CardList.class);
@@ -119,7 +119,7 @@ public class ServerUtils {
 
     public boolean deleteBoardById(long id) {
         return ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path("api/board/remove") //
+                .target(SERVER).path("api/board/remove/" + id) //
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
                 .delete(Boolean.class);
@@ -127,7 +127,7 @@ public class ServerUtils {
 
     public Board updateBoardById(long id, Board board) {
         return ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path("api/board/update") //
+                .target(SERVER).path("api/board/update" + id) //
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
                 .put(Entity.entity(board, APPLICATION_JSON), Board.class);
