@@ -20,6 +20,7 @@ public class CardList {
     private String title;
 
     @OneToMany(cascade = CascadeType.ALL)
+    @OrderColumn
     private List<Card> cards;
 
     @ManyToOne
