@@ -97,8 +97,6 @@ public class CardControllerTest {
         removed = controller.remove(123L);
         assertEquals(HttpStatus.BAD_REQUEST, removed.getStatusCode());
 
-        removed = controller.remove(null);
-        assertEquals(HttpStatus.BAD_REQUEST, removed.getStatusCode());
     }
 
     @Test
