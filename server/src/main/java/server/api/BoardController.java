@@ -1,7 +1,6 @@
 package server.api;
 
 import commons.Board;
-import commons.CardList;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import server.database.BoardRepository;
@@ -31,12 +30,31 @@ public class BoardController {
         return ResponseEntity.ok(boardRepository.findById(id).get());
     }
 
-    @PostMapping(path = { "", "/" })
+    @PostMapping(path = "/add")
     public ResponseEntity<Board> add(@RequestBody Board board) {
-        if(board == null){
+        if(board == null) {
             return ResponseEntity.badRequest().build();
         }
         Board saved = boardRepository.save(board);
+        return ResponseEntity.ok(saved);
+    }
+
+    @PostMapping(path = "/remove")
+    public ResponseEntity<?> remove(@RequestBody Long id) {
+        if(id == null || !boardRepository.existsById(id)){
+            return ResponseEntity.badRequest().build();
+        }
+        boardRepository.deleteById(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(path = "/update")
+    public ResponseEntity<Board> update(@RequestBody Board board, @RequestBody Long id) {
+        if(board == null || id == null || !boardRepository.existsById(id)) {
+            return ResponseEntity.badRequest().build();
+        }
+        boardRepository.deleteById(id);
+        var saved = boardRepository.save(board);
         return ResponseEntity.ok(saved);
     }
 }

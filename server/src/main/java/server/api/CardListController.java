@@ -1,11 +1,9 @@
 package server.api;
 
-import commons.Card;
 import commons.CardList;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import server.database.CardListRepository;
-import server.database.CardRepository;
 
 import java.util.List;
 
@@ -38,6 +36,25 @@ public class CardListController {
             return ResponseEntity.badRequest().build();
         }
         CardList saved = cardListRepository.save(cardList);
+        return ResponseEntity.ok(saved);
+    }
+
+    @PostMapping(path = "/remove")
+    public ResponseEntity<?> remove(@RequestBody Long id) {
+        if(id == null || !cardListRepository.existsById(id)){
+            return ResponseEntity.badRequest().build();
+        }
+        cardListRepository.deleteById(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(path = "/update")
+    public ResponseEntity<CardList> update(@RequestBody CardList cardList, @RequestBody Long id) {
+        if(cardList == null || id == null || !cardListRepository.existsById(id)) {
+            return ResponseEntity.badRequest().build();
+        }
+        cardListRepository.deleteById(id);
+        var saved = cardListRepository.save(cardList);
         return ResponseEntity.ok(saved);
     }
 }
