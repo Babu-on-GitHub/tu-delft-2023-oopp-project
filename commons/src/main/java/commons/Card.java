@@ -22,6 +22,7 @@ public class Card {
     private String description;
 
     @OneToMany(cascade = CascadeType.ALL)
+    @OrderColumn
     private List<Task> subTasks;
 
     @ManyToMany(cascade = CascadeType.ALL)

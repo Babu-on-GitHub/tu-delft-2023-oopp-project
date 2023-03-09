@@ -19,6 +19,7 @@ public class Board {
     private String title;
 
     @OneToMany(cascade = CascadeType.ALL)
+    @OrderColumn
     private List<CardList> lists;
 
     @SuppressWarnings("unused")
