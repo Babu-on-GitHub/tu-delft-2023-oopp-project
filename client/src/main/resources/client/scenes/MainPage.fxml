@@ -47,7 +47,8 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.MainPageCtrl">
+<VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="client.scenes.MainPageCtrl">
   <children>
     <SplitPane focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
       <items>
@@ -76,12 +77,13 @@
                            <content>
                               <HBox maxWidth="1.7976931348623157E308">
                                  <children>
-                                    <VBox blendMode="OVERLAY" minWidth="-Infinity" prefWidth="200.0" style="-fx-border-color: #30363d; -fx-border-radius: 5;">
+<!--                                     this is where the list begins. is it?-->
+                                    <VBox fx:id="list" blendMode="OVERLAY" minWidth="-Infinity" prefWidth="200.0" style="-fx-border-color: #30363d; -fx-border-radius: 5;">
                                        <HBox.margin>
                                           <Insets bottom="5.0" left="10.0" top="5.0" />
                                        </HBox.margin>
-                                       <children>
-                                          <StackPane style="-fx-border-width: 0px;" VBox.vgrow="NEVER">
+                                        <children>
+                                            <StackPane style="-fx-border-width: 0px;" VBox.vgrow="NEVER">
                                              <VBox.margin>
                                                 <Insets />
                                              </VBox.margin>
@@ -95,38 +97,17 @@
                                                    </StackPane.margin>
                                                 </TextField>
                                              </children>
-                                          </StackPane>
+                                            </StackPane>
                                           <Separator VBox.vgrow="NEVER" />
                                           <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="NEVER" VBox.vgrow="ALWAYS">
                                              <content>
-                                                <VBox>
-                                                   <children>
-                                                      <StackPane alignment="TOP_CENTER" prefHeight="80.0" style="-fx-border-color: #30363d; -fx-border-radius: 5;" VBox.vgrow="NEVER">
-                                                         <VBox.margin>
-                                                            <Insets bottom="15.0" top="15.0" />
-                                                         </VBox.margin>
-                                                         <children>
-                                                            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="First Card">
-                                                               <StackPane.margin>
-                                                                  <Insets top="3.0" />
-                                                               </StackPane.margin>
-                                                               <font>
-                                                                  <Font size="16.0" />
-                                                               </font>
-                                                            </Text>
-                                                            <Button fx:id="deleteCardButton" alignment="CENTER" cancelButton="true" contentDisplay="CENTER" style="-fx-border-color: #da3633; -fx-border-radius: 3;" StackPane.alignment="BOTTOM_RIGHT">
-                                                               <styleClass>
-                                                                  <String fx:value="button-icon" />
-                                                                  <String fx:value="flat" />
-                                                                  <String fx:value="danger" />
-                                                               </styleClass>
-                                                               <StackPane.margin>
-                                                                  <Insets bottom="5.0" right="5.0" />
-                                                               </StackPane.margin>
-                                                            </Button>
-                                                         </children>
-                                                      </StackPane>
-                                                   </children>
+                                                <VBox fx:id="listStartsHere">
+<!--                                                   <children>-->
+<!--                                                      this from here is one card-->
+                                                    <fx:include fx:id="card" source="/client/scenes/Card.fxml"/>
+<!--                                                      this up to here is one card-->
+<!--                                                       insert new card here-->
+<!--                                                   </children>-->
                                                 </VBox>
                                              </content>
                                           </ScrollPane>
@@ -135,8 +116,11 @@
                                                 <Insets />
                                              </VBox.margin>
                                              <children>
-                                                <Button fx:id="addCardButton" mnemonicParsing="false" style="-fx-border-color: #238636; -fx-border-radius: 3;" StackPane.alignment="BOTTOM_CENTER">
-                                                   <StackPane.margin>
+                                                <Button fx:id="addCardButton" mnemonicParsing="false"
+                                                        onAction="#addCardButtonPress"
+                                                        style="-fx-border-color: #238636; -fx-border-radius: 3;"
+                                                        StackPane.alignment="BOTTOM_CENTER">
+                                                    <StackPane.margin>
                                                       <Insets left="5.0" />
                                                    </StackPane.margin>
                                                    <styleClass>
@@ -165,15 +149,17 @@
                                           <Insets left="5.0" right="5.0" />
                                        </padding>
                                     </VBox>
+<!--                                     list ends here-->
                                  </children>
                               </HBox>
                            </content>
                         </ScrollPane>
                         <StackPane prefWidth="150.0" HBox.hgrow="NEVER">
                            <children>
-                              <Button fx:id="addListButton" style="-fx-border-color: #238636; -fx-border-radius: 5;" StackPane.alignment="CENTER">
-                                 <graphic>
-                                    <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                              <Button fx:id="addListButton" onAction="#addListButtonPress" style="-fx-border-color: #238636; -fx-border-radius: 5;" StackPane.alignment="CENTER">
+<!--                                 onMouseClick does not work here-->
+                                  <graphic>
+                                    <ImageView fx:id="addListButtonImage" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
                                           <Image url="@../icons/plusIconGreen.png" />
                                        </image>
