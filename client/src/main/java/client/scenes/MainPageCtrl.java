@@ -37,7 +37,7 @@ public class MainPageCtrl implements Initializable {
     private StackPane card;
 
     @FXML
-    private VBox listStartsHere;
+    private VBox list;
 
     @FXML
     private HBox board;
@@ -70,11 +70,9 @@ public class MainPageCtrl implements Initializable {
     public void addCardButtonPress(ActionEvent event) throws IOException {
         System.out.println("test button click");
 
-
-//        FXMLLoader loader = new FXMLLoader(new URL("client/src/main/resources/client/scenes/Card.fxml"));
-        FXMLLoader loader = new FXMLLoader(getClass()
-                .getResource(("Card.fxml")));
-        listStartsHere.getChildren().add(loader.load());
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(("Card.fxml")));
+        System.out.println("test button click 2");
+        list.getChildren().add(loader.load());
 
     }
 
