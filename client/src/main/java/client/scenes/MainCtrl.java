@@ -27,9 +27,9 @@ public class MainCtrl {
     private MainPageCtrl mainPageCtrl;
     private Scene mainPage;
 
-    public void initialize(Stage primaryStage, Pair<MainPageCtrl, Parent> mainPage) {
+    public void initialize(Stage primaryStage, Pair<ServerChoiceCtrl, Parent> mainPage) {
         this.primaryStage = primaryStage;
-        this.mainPageCtrl = mainPage.getKey();
+        //this.mainPageCtrl = mainPage.getKey();
         this.mainPage = new Scene(mainPage.getValue());
 
         showMainPage();

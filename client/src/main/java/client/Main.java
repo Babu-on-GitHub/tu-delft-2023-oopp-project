@@ -21,10 +21,10 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 
 import atlantafx.base.theme.PrimerDark;
-import client.scenes.MainPageCtrl;
+import client.scenes.MainCtrl;
+import client.scenes.ServerChoiceCtrl;
 import com.google.inject.Injector;
 
-import client.scenes.MainCtrl;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -39,13 +39,11 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-
         Application.setUserAgentStylesheet(new PrimerDark().getUserAgentStylesheet());
         System.out.println("st");
-        var mainPage = FXML.load(MainPageCtrl.class, "client", "scenes", "MainPage.fxml");
-
+        var serverChoice = FXML.load(ServerChoiceCtrl.class, "client","scenes","ServerChoice.fxml");
         System.out.println("ba");
-        var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
-        mainCtrl.initialize(primaryStage, mainPage);
+        var mainCtrl = INJECTOR.getInstance(ServerChoiceCtrl.class);
+        mainCtrl.initialize(primaryStage, serverChoice);
     }
 }
