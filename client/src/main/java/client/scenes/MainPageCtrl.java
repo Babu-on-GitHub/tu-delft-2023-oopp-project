@@ -40,7 +40,7 @@ public class MainPageCtrl implements Initializable {
     private VBox list;
 
     @FXML
-    private HBox board;
+    private HBox listList;
 
     @FXML
     private Button deleteCardButton;
@@ -67,16 +67,29 @@ public class MainPageCtrl implements Initializable {
     }
 
     @FXML
-    public void addListButtonPress(ActionEvent event) throws IOException {
+    public void addCardButtonPress(ActionEvent event) throws IOException {
         System.out.println("test button click add card");
 
-//        FXMLLoader loader = new FXMLLoader(getClass()
-//                .getResource("client/src/main/resources/client/scenes/Card.fxml"));
-//        StackPane newCard = loader.load();
-//
-//        //StackPane originalCard = (StackPane) loader.getNamespace().get("#card");
-//
-//        listStartsHere.getChildren().add(newCard);
+        FXMLLoader loader = new FXMLLoader(getClass()
+                .getResource("/client/scenes/Card.fxml"));
+        loader.setController(this);
+        StackPane newCard = loader.load();
+
+        //StackPane originalCard = (StackPane) loader.getNamespace().get("#card");
+
+        list.getChildren().add(newCard);
+    }
+    @FXML
+    public void addListButton(ActionEvent event) throws IOException {
+        System.out.println("test button click");
+
+        FXMLLoader loader = new FXMLLoader(MainPageCtrl.class.getResource("List.fxml"));
+
+        loader.setController(this);
+        System.out.println("test button click 2");
+        VBox newList = loader.load();
+        listList.getChildren().add(newList);
+
     }
 
     // TODO: 08/03/2023  this is for the purpose of duplicating cards

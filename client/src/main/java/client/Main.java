@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 
 import atlantafx.base.theme.PrimerDark;
-import atlantafx.base.theme.PrimerLight;
 import client.scenes.MainPageCtrl;
 import com.google.inject.Injector;
 

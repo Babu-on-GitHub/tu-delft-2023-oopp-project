@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/17.0.2-ea"
-      xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.MainPageCtrl">
+<VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.MainPageCtrl">
    <children>
       <TextField fx:id="boardName" alignment="CENTER" prefHeight="70.0" prefWidth="900.0" text="Board Name">
          <font>
@@ -18,9 +24,8 @@
                <children>
                   <ScrollPane hbarPolicy="ALWAYS" prefHeight="522.0" prefWidth="782.0" vbarPolicy="NEVER">
                      <content>
-                        <HBox prefHeight="506.0" prefWidth="780.0">
-                            <fx:include source="client/scenes/List.fxml"/>
-                        </HBox>
+                         <HBox fx:id="listList" prefHeight="506.0" prefWidth="780.0">
+                         </HBox>
                      </content>
                   </ScrollPane>
                </children>
@@ -29,7 +34,7 @@
                <children>
                   <StackPane prefHeight="520.0" prefWidth="110.0">
                      <children>
-                        <Button mnemonicParsing="false" text="Button" />
+                        <Button mnemonicParsing="false" onAction="#addListButton" text="Button" />
                      </children>
                   </StackPane>
                </children></AnchorPane>
