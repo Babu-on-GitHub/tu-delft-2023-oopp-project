@@ -30,7 +30,21 @@ import jakarta.ws.rs.core.GenericType;
 
 public class ServerUtils {
 
-    private static final String SERVER = "http://localhost:8080/";
+    private String SERVER;
+
+    public String choseServer(String server){
+        String response = ClientBuilder.newClient(new ClientConfig()) //
+                .target(server).path("/api/ServerChoice") //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .get(new GenericType<>() {});
+        if (response.equals("successfully connected")) {
+            SERVER = "http://localhost:8080";
+            return "successfully connected";
+        }else{
+            return "connection failed";
+        }
+    }
 
     public List<Card> getCards() {
         return ClientBuilder.newClient(new ClientConfig()) //
