@@ -3,6 +3,7 @@ package client.scenes;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -69,12 +70,9 @@ public class MainPageCtrl implements Initializable {
     public void addCardButtonPress(ActionEvent event) throws IOException {
         System.out.println("test button click add card");
 
-        FXMLLoader loader = new FXMLLoader(getClass()
-                .getResource("/client/scenes/Card.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/client/scenes/Card.fxml"));
         loader.setController(this);
         StackPane newCard = loader.load();
-
-        //StackPane originalCard = (StackPane) loader.getNamespace().get("#card");
 
         list.getChildren().add(newCard);
     }
@@ -83,16 +81,29 @@ public class MainPageCtrl implements Initializable {
         System.out.println("test button click");
 
         FXMLLoader loader = new FXMLLoader(MainPageCtrl.class.getResource("List.fxml"));
-
         loader.setController(this);
-        System.out.println("test button click 2");
         VBox newList = loader.load();
+
         listList.getChildren().add(newList);
 
     }
 
-    // TODO: 08/03/2023  this is for the purpose of duplicating cards
-    // a new class that will take care of duplicating cards is needed
+    @FXML
+    public void deleteCardButton(ActionEvent event) {
+        if(!list.getChildren().isEmpty()) {
+            list.getChildren().remove(list.getChildren().size() - 1);
+        }
+        //this does not work
+    }
+
+    @FXML
+    public void deleteListButton(ActionEvent event) {
+        if(!listList.getChildren().isEmpty()) {
+            listList.getChildren().remove(listList.getChildren().size() - 1);
+        }
+        //this does not work
+    }
+
 
 
 }
