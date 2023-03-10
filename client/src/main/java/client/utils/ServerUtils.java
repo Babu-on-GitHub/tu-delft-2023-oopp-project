@@ -17,15 +17,13 @@ package client.utils;
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.List;
 
+import commons.Board;
+import commons.Card;
+import commons.CardList;
 import org.glassfish.jersey.client.ClientConfig;
 
-import commons.Quote;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
@@ -34,29 +32,99 @@ public class ServerUtils {
 
     private static final String SERVER = "http://localhost:8080/";
 
-    public void getQuotesTheHardWay() throws IOException {
-        var url = new URL("http://localhost:8080/api/quotes");
-        var is = url.openConnection().getInputStream();
-        var br = new BufferedReader(new InputStreamReader(is));
-        String line;
-        while ((line = br.readLine()) != null) {
-            System.out.println(line);
-        }
-    }
-
-    public List<Quote> getQuotes() {
+    public List<Card> getCards() {
         return ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path("api/quotes") //
+                .target(SERVER).path("api/card") //
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
-                .get(new GenericType<List<Quote>>() {});
+                .get(new GenericType<>() {});
     }
 
-    public Quote addQuote(Quote quote) {
+    public Card addCard(Card card) {
         return ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path("api/quotes") //
+                .target(SERVER).path("api/card/add") //
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
-                .post(Entity.entity(quote, APPLICATION_JSON), Quote.class);
+                .post(Entity.entity(card, APPLICATION_JSON), Card.class);
+    }
+
+    public boolean deleteCardById(long id) {
+        return ClientBuilder.newClient(new ClientConfig()) //
+                .target(SERVER).path("api/card/remove/" + id) //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .delete(Boolean.class);
+    }
+
+    public Card updateCardById(long id, Card card) {
+        return ClientBuilder.newClient(new ClientConfig()) //
+                .target(SERVER).path("api/card/update/" + id) //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .put(Entity.entity(card, APPLICATION_JSON), Card.class);
+    }
+
+    public List<CardList> getCardLists() {
+        return ClientBuilder.newClient(new ClientConfig()) //
+                .target(SERVER).path("api/list") //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .get(new GenericType<>() {});
+    }
+
+    public CardList addCardList(CardList list) {
+        return ClientBuilder.newClient(new ClientConfig()) //
+                .target(SERVER).path("api/list/add") //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .post(Entity.entity(list, APPLICATION_JSON), CardList.class);
+    }
+
+    public boolean deleteCardListById(long id) {
+        return ClientBuilder.newClient(new ClientConfig()) //
+                .target(SERVER).path("api/list/remove/" + id) //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .delete(Boolean.class);
+    }
+
+    public CardList updateCardListById(long id, CardList list) {
+        return ClientBuilder.newClient(new ClientConfig()) //
+                .target(SERVER).path("api/list/update/" + id) //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .put(Entity.entity(list, APPLICATION_JSON), CardList.class);
+    }
+
+    public List<Board> getBoard() {
+        return ClientBuilder.newClient(new ClientConfig()) //
+                .target(SERVER).path("api/board") //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .get(new GenericType<>() {});
+    }
+
+    public Board addBoard(Board board) {
+        return ClientBuilder.newClient(new ClientConfig()) //
+                .target(SERVER).path("api/board/add") //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .post(Entity.entity(board, APPLICATION_JSON), Board.class);
+    }
+
+    public boolean deleteBoardById(long id) {
+        return ClientBuilder.newClient(new ClientConfig()) //
+                .target(SERVER).path("api/board/remove/" + id) //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .delete(Boolean.class);
+    }
+
+    public Board updateBoardById(long id, Board board) {
+        return ClientBuilder.newClient(new ClientConfig()) //
+                .target(SERVER).path("api/board/update/" + id) //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .put(Entity.entity(board, APPLICATION_JSON), Board.class);
     }
 }
