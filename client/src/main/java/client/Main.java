@@ -20,10 +20,12 @@ import static com.google.inject.Guice.createInjector;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-import atlantafx.base.theme.PrimerDark;
+import atlantafx.base.theme.PrimerLight;
+import client.scenes.MainCtrl;
+import client.scenes.MainPageCtrl;
 import client.scenes.ServerChoiceCtrl;
-import com.google.inject.Injector;
 
+import com.google.inject.Injector;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -39,12 +41,13 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
 
-        Application.setUserAgentStylesheet(new PrimerDark().getUserAgentStylesheet());
+        Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
         System.out.println("st");
-        var mainPage = FXML.load(ServerChoiceCtrl.class, "client", "scenes", "ServerChoice.fxml");
+        var serverCtrl = FXML.load(ServerChoiceCtrl.class, "client", "scenes", "ServerChoice.fxml");
+        var mainPage = FXML.load(MainPageCtrl.class, "client", "scenes", "MainPage.fxml");
 
         System.out.println("ba");
-        var serverChoice = INJECTOR.getInstance(ServerChoiceCtrl.class);
-        serverChoice.initialize(primaryStage, mainPage);
+        var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
+        mainCtrl.initialize(primaryStage, mainPage, serverCtrl);
     }
 }
