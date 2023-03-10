@@ -25,15 +25,20 @@ public class MainCtrl {
     private Stage primaryStage;
 
     private MainPageCtrl mainPageCtrl;
-
     private Scene mainPage;
 
-    public void initialize(Stage primaryStage, Pair<MainPageCtrl, Parent> mainPage) {
+    private ServerChoiceCtrl serverChoiceCtrl;
+    private Scene serverChoice;
+
+    public void initialize(Stage primaryStage, Pair<MainPageCtrl, Parent> mainPage,
+                           Pair<ServerChoiceCtrl,Parent> serverChoice) {
         this.primaryStage = primaryStage;
         this.mainPageCtrl = mainPage.getKey();
         this.mainPage = new Scene(mainPage.getValue());
+        this.serverChoiceCtrl = serverChoice.getKey();
+        this.serverChoice = new Scene(serverChoice.getValue());
 
-        showMainPage();
+        showServerChoice();
         primaryStage.show();
     }
 
@@ -41,5 +46,10 @@ public class MainCtrl {
         primaryStage.setTitle("Board Overview");
         primaryStage.setScene(mainPage);
         mainPageCtrl.refresh();
+    }
+
+    public void showServerChoice() {
+        primaryStage.setTitle("Server choice");
+        primaryStage.setScene(serverChoice);
     }
 }
