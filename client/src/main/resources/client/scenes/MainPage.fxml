@@ -19,9 +19,7 @@
                   <ScrollPane hbarPolicy="ALWAYS" prefHeight="522.0" prefWidth="782.0" vbarPolicy="NEVER">
                      <content>
                         <HBox prefHeight="506.0" prefWidth="780.0">
-                            <fx:include source="client/scenes/List.fxml">
-
-                            </fx:include>
+                            <fx:include source="client/scenes/List.fxml"/>
                         </HBox>
                      </content>
                   </ScrollPane>

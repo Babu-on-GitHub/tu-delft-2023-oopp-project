@@ -67,16 +67,6 @@ public class MainPageCtrl implements Initializable {
     }
 
     @FXML
-    public void addCardButtonPress(ActionEvent event) throws IOException {
-        System.out.println("test button click");
-
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(("Card.fxml")));
-        System.out.println("test button click 2");
-        list.getChildren().add(loader.load());
-
-    }
-
-    @FXML
     public void addListButtonPress(ActionEvent event) throws IOException {
         System.out.println("test button click add card");
 

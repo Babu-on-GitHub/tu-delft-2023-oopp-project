@@ -11,7 +11,7 @@
 
 <VBox blendMode="OVERLAY" minWidth="-Infinity" prefHeight="500.0" prefWidth="200.0"
       style="-fx-border-color: #30363d; -fx-border-radius: 5;" xmlns="http://javafx.com/javafx/19"
-      xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.MainPageCtrl">
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.ListController">
    <children>
       <TextField alignment="CENTER" prefHeight="47.0" prefWidth="198.0" text="List Name">
          <font>
