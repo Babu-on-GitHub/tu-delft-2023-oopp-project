@@ -1,40 +1,35 @@
 package client.scenes;
 
-import javafx.event.ActionEvent;
+import client.utils.ServerUtils;
+import com.google.inject.Inject;
 import javafx.fxml.FXML;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
-import javafx.util.Pair;
+import javafx.scene.control.TextField;
+
+import java.io.IOException;
 
 public class ServerChoiceCtrl {
-    private Stage primaryStage;
-    private ServerChoiceCtrl serverChoicePage;
-    private Scene resources;
+    private ServerUtils utils;
 
-    public void initialize(Stage primaryStage, Pair<ServerChoiceCtrl, Parent> resources) {
-        this.primaryStage = primaryStage;
-        this.serverChoicePage = resources.getKey();
-        this.resources = new Scene(resources.getValue());
-
-        showMainPage();
-        primaryStage.show();
-    }
-
-    private void showMainPage() {
-        primaryStage.setTitle("Board Overview");
-        primaryStage.setScene(resources);
-        //serverChoicePage.refresh();
-    }
+    private MainCtrl ctrl;
 
     @FXML
-    private void handleConnectButton(ActionEvent event) {
-        // TODO
+    private TextField serverTextField;
+
+    @Inject
+    public ServerChoiceCtrl(ServerUtils utils, MainCtrl ctrl) {
+        this.utils = utils;
+        this.ctrl = ctrl;
     }
 
-    @FXML
-    private void handleExitButton(ActionEvent event) {
-        primaryStage.close();
+
+
+    public void handleConnectButton() throws IOException {
+        this.utils = new ServerUtils();
+        String userInput =serverTextField.getText();
+        userInput = utils.choseServer(userInput);
+        if (userInput.equals("successfully connected")) {
+            ctrl.showMainPage();
+        }
     }
 
 
