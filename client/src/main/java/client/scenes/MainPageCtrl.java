@@ -37,10 +37,10 @@ public class MainPageCtrl implements Initializable {
     private StackPane card;
 
     @FXML
-    private VBox listStartsHere;
+    private VBox list;
 
     @FXML
-    private HBox board;
+    private HBox listList;
 
     @FXML
     private Button deleteCardButton;
@@ -68,31 +68,42 @@ public class MainPageCtrl implements Initializable {
 
     @FXML
     public void addCardButtonPress(ActionEvent event) throws IOException {
+        System.out.println("test button click add card");
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/client/scenes/Card.fxml"));
+        loader.setController(this);
+        StackPane newCard = loader.load();
+
+        list.getChildren().add(newCard);
+    }
+    @FXML
+    public void addListButton(ActionEvent event) throws IOException {
         System.out.println("test button click");
 
+        FXMLLoader loader = new FXMLLoader(MainPageCtrl.class.getResource("List.fxml"));
+        loader.setController(this);
+        VBox newList = loader.load();
 
-//        FXMLLoader loader = new FXMLLoader(new URL("client/src/main/resources/client/scenes/Card.fxml"));
-        FXMLLoader loader = new FXMLLoader(getClass()
-                .getResource(("Card.fxml")));
-        listStartsHere.getChildren().add(loader.load());
+        listList.getChildren().add(newList);
 
     }
 
     @FXML
-    public void addListButtonPress(ActionEvent event) throws IOException {
-        System.out.println("test button click add card");
-
-//        FXMLLoader loader = new FXMLLoader(getClass()
-//                .getResource("client/src/main/resources/client/scenes/Card.fxml"));
-//        StackPane newCard = loader.load();
-//
-//        //StackPane originalCard = (StackPane) loader.getNamespace().get("#card");
-//
-//        listStartsHere.getChildren().add(newCard);
+    public void deleteCardButton(ActionEvent event) {
+        if(!list.getChildren().isEmpty()) {
+            list.getChildren().remove(list.getChildren().size() - 1);
+        }
+        //this does not work
     }
 
-    // TODO: 08/03/2023  this is for the purpose of duplicating cards
-    // a new class that will take care of duplicating cards is needed
+    @FXML
+    public void deleteListButton(ActionEvent event) {
+        if(!listList.getChildren().isEmpty()) {
+            listList.getChildren().remove(listList.getChildren().size() - 1);
+        }
+        //this does not work
+    }
+
 
 
 }

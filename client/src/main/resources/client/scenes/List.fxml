@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<VBox blendMode="OVERLAY" minWidth="-Infinity" prefHeight="500.0" prefWidth="200.0" style="-fx-border-color: #30363d; -fx-border-radius: 5;" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fx:id="wholeList" blendMode="OVERLAY" minWidth="-Infinity" prefHeight="500.0" prefWidth="200.0" style="-fx-border-color: #30363d; -fx-border-radius: 5;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <TextField alignment="CENTER" prefHeight="47.0" prefWidth="198.0" text="List Name">
          <font>
@@ -15,19 +19,18 @@
       <Separator prefHeight="6.0" prefWidth="198.0" />
       <ScrollPane hbarPolicy="NEVER" prefHeight="401.0" prefWidth="198.0" vbarPolicy="ALWAYS">
          <content>
-            <VBox prefHeight="302.0" prefWidth="185.0">
-               <fx:include source="Card.fxml">
-
-               </fx:include>
+            <VBox fx:id="list" prefHeight="302.0" prefWidth="185.0">
+               <fx:include source="Card.fxml" />
                <padding>
                   <Insets left="5.0" right="5.0" />
                </padding>
             </VBox>
-         </content></ScrollPane>
+         </content>
+      </ScrollPane>
       <HBox alignment="CENTER" prefHeight="46.0" prefWidth="198.0" spacing="50">
          <children>
-            <Button mnemonicParsing="false" text="Button 1" textAlignment="CENTER" />
-            <Button alignment="TOP_LEFT" mnemonicParsing="false" text="Button 2" />
+            <Button mnemonicParsing="false" onAction="#addCardButtonPress" text="Add Card" textAlignment="CENTER" />
+            <Button alignment="TOP_LEFT" mnemonicParsing="false" text="Delete List" />
          </children></HBox>
    </children>
 </VBox>
