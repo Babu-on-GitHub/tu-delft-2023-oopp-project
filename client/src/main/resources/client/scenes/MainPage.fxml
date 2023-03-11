@@ -24,7 +24,7 @@
                <children>
                   <ScrollPane hbarPolicy="ALWAYS" prefHeight="522.0" prefWidth="782.0" vbarPolicy="NEVER">
                      <content>
-                         <HBox fx:id="listList" prefHeight="506.0" prefWidth="780.0">
+                         <HBox fx:id="listOfLists" prefHeight="506.0" prefWidth="780.0">
                          </HBox>
                      </content>
                   </ScrollPane>

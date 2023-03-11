@@ -2,10 +2,11 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
+import javafx.scene.Node;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -25,25 +26,18 @@ public class MainPageCtrl implements Initializable {
     private TextField boardName;
 
     @FXML
-    private Button deleteListButton;
-
-    @FXML
-    private Button addListButton;
-
-    @FXML
-    private Button addCardButton;
-
-    @FXML
-    private StackPane card;
-
-    @FXML
     private VBox list;
 
     @FXML
-    private HBox listList;
+    private HBox listOfLists;
 
     @FXML
-    private Button deleteCardButton;
+    private HBox listButtons;
+
+    private int listButtonCounter;
+
+    private int listIdCounter;
+
 
     @Inject
     public MainPageCtrl(ServerUtils server, MainCtrl mainCtrl) {
@@ -83,8 +77,10 @@ public class MainPageCtrl implements Initializable {
         FXMLLoader loader = new FXMLLoader(MainPageCtrl.class.getResource("List.fxml"));
         loader.setController(this);
         VBox newList = loader.load();
+        listIdCounter++;
+        newList.setId("list" + listIdCounter);
 
-        listList.getChildren().add(newList);
+        listOfLists.getChildren().add(newList);
 
     }
 
@@ -98,10 +94,18 @@ public class MainPageCtrl implements Initializable {
 
     @FXML
     public void deleteListButton(ActionEvent event) {
-        if(!listList.getChildren().isEmpty()) {
-            listList.getChildren().remove(listList.getChildren().size() - 1);
+
+        if(!listOfLists.getChildren().isEmpty()) {
+            String listId = list.getId();
+            System.out.println(listId);
+//            ObservableList<Node> list = listOfLists.getChildren();
+//            while (node != null){
+//                node = node.getParent();
+//            }
+//            Node parentNode = node;
+//            Node toBeDeleted = mainCtrl.getMainPage().lookup("#");
+            listOfLists.getChildren().remove(listOfLists.getChildren().size() - 1);
         }
-        //this does not work
     }
 
 

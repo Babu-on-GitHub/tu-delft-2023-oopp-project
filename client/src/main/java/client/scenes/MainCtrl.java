@@ -42,6 +42,10 @@ public class MainCtrl {
         primaryStage.show();
     }
 
+    public Scene getMainPage() {
+        return mainPage;
+    }
+
     public void showMainPage() {
         primaryStage.setTitle("Board Overview");
         primaryStage.setScene(mainPage);
@@ -50,6 +54,7 @@ public class MainCtrl {
 
     public void showServerChoice() {
         primaryStage.setTitle("Server choice");
-        primaryStage.setScene(serverChoice);
+//        primaryStage.setScene(serverChoice);
+        primaryStage.setScene(mainPage);
     }
 }
