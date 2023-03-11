@@ -32,17 +32,26 @@ public class ServerUtils {
 
     private String SERVER;
 
-    public String choseServer(String server){
+    public ServerUtils(){
+        this.SERVER = "http://localhost:8080";
+    }
+
+    public boolean chooseServer(String server) {
+        if (server == null)
+            return false;
+
         String response = ClientBuilder.newClient(new ClientConfig()) //
-                .target(server).path("/api/ServerChoice") //
+                .target(server).path("/api/status") //
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
                 .get(new GenericType<>() {});
-        if (response.equals("successfully connected")) {
-            SERVER = "http://localhost:8080";
-            return "successfully connected";
-        }else{
-            return "connection failed";
+
+        if (response.equals("Running")) {
+            SERVER = server;
+            return true;
+        }
+        else {
+            return false;
         }
     }
 
