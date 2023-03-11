@@ -22,7 +22,7 @@
                   <Font size="14.0" />
                </font>
             </Text>
-            <TextField fx:id="serverTextField" />
+            <TextField fx:id="serverTextField" text="http://localhost:8080" />
             <Button mnemonicParsing="false" onAction="#handleConnectButton" text="Connect" />
          </children>
          <padding>
