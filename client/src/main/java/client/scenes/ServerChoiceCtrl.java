@@ -21,18 +21,13 @@ public class ServerChoiceCtrl {
         this.ctrl = ctrl;
     }
 
-
-
-    public void handleConnectButton() throws IOException {
-        this.utils = new ServerUtils();
-        String userInput =serverTextField.getText();
-        try{
-            userInput = utils.choseServer(userInput);
-            if (userInput.equals("successfully connected")) {
+    public void handleConnectButton() {
+        String userInput = serverTextField.getText();
+        try {
+            if (utils.chooseServer(userInput))
                 ctrl.showMainPage();
-            }
         }
-        catch (Exception e){
+        catch (Exception e) {
             serverTextField.setStyle("-fx-border-color: red;");
         }
     }

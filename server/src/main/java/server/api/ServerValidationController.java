@@ -4,10 +4,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping ("/api")
+@RequestMapping ("/api/status")
 public class ServerValidationController {
-    @GetMapping("/ServerChoice")
+    @GetMapping(path = {"", "/"})
     public ResponseEntity<String> validate() {
-        return ResponseEntity.ok("successfully connected");
+        return ResponseEntity.ok("Running");
     }
 }
