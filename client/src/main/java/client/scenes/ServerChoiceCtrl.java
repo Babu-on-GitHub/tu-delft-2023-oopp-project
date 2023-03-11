@@ -26,9 +26,14 @@ public class ServerChoiceCtrl {
     public void handleConnectButton() throws IOException {
         this.utils = new ServerUtils();
         String userInput =serverTextField.getText();
-        userInput = utils.choseServer(userInput);
-        if (userInput.equals("successfully connected")) {
-            ctrl.showMainPage();
+        try{
+            userInput = utils.choseServer(userInput);
+            if (userInput.equals("successfully connected")) {
+                ctrl.showMainPage();
+            }
+        }
+        catch (Exception e){
+            serverTextField.setStyle("-fx-border-color: red;");
         }
     }
 

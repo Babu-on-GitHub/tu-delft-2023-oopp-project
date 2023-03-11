@@ -32,14 +32,18 @@ public class ServerUtils {
 
     private String SERVER;
 
+    public ServerUtils(){
+        this.SERVER = "http://localhost:8080";
+    }
+
     public String choseServer(String server){
         String response = ClientBuilder.newClient(new ClientConfig()) //
-                .target(server).path("/api/ServerChoice") //
+                .target("http://" + server).path("/api/ServerChoice") //
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
                 .get(new GenericType<>() {});
         if (response.equals("successfully connected")) {
-            SERVER = "http://localhost:8080";
+            SERVER = "http://" + server;
             return "successfully connected";
         }else{
             return "connection failed";
