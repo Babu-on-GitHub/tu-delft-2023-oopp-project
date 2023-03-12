@@ -11,7 +11,8 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.MainPageCtrl">
+<VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/19"
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.MainPageCtrl">
    <children>
       <TextField fx:id="boardName" alignment="CENTER" prefHeight="70.0" prefWidth="900.0" text="Board Name">
          <font>
@@ -24,7 +25,7 @@
                <children>
                   <ScrollPane hbarPolicy="ALWAYS" prefHeight="522.0" prefWidth="782.0" vbarPolicy="NEVER">
                      <content>
-                         <HBox fx:id="listList" prefHeight="506.0" prefWidth="780.0">
+                         <HBox fx:id="listOfLists" prefHeight="506.0" prefWidth="780.0">
                          </HBox>
                      </content>
                   </ScrollPane>

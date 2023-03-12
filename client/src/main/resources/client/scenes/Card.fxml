@@ -15,7 +15,9 @@
 <!--            prefHeight="400.0" prefWidth="600.0">-->
 <!--</AnchorPane>-->
 
-<StackPane fx:id="card" prefHeight="80.0" prefWidth="219.0" style="-fx-border-color: #30363d; -fx-border-radius: 5;" VBox.vgrow="NEVER" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<StackPane fx:id="card" prefHeight="80.0" prefWidth="219.0"
+           style="-fx-border-color: #30363d; -fx-border-radius: 5;" VBox.vgrow="NEVER"
+           xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
         <VBox.margin>
             <Insets bottom="15.0" top="15.0" />
         </VBox.margin>
@@ -37,8 +39,8 @@
             </TextField>
             <VBox alignment="CENTER_LEFT" prefHeight="95.0" prefWidth="59.0" spacing="20">
                <children>
-                  <Button mnemonicParsing="false" text="Delete" />
-                  <Button alignment="CENTER" mnemonicParsing="false" text="Details" />
+                  <Button fx:id="deleteButton" mnemonicParsing="false" text="Delete" />
+                  <Button fx:id="detailsButton" alignment="CENTER" mnemonicParsing="false" text="Details" />
                </children>
             </VBox>
          </children>
