@@ -30,7 +30,8 @@
       <HBox fx:id="listButtons" alignment="CENTER" prefHeight="46.0" prefWidth="198.0" spacing="50">
          <children>
             <Button mnemonicParsing="false" onAction="#addCardButtonPress" text="Add Card" textAlignment="CENTER" />
-            <Button fx:id="deleteListButton" alignment="TOP_LEFT" mnemonicParsing="false" text="Delete List" onAction="#deleteListButton"/>
+            <Button fx:id="deleteListButton" alignment="TOP_LEFT" mnemonicParsing="false" text="Delete List"
+                    onAction="#deleteListButton"/>
          </children></HBox>
    </children>
 </VBox>

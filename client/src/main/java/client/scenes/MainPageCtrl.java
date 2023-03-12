@@ -7,20 +7,23 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 import javafx.event.ActionEvent;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class MainPageCtrl implements Initializable {
-    private final ServerUtils server;
-
-    private final MainCtrl mainCtrl;
+//    private final ServerUtils server;
+//
+//    private final MainCtrl mainCtrl;
 
     @FXML
     private TextField boardName;
@@ -38,12 +41,20 @@ public class MainPageCtrl implements Initializable {
 
     private int listIdCounter;
 
+    //for card
 
-    @Inject
-    public MainPageCtrl(ServerUtils server, MainCtrl mainCtrl) {
-        this.server = server;
-        this.mainCtrl = mainCtrl;
-    }
+    private int cardIdCounter;
+
+    private int deleteCardButtonCounter;
+
+    private int detailsButtonCounter;
+
+
+//    @Inject
+//    public MainPageCtrl(ServerUtils server, MainCtrl mainCtrl) {
+//        this.server = server;
+//        this.mainCtrl = mainCtrl;
+//    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -60,16 +71,10 @@ public class MainPageCtrl implements Initializable {
         // do nothing
     }
 
-    @FXML
-    public void addCardButtonPress(ActionEvent event) throws IOException {
-        System.out.println("test button click add card");
-
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/client/scenes/Card.fxml"));
-        loader.setController(this);
-        StackPane newCard = loader.load();
-
-        list.getChildren().add(newCard);
+    public VBox getList() {
+        return list;
     }
+
     @FXML
     public void addListButton(ActionEvent event) throws IOException {
         System.out.println("test button click");
@@ -85,19 +90,49 @@ public class MainPageCtrl implements Initializable {
     }
 
     @FXML
+    public void addCardButtonPress(ActionEvent event) throws IOException {
+        System.out.println("test button click add card");
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/client/scenes/Card.fxml"));
+        loader.setController(this);
+        System.out.println(loader.getController().toString());
+        StackPane newCard = loader.load();
+
+        cardIdCounter++;
+        newCard.lookup("#card").setId("card" + cardIdCounter);
+
+        deleteCardButtonCounter++;
+        newCard.lookup("#deleteButton").setId("deleteButton" + deleteCardButtonCounter);
+
+        detailsButtonCounter++;
+        newCard.lookup("#detailsButton").setId("detailsButton" + detailsButtonCounter);
+
+        list.getChildren().add(newCard);
+    }
+
+    @FXML
     public void deleteCardButton(ActionEvent event) {
-        if(!list.getChildren().isEmpty()) {
-            list.getChildren().remove(list.getChildren().size() - 1);
-        }
-        //this does not work
+//        if(!list.getChildren().isEmpty()) {
+//
+//            list.lookup()
+//            list.getChildren().get(list.lookup("#"))
+//
+//
+//            list.getChildren().remove(list.getChildren().size() - 1);
+//        }
+        Button delete = (Button) event.getSource();
+        StackPane remove = (StackPane) delete.getParent().getParent().getParent();
+        list.getChildren().remove(remove);
     }
 
     @FXML
     public void deleteListButton(ActionEvent event) {
 
         if(!listOfLists.getChildren().isEmpty()) {
-            String listId = list.getId();
-            System.out.println(listId);
+//            String listId = list.getId();
+//            System.out.println(listId);
+
+
 //            ObservableList<Node> list = listOfLists.getChildren();
 //            while (node != null){
 //                node = node.getParent();
@@ -105,6 +140,10 @@ public class MainPageCtrl implements Initializable {
 //            Node parentNode = node;
 //            Node toBeDeleted = mainCtrl.getMainPage().lookup("#");
             listOfLists.getChildren().remove(listOfLists.getChildren().size() - 1);
+
+//            Button delete = (Button) event.getSource();
+//            ScrollPane fullList = (ScrollPane) delete.getParent().getParent().getParent();
+//            fullList.getContent().remove(fullList);
         }
     }
 
