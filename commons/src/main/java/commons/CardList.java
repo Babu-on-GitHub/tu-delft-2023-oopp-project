@@ -6,6 +6,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
@@ -40,6 +41,25 @@ public class CardList {
         this.id = id;
         this.title = title;
         this.cards = cards;
+    }
+
+    /**
+     * Constructor without id
+     * @param title
+     * @param cards
+     */
+    public CardList(String title, List<Card> cards) {
+        this.title = title;
+        this.cards = cards;
+    }
+
+    /**
+     * Constructor only with title
+     * @param title
+     */
+    public CardList(String title) {
+        this.title = title;
+        cards = new ArrayList<>();
     }
 
     /**

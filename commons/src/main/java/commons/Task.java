@@ -25,8 +25,21 @@ public class Task {
 
     }
 
+    /**
+     * Constructor with all parameters
+     * @param id
+     * @param title
+     */
     public Task(long id, String title) {
         this.id = id;
+        this.title = title;
+    }
+
+    /**
+     * Constructor without id
+     * @param title
+     */
+    public Task(String title) {
         this.title = title;
     }
 
