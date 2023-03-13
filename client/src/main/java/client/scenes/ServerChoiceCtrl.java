@@ -21,12 +21,9 @@ public class ServerChoiceCtrl {
 
     public void handleConnectButton() {
         String userInput = serverTextField.getText();
-        try {
-            if (utils.chooseServer(userInput))
-                ctrl.showMainPage();
-        }
-        catch (Exception e) {
+        if (utils.chooseServer(userInput))
+            ctrl.showMainPage();
+        else
             serverTextField.setStyle("-fx-border-color: red;");
-        }
     }
 }

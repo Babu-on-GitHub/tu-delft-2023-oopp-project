@@ -32,6 +32,38 @@ public class ServerUtils {
 
     private String SERVER;
 
+    private <T> T get(String endpoint, GenericType<T> type) {
+        return ClientBuilder.newClient(new ClientConfig()) //
+                .target(SERVER).path(endpoint) //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .get(type);
+    }
+
+    private <T> T post(String endpoint, Object body, GenericType<T> type) {
+        return ClientBuilder.newClient(new ClientConfig()) //
+                .target(SERVER).path(endpoint) //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .post(Entity.entity(body, APPLICATION_JSON), type);
+    }
+
+    private <T> T put(String endpoint, Object body, GenericType<T> type) {
+        return ClientBuilder.newClient(new ClientConfig()) //
+                .target(SERVER).path(endpoint) //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .put(Entity.entity(body, APPLICATION_JSON), type);
+    }
+
+    private <T> T delete(String endpoint, GenericType<T> type) {
+        return ClientBuilder.newClient(new ClientConfig()) //
+                .target(SERVER).path(endpoint) //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .delete(type);
+    }
+
     public ServerUtils(){
         this.SERVER = "http://localhost:8080";
     }
@@ -40,114 +72,68 @@ public class ServerUtils {
         if (server == null)
             return false;
 
-        String response = ClientBuilder.newClient(new ClientConfig()) //
-                .target(server).path("/api/status") //
-                .request(APPLICATION_JSON) //
-                .accept(APPLICATION_JSON) //
-                .get(new GenericType<>() {});
+        var oldServer = SERVER;
+        SERVER = server;
 
-        if (response.equals("Running")) {
-            SERVER = server;
-            return true;
-        }
-        else {
+        try {
+            String response = get("api/status", new GenericType<>() {});
+            if (response.equals("Running")) {
+                return true;
+            } else {
+                SERVER = oldServer;
+                return false;
+            }
+        } catch (Exception e) {
+            SERVER = oldServer;
             return false;
         }
     }
 
     public List<Card> getCards() {
-        return ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path("api/card") //
-                .request(APPLICATION_JSON) //
-                .accept(APPLICATION_JSON) //
-                .get(new GenericType<>() {});
+        return get("api/card", new GenericType<>() {});
     }
 
     public Card addCard(Card card) {
-        return ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path("api/card/add") //
-                .request(APPLICATION_JSON) //
-                .accept(APPLICATION_JSON) //
-                .post(Entity.entity(card, APPLICATION_JSON), Card.class);
+        return post("api/card/add", card, new GenericType<>() {});
     }
 
     public boolean deleteCardById(long id) {
-        return ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path("api/card/remove/" + id) //
-                .request(APPLICATION_JSON) //
-                .accept(APPLICATION_JSON) //
-                .delete(Boolean.class);
+        return delete("api/card/delete/" + id, new GenericType<>() {});
     }
 
     public Card updateCardById(long id, Card card) {
-        return ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path("api/card/update/" + id) //
-                .request(APPLICATION_JSON) //
-                .accept(APPLICATION_JSON) //
-                .put(Entity.entity(card, APPLICATION_JSON), Card.class);
+        return put("api/card/update/" + id, card, new GenericType<>() {});
     }
 
     public List<CardList> getCardLists() {
-        return ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path("api/list") //
-                .request(APPLICATION_JSON) //
-                .accept(APPLICATION_JSON) //
-                .get(new GenericType<>() {});
+        return get("api/list", new GenericType<>() {});
     }
 
     public CardList addCardList(CardList list) {
-        return ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path("api/list/add") //
-                .request(APPLICATION_JSON) //
-                .accept(APPLICATION_JSON) //
-                .post(Entity.entity(list, APPLICATION_JSON), CardList.class);
+        return post("api/list/add", list, new GenericType<>() {});
     }
 
     public boolean deleteCardListById(long id) {
-        return ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path("api/list/remove/" + id) //
-                .request(APPLICATION_JSON) //
-                .accept(APPLICATION_JSON) //
-                .delete(Boolean.class);
+        return delete("api/list/remove/" + id, new GenericType<>() {});
     }
 
     public CardList updateCardListById(long id, CardList list) {
-        return ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path("api/list/update/" + id) //
-                .request(APPLICATION_JSON) //
-                .accept(APPLICATION_JSON) //
-                .put(Entity.entity(list, APPLICATION_JSON), CardList.class);
+        return put("api/list/update/" + id, list, new GenericType<>() {});
     }
 
     public List<Board> getBoard() {
-        return ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path("api/board") //
-                .request(APPLICATION_JSON) //
-                .accept(APPLICATION_JSON) //
-                .get(new GenericType<>() {});
+        return get("api/board", new GenericType<>() {});
     }
 
     public Board addBoard(Board board) {
-        return ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path("api/board/add") //
-                .request(APPLICATION_JSON) //
-                .accept(APPLICATION_JSON) //
-                .post(Entity.entity(board, APPLICATION_JSON), Board.class);
+        return post("api/board/add", board, new GenericType<>() {});
     }
 
     public boolean deleteBoardById(long id) {
-        return ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path("api/board/remove/" + id) //
-                .request(APPLICATION_JSON) //
-                .accept(APPLICATION_JSON) //
-                .delete(Boolean.class);
+        return delete("api/board/delete/" + id, new GenericType<>() {});
     }
 
     public Board updateBoardById(long id, Board board) {
-        return ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path("api/board/update/" + id) //
-                .request(APPLICATION_JSON) //
-                .accept(APPLICATION_JSON) //
-                .put(Entity.entity(board, APPLICATION_JSON), Board.class);
+        return put("api/board/update/" + id, board, new GenericType<>() {});
     }
 }
