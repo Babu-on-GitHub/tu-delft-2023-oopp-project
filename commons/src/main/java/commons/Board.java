@@ -5,6 +5,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
@@ -36,6 +37,25 @@ public class Board {
         this.id = id;
         this.title = title;
         this.lists = lists;
+    }
+
+    /**
+     * Constructor without id
+     * @param title
+     * @param lists
+     */
+    public Board(String title, List<CardList> lists) {
+        this.title = title;
+        this.lists = lists;
+    }
+
+    /**
+     * Constructor only with title
+     * @param title
+     */
+    public Board(String title) {
+        this.title = title;
+        lists = new ArrayList<>();
     }
 
     /**
