@@ -44,7 +44,7 @@ public class Main extends Application {
         Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
         System.out.println("st");
         var serverCtrl = FXML.load(ServerChoiceCtrl.class, "client", "scenes", "ServerChoice.fxml");
-        var mainPage = FXML.load(MainPageCtrl.class, "client", "scenes", "MainPage.fxml");
+        var mainPage = FXML.load(MainPageCtrl.class, "client", "scenes", "ReworkedMainPage.fxml");
 
         System.out.println("ba");
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
