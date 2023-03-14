@@ -37,7 +37,7 @@ public class ListController implements Initializable {
     public void deleteListButton(ActionEvent event) {
         Button pressed = (Button) event.getSource();
 
-        var toDelete = (BorderPane) pressed.getParent().getParent();
+        var toDelete = pressed.getParent().getParent();
         var listOfLists = (HBox) toDelete.getParent();
 
         listOfLists.getChildren().remove(toDelete);

@@ -61,6 +61,11 @@ public class MainPageCtrl implements Initializable {
     }
 
     @FXML
+    public void optionsShowServerChoice(ActionEvent event){
+        mainCtrl.showServerChoice();
+    }
+
+    @FXML
     public void addListButton(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("ReworkedList.fxml"));
         Node newList = loader.load();
