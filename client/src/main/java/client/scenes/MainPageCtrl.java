@@ -5,6 +5,7 @@ import com.google.inject.Inject;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
@@ -30,6 +31,10 @@ public class MainPageCtrl implements Initializable {
     @FXML
     private HBox listOfLists;
 
+    @FXML
+    private ScrollPane boardScrollPane;
+
+
     @Inject
     public MainPageCtrl(ServerUtils server, MainCtrl mainCtrl) {
         this.server = server;
@@ -39,6 +44,10 @@ public class MainPageCtrl implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         boardName.setText("Default board");
+
+        //This makes the lists to fill the entire height of their parent
+        boardScrollPane.setFitToHeight(true);
+        listOfLists.setSpacing(20);
 
 //        deleteListButton.setGraphic(new FontIcon(Feather.TRASH));
 //        deleteCardButton.setGraphic(new FontIcon(Feather.TRASH));
@@ -52,13 +61,25 @@ public class MainPageCtrl implements Initializable {
     }
 
     @FXML
+    public void optionsShowServerChoice(ActionEvent event){
+        mainCtrl.showServerChoice();
+    }
+
+    @FXML
     public void addListButton(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("List.fxml"));
-        loader.setController(this);
-        VBox newList = loader.load();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("ReworkedList.fxml"));
+        Node newList = loader.load();
 
         listOfLists.getChildren().add(newList);
     }
+//    @FXML
+//    public void addListButton(ActionEvent event) throws IOException {
+//        FXMLLoader loader = new FXMLLoader(getClass().getResource("List.fxml"));
+//        loader.setController(this);
+//        VBox newList = loader.load();
+//
+//        listOfLists.getChildren().add(newList);
+//    }
 
     @FXML
     public void addCardButton(ActionEvent event) throws IOException {

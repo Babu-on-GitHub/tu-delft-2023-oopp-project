@@ -54,7 +54,7 @@ public class MainCtrl {
 
     public void showServerChoice() {
         primaryStage.setTitle("Server choice");
-//        primaryStage.setScene(serverChoice);
-        primaryStage.setScene(mainPage);
+        primaryStage.setScene(serverChoice);
+//        primaryStage.setScene(mainPage);
     }
 }
