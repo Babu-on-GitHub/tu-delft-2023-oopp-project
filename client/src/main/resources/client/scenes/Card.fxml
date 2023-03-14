@@ -39,7 +39,7 @@
             </TextField>
             <VBox alignment="CENTER_LEFT" prefHeight="95.0" prefWidth="59.0" spacing="20">
                <children>
-                  <Button fx:id="deleteButton" mnemonicParsing="false" text="Delete" />
+                  <Button fx:id="deleteCardButton" mnemonicParsing="false" text="Delete" onAction="#deleteCardButton"/>
                   <Button fx:id="detailsButton" alignment="CENTER" mnemonicParsing="false" text="Details" />
                </children>
             </VBox>
