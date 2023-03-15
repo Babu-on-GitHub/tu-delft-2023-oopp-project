@@ -53,7 +53,6 @@ public class CardController {
         if(card == null || !cardRepository.existsById(id)) {
             return ResponseEntity.badRequest().build();
         }
-        cardRepository.deleteById(id);
         var saved = cardRepository.save(card);
         return ResponseEntity.ok(saved);
     }

@@ -53,7 +53,6 @@ public class BoardController {
         if(board == null || !boardRepository.existsById(id)) {
             return ResponseEntity.badRequest().build();
         }
-        boardRepository.deleteById(id);
         var saved = boardRepository.save(board);
         return ResponseEntity.ok(saved);
     }
