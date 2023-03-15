@@ -1,12 +1,17 @@
 package client.scenes;
 
 
+import commons.Card;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.input.DataFormat;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
 
 import java.io.IOException;
@@ -15,11 +20,13 @@ import java.util.ResourceBundle;
 
 public class ListController implements Initializable {
 
+    public static final DataFormat CARD = new DataFormat("myCardMimeType");
     @FXML
     private VBox cardListContainer;
 
     @FXML
     private ScrollPane scrollPane;
+
 
 
     @SuppressWarnings("unused")
@@ -43,6 +50,34 @@ public class ListController implements Initializable {
         listOfLists.getChildren().remove(toDelete);
     }
 
+    @FXML
+    void dragOver(DragEvent event) {
+        if (event.getGestureSource() != cardListContainer && event.getDragboard().hasContent(CARD)) {
+            event.acceptTransferModes(TransferMode.MOVE);
+        }
+
+        event.consume();
+    }
+
+    @FXML
+    void drop(DragEvent event) throws IOException {
+        Dragboard dragboard = event.getDragboard();
+        boolean success = false;
+        if (dragboard.hasContent(CARD)) {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("ReworkedCard.fxml"));
+            AnchorPane newCard = loader.load();
+
+            Card card = (Card) dragboard.getContent(CARD);
+
+            ((CardController)loader.getController()).cardTitle.setText(card.getTitle());
+            cardListContainer.getChildren().add(newCard);
+            success = true;
+        }
+        event.setDropCompleted(success);
+
+        event.consume();
+
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

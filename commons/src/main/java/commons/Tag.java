@@ -6,10 +6,12 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import javax.persistence.*;
 
+import java.io.Serializable;
+
 import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
 
 @Entity
-public class Tag {
+public class Tag implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
