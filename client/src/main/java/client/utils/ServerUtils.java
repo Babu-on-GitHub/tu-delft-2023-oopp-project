@@ -93,6 +93,10 @@ public class ServerUtils {
         return get("api/card", new GenericType<>() {});
     }
 
+    public Card getCardById(long id){
+        return get("api/card/"+id, new GenericType<>(){});
+    }
+
     public Card addCard(Card card) {
         return post("api/card/add", card, new GenericType<>() {});
     }
@@ -109,6 +113,10 @@ public class ServerUtils {
         return get("api/list", new GenericType<>() {});
     }
 
+    public CardList getCardListById(long id){
+        return get("api/list/"+id, new GenericType<>(){});
+    }
+
     public CardList addCardList(CardList list) {
         return post("api/list/add", list, new GenericType<>() {});
     }
@@ -121,8 +129,12 @@ public class ServerUtils {
         return put("api/list/update/" + id, list, new GenericType<>() {});
     }
 
-    public List<Board> getBoard() {
+    public List<Board> getBoards() {
         return get("api/board", new GenericType<>() {});
+    }
+
+    public Board getBoardById(long id){
+        return get("api/board/"+id, new GenericType<>(){});
     }
 
     public Board addBoard(Board board) {
