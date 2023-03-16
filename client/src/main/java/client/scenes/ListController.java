@@ -55,7 +55,6 @@ public class ListController implements Initializable {
         if (event.getGestureSource() != cardListContainer && event.getDragboard().hasContent(CARD)) {
             event.acceptTransferModes(TransferMode.MOVE);
         }
-
         event.consume();
     }
 
@@ -77,6 +76,16 @@ public class ListController implements Initializable {
 
         event.consume();
 
+    }
+
+    @FXML
+    void dragDone(DragEvent event) {
+//        cardListContainer = (VBox) ((TextField) event.getGestureSource()).getParent().getParent();
+//        if (event.getGestureSource() != cardListContainer && event.getDragboard().hasContent(CARD)) {
+//            var startPosition = cardTitle.getParent();
+//            var listOfToDelete = (VBox) startPosition.getParent();
+//            listOfToDelete.getChildren().remove(startPosition);
+//        }
     }
 
     @Override

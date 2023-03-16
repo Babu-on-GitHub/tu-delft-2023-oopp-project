@@ -46,7 +46,8 @@ public class CardController {
 
     @FXML
     void dragDone(DragEvent event) {
-        if (event.getGestureSource() != cardListContainer && event.getDragboard().hasContent(CARD)) {
+        var parent = ((TextField) event.getGestureSource()).getParent().getParent();
+        if (event.getDragboard().hasContent(CARD) && event.getGestureTarget() != null) {
             var startPosition = cardTitle.getParent();
             var listOfToDelete = (VBox) startPosition.getParent();
             listOfToDelete.getChildren().remove(startPosition);

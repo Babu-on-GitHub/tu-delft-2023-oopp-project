@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane minHeight="-Infinity" minWidth="-Infinity" prefWidth="300.0" style="-fx-border-image-width: 1px; -fx-border-color: black;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.ListController">
+<BorderPane minWidth="-Infinity" prefHeight="600.0" prefWidth="300.0" style="-fx-border-image-width: 1px; -fx-border-color: black;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.ListController">
    <top>
       <AnchorPane prefHeight="55.0" prefWidth="300.0" BorderPane.alignment="CENTER">
          <children>
@@ -31,7 +31,7 @@
    <center>
       <ScrollPane fx:id="scrollPane" prefHeight="484.0" prefWidth="300.0" BorderPane.alignment="CENTER">
          <content>
-            <VBox fx:id="cardListContainer" onDragDropped="#drop" onDragOver="#dragOver" />
+            <VBox fx:id="cardListContainer" onDragDone="#dragDone" onDragDropped="#drop" onDragOver="#dragOver" prefHeight="484.0" />
          </content>
       </ScrollPane>
    </center>
