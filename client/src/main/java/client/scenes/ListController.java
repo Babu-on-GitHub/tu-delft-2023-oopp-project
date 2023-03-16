@@ -43,22 +43,19 @@ public class ListController implements Initializable {
     public void addCardButton(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("ReworkedCard.fxml"));
 
-        Card newChild = new Card("caacdfe");
+        Card newChild = new Card();
         if (cardList.getCards() == null) {
             cardList.setCards(new ArrayList<>());
         }
 
         ServerUtils utils = new ServerUtils();
-        newChild = utils.addCard(newChild);
 
         cardList.getCards().add(newChild);
         cardList = utils.updateCardListById(cardList.getId(), cardList);
-
+        loader.setController(new CardController(newChild));
         AnchorPane newCard = loader.load();
-        //newCard.setUserData(newChild.getId());
 
         cardListContainer.getChildren().add(newCard);
-        cardList = utils.updateCardListById(cardList.getId(), cardList);
     }
 
     @FXML

@@ -41,16 +41,15 @@ public class CardController implements Initializable {
 
     @FXML
     public void deleteCardButton(ActionEvent event) throws IOException {
-        Button pressed = (Button) event.getSource();
-
-        AnchorPane cardToDelete = (AnchorPane) pressed.getParent();
-        //long cardId = (long) cardToDelete.getUserData();
-
-        VBox cardListContainer = (VBox) cardToDelete.getParent();
-        cardListContainer.getChildren().remove(cardToDelete);
-
-        ServerUtils utils = new ServerUtils();
-        //utils.deleteCardById();
+//        Button pressed = (Button) event.getSource();
+//
+//        Card toDelete =
+//
+//        VBox cardListContainer = (VBox) cardToDelete.getParent();
+//        cardListContainer.getChildren().remove(cardToDelete);
+//
+//        ServerUtils utils = new ServerUtils();
+//        //utils.deleteCardById();
     }
 
     public void updateTitle(){
