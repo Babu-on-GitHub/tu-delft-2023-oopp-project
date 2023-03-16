@@ -2,6 +2,9 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
+import commons.Board;
+import commons.CardList;
+import jakarta.ws.rs.BadRequestException;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -17,6 +20,8 @@ import javafx.event.ActionEvent;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class MainPageCtrl implements Initializable {
@@ -34,6 +39,8 @@ public class MainPageCtrl implements Initializable {
     @FXML
     private ScrollPane boardScrollPane;
 
+    private Board board;
+
 
     @Inject
     public MainPageCtrl(ServerUtils server, MainCtrl mainCtrl) {
@@ -48,6 +55,17 @@ public class MainPageCtrl implements Initializable {
         //This makes the lists to fill the entire height of their parent
         boardScrollPane.setFitToHeight(true);
         listOfLists.setSpacing(20);
+
+        if(board == null){
+            try {
+                board = server.getBoardById(1L);
+            }catch(BadRequestException e){
+                Board toAdd = new Board();
+                toAdd.setId(1L);
+                board = server.addBoard(toAdd);
+            }
+
+        }
 
 //        deleteListButton.setGraphic(new FontIcon(Feather.TRASH));
 //        deleteCardButton.setGraphic(new FontIcon(Feather.TRASH));
@@ -68,8 +86,17 @@ public class MainPageCtrl implements Initializable {
     @FXML
     public void addListButton(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("ReworkedList.fxml"));
-        Node newList = loader.load();
 
+        CardList newChild = new CardList();
+        if(board.getLists() == null){
+            board.setLists(new ArrayList<>());
+        }
+        board.getLists().add(newChild);
+        board = server.updateBoardById(board.getId(),board);
+
+        loader.setController(new ListController(board.getLists().get(board.getLists().size()-1)));
+
+        Node newList = loader.load();
         listOfLists.getChildren().add(newList);
     }
 //    @FXML
