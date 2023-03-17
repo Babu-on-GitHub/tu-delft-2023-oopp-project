@@ -2,6 +2,8 @@ package server.api;
 
 import commons.Board;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.*;
 import server.database.BoardRepository;
 
@@ -57,4 +59,16 @@ public class BoardController {
         var saved = boardRepository.save(board);
         return ResponseEntity.ok(saved);
     }
+
+//    @MessageMapping("/{id}")
+//    public void getBoardByID(@PathVariable("id") long id) {
+//        getById(id);
+//    }
+//
+//    @MessageMapping("/add")
+//    @SendTo("/topic/board")
+//    public Board addBoard(Board board) {
+//        add(board);
+//        return board;
+//    }
 }
