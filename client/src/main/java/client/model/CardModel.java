@@ -24,4 +24,9 @@ public class CardModel {
     public void setCard(Card newCard){
         this.card = newCard;
     }
+
+    public void deleteCard(){
+        parent.deleteCard(this);
+    }
+
 }

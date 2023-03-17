@@ -1,5 +1,7 @@
 package client.scenes;
 
+import client.model.BoardModel;
+import client.model.ListModel;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Board;
@@ -39,7 +41,7 @@ public class MainPageCtrl implements Initializable {
     @FXML
     private ScrollPane boardScrollPane;
 
-    private Board board;
+    private BoardModel board;
 
 
     @Inject
@@ -58,11 +60,11 @@ public class MainPageCtrl implements Initializable {
 
         if(board == null){
             try {
-                board = server.getBoardById(1L);
+                board = new BoardModel( server.getBoardById(1L));
             }catch(BadRequestException e){
                 Board toAdd = new Board();
-                toAdd.setId(1L);
-                board = server.addBoard(toAdd);
+                toAdd = server.addBoard(toAdd);
+                board = new BoardModel(toAdd);
             }
 
         }
@@ -87,14 +89,11 @@ public class MainPageCtrl implements Initializable {
     public void addListButton(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("ReworkedList.fxml"));
 
-        CardList newChild = new CardList();
-        if(board.getLists() == null){
-            board.setLists(new ArrayList<>());
-        }
-        board.getLists().add(newChild);
-        board = server.updateBoardById(board.getId(),board);
+        ListModel newChild = new ListModel(new CardList(),board);
 
-        loader.setController(new ListController(board.getLists().get(board.getLists().size()-1)));
+        board.addList(newChild);
+
+        loader.setController(new ListController(newChild));
 
         Node newList = loader.load();
         listOfLists.getChildren().add(newList);

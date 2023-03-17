@@ -1,6 +1,8 @@
 package client.scenes;
 
 
+import client.model.CardModel;
+import client.model.ListModel;
 import client.utils.ServerUtils;
 import commons.Card;
 import commons.CardList;
@@ -13,6 +15,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.Node;
+import org.checkerframework.checker.units.qual.C;
 
 import java.io.IOException;
 import java.net.URL;
@@ -30,28 +33,25 @@ public class ListController implements Initializable {
     @FXML
     private TextField listTitle;
 
-    private CardList cardList;
+    private ListModel listModel;
 
 
     @SuppressWarnings("unused")
     public ListController(){}
 
-    public ListController(CardList cardList){
-        this.cardList = cardList;
+    public ListController(ListModel cardList){
+        this.listModel = cardList;
     }
 
     public void addCardButton(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("ReworkedCard.fxml"));
 
-        Card newChild = new Card();
-        if (cardList.getCards() == null) {
-            cardList.setCards(new ArrayList<>());
-        }
+        CardModel newChild = new CardModel(new Card(),listModel);
 
         ServerUtils utils = new ServerUtils();
 
-        cardList.getCards().add(newChild);
-        cardList = utils.updateCardListById(cardList.getId(), cardList);
+        listModel.addCard(newChild);
+
         loader.setController(new CardController(newChild));
         AnchorPane newCard = loader.load();
 
@@ -65,16 +65,16 @@ public class ListController implements Initializable {
         var toDelete = pressed.getParent().getParent();
         var listOfLists = (HBox) toDelete.getParent();
 
+        listModel.deleteList();
+
         listOfLists.getChildren().remove(toDelete);
 
-        ServerUtils utils = new ServerUtils();
-        //utils.deleteCardListById();
     }
 
     public void updateTitle(){
-        cardList.setTitle(listTitle.getText());
-        ServerUtils utils = new ServerUtils();
-        cardList = utils.updateCardListById(cardList.getId(),cardList);
+//        cardList.setTitle(listTitle.getText());
+//        ServerUtils utils = new ServerUtils();
+//        cardList = utils.updateCardListById(cardList.getId(),cardList);
     }
 
 

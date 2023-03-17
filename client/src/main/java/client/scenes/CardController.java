@@ -1,5 +1,6 @@
 package client.scenes;
 
+import client.model.CardModel;
 import client.utils.ServerUtils;
 import commons.Card;
 import commons.CardList;
@@ -17,7 +18,7 @@ import java.util.ResourceBundle;
 
 public class CardController implements Initializable {
 
-    private Card card;
+    private CardModel card;
 
     @FXML
     private TextField cardTitle;
@@ -25,22 +26,24 @@ public class CardController implements Initializable {
     @SuppressWarnings("unused")
     public CardController(){}
 
-    public CardController(Card card){
+    public CardController(CardModel card){
         this.card = card;
     }
 
-//    @FXML
-//    public void deleteCardButton(ActionEvent event) {
-//        Button pressed = (Button) event.getSource();
-//
-//        var toDelete = pressed.getParent();
-//        var listOfToDelete = (VBox) toDelete.getParent();
-//
-//        listOfToDelete.getChildren().remove(toDelete);
-//    }
-
     @FXML
-    public void deleteCardButton(ActionEvent event) throws IOException {
+    public void deleteCardButton(ActionEvent event) {
+        Button pressed = (Button) event.getSource();
+
+        var toDelete = pressed.getParent();
+        var listOfToDelete = (VBox) toDelete.getParent();
+
+        card.deleteCard();
+
+        listOfToDelete.getChildren().remove(toDelete);
+    }
+
+//    @FXML
+//    public void deleteCardButton(ActionEvent event) throws IOException {
 //        Button pressed = (Button) event.getSource();
 //
 //        Card toDelete =
@@ -50,12 +53,12 @@ public class CardController implements Initializable {
 //
 //        ServerUtils utils = new ServerUtils();
 //        //utils.deleteCardById();
-    }
+//    }
 
     public void updateTitle(){
-        card.setTitle(cardTitle.getText());
-        ServerUtils utils = new ServerUtils();
-        card = utils.updateCardById(card.getId(),card);
+//        card.setTitle(cardTitle.getText());
+//        ServerUtils utils = new ServerUtils();
+//        card = utils.updateCardById(card.getId(),card);
     }
 
     @Override
