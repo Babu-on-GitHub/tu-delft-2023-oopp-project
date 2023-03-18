@@ -1,5 +1,6 @@
 package server;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -12,7 +13,12 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 @EnableWebSocketMessageBroker
 public class WebsocketConfig implements WebSocketMessageBrokerConfigurer {
 
+    @Autowired
     private SimpMessagingTemplate messagingTemplate;
+
+    public WebsocketConfig(SimpMessagingTemplate messagingTemplate) {
+        this.messagingTemplate = messagingTemplate;
+    }
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
@@ -26,9 +32,9 @@ public class WebsocketConfig implements WebSocketMessageBrokerConfigurer {
     }
 
     @Scheduled(fixedRate = 1000)
-    public void sendInfo() {
+    public void sendMessage() {
         String message = "This is some info from server";
-        messagingTemplate.convertAndSend("/topic/info", message);
+        messagingTemplate.convertAndSend("/topic", message);
     }
 
 }
