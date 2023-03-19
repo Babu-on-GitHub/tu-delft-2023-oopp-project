@@ -144,23 +144,4 @@ public class ServerUtils {
         return put("api/board/update/" + id, board, new GenericType<>() {});
     }
 
-    private StompSession session = connect("ws://localhost:8080/websocket");
-
-    private StompSession connect(String url) {
-        var client = new StandardWebSocketClient();
-        var stomp = new WebSocketStompClient(client);
-        stomp.setMessageConverter(new MappingJackson2MessageConverter());
-        try {
-            return stomp.connectAsync(url, new StompSessionHandlerAdapter() {}).get();
-        }
-        catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-        catch (ExecutionException e) {
-            throw new RuntimeException(e);
-        }
-        throw new IllegalStateException();
-    }
-
-    //"registerformessages" method here
 }

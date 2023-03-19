@@ -23,6 +23,7 @@ import com.google.inject.Injector;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.messaging.simp.stomp.StompSession;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -53,16 +54,6 @@ public class Main extends Application {
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
         mainCtrl.initialize(primaryStage, mainPage, serverCtrl);
 
-        //websocket
         WebsocketClient client = new WebsocketClient();
-        try {
-            while (true) {
-                client.getSession().getBasicRemote().sendText("Hello from client!");
-                TimeUnit.SECONDS.sleep(2);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        //
     }
 }
