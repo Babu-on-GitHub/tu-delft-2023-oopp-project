@@ -42,35 +42,21 @@ public class ListModel {
         this.children = children;
     }
 
-    public void addCard(CardModel card){
+    public void addCard(CardModel cardModel){
         if (this.getChildren() == null) {
             this.setChildren(new ArrayList<>());
         }
         if(cardList.getCards() == null){
             cardList.setCards(new ArrayList<>());
         }
-        cardList.getCards().add(card.getCard());
 
-        ServerUtils utils = new ServerUtils();
-        cardList = utils.updateCardListById(cardList.getId(), cardList);
+        cardModel.update();
 
-        card.setCard(cardList.getCards().get(cardList.getCards().size()-1));
+        cardList.getCards().add(cardModel.getCard());
 
-        children.add(card);
-        parent.updateCardListById(cardList.getId(), cardList);
+        children.add(cardModel);
 
-        for(var newCard : cardList.getCards()){
-            boolean flag = true;
-            for(var child : children){
-                if (child.getCard().getId() == newCard.getId()){
-                    child.setCard(newCard);
-                    flag = false;
-                }
-            }
-            if (flag){
-                //TODO fix inconsistencies
-            }
-        }
+        this.update();
     }
 
     public void deleteList(){
@@ -86,10 +72,39 @@ public class ListModel {
                 cardList.getCards().remove(card);
             }
         }
-        cardList = utils.updateCardListById(cardList.getId(),cardList);
-        parent.updateCardListById(cardList.getId(),cardList);
         children.remove(cardModel);
 
+        this.update();
     }
 
+    public void update(){
+        ServerUtils utils = new ServerUtils();
+        if(cardList.getId()==0) cardList = utils.addCardList(cardList);
+        else cardList = utils.updateCardListById(cardList.getId(),cardList);
+        this.updateChildren();
+        parent.updateChild(this.getCardList());
+    }
+
+    public void updateChildren() {
+        if(cardList.getCards()==null||children==null) return;
+        for(var card: cardList.getCards()){
+            for(var child: children){
+                if(child.getCard().getId() == card.getId()){
+                    child.setCard(card);
+                    child.updateChildren();
+                }
+            }
+        }
+    }
+
+    public void updateChild(Card card){
+        for(int i=0;i<cardList.getCards().size();i++){
+            var toUpdate = cardList.getCards().get(i);
+            if( toUpdate.getId() == card.getId()){
+                cardList.getCards().set(i, card);
+            }
+        }
+        this.update();
+        parent.updateChild(this.getCardList());
+    }
 }

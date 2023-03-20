@@ -11,14 +11,14 @@ public class BoardModel {
     private Board board;
     private List<ListModel> children;
 
-    public void updateCardListById(long id, CardList cardList){
+    public void updateChild(CardList cardList){
         for(int i=0;i<board.getLists().size();i++){
             var list = board.getLists().get(i);
             if( list.getId() == cardList.getId()){
                 board.getLists().set(i, cardList);
             }
         }
-
+        this.update();
     }
 
     public BoardModel(Board board) {
@@ -49,46 +49,46 @@ public class BoardModel {
             board.setLists(new ArrayList<>());
         }
 
+        listModel.update();
+
         board.getLists().add(listModel.getCardList());
 
-        ServerUtils utils = new ServerUtils();
-        board = utils.updateBoardById(board.getId(), board);
-
-        listModel.setCardList(board.getLists().get(board.getLists().size()-1));
         children.add(listModel);
 
-        for(var newList : board.getLists()){
-            boolean flag = true;
-            for(var child : children){
-                if (child.getCardList().getId() == newList.getId()){
-                    child.setCardList(newList);
-                    flag = false;
-                }
-            }
-            if (flag){
-                //TODO fix inconsistencies
-            }
-        }
+        this.update();
     }
 
     public void deleteList(ListModel listModel){
-        ServerUtils utils = new ServerUtils();
         long id = listModel.getCardList().getId();
         for(int i = 0; i<board.getLists().size(); i++){
             CardList list = board.getLists().get(i);
             if(list.getId()==id){
                 board.getLists().remove(list);
+                //utils.deleteCardListById(list.getId());
             }
         }
-        board = utils.updateBoardById(board.getId(),board);
         children.remove(listModel);
+
+        this.update();
     }
 
     public void update(){
         var utils = new ServerUtils();
-        board = utils.updateBoardById(board.getId(), board);
-        for(var child : children){
-            //child.update();
+        if(board.getId() == 0 ) board = utils.addBoard(board);
+        else board = utils.updateBoardById(board.getId(), board);
+        this.updateChildren();
+    }
+
+
+    public void updateChildren(){
+        if(board.getLists()==null||children==null) return;
+        for(var list: board.getLists()){
+            for(var child: children){
+                if(child.getCardList().getId() == list.getId()){
+                    child.setCardList(list);
+                    child.updateChildren();
+                }
+            }
         }
     }
 }

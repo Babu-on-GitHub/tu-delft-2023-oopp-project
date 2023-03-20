@@ -1,5 +1,6 @@
 package client.model;
 
+import client.utils.ServerUtils;
 import commons.Card;
 
 public class CardModel {
@@ -8,13 +9,6 @@ public class CardModel {
     public CardModel(Card card,ListModel parent){
         this.card = card;
         this.parent = parent;
-    }
-    public void update(){
-
-    }
-
-    public void delete(){
-
     }
 
     public Card getCard(){
@@ -29,4 +23,14 @@ public class CardModel {
         parent.deleteCard(this);
     }
 
+    public void update(){
+        ServerUtils utils = new ServerUtils();
+        if(card.getId() == 0) card = utils.addCard(card);
+        else card = utils.updateCardById(card.getId(),card);
+        this.updateChildren();
+        parent.updateChild(this.getCard());
+    }
+
+    public void updateChildren() {
+    }
 }
