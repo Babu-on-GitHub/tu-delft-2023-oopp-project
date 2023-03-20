@@ -2,6 +2,9 @@ package server.api;
 
 import commons.CardList;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.*;
 import server.database.CardListRepository;
 
@@ -56,5 +59,18 @@ public class CardListController {
         cardListRepository.deleteById(id);
         var saved = cardListRepository.save(cardList);
         return ResponseEntity.ok(saved);
+    }
+
+    @MessageMapping("/cardlist/update/{id}")
+    @SendTo("/topic/cardlist/{id}")
+    public CardList updateCardList(CardList cardList, @DestinationVariable long id) {
+        return update(cardList, id).getBody();
+    }
+
+    @MessageMapping("/cardlist/remove/{id}")
+    @SendTo("/topic/cardlist/{id}")
+    public CardList removeCardList(@DestinationVariable long id) {
+        remove(id);
+        return null;
     }
 }

@@ -2,6 +2,7 @@ package server.api;
 
 import commons.Board;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.*;
@@ -60,15 +61,16 @@ public class BoardController {
         return ResponseEntity.ok(saved);
     }
 
-//    @MessageMapping("/{id}")
-//    public void getBoardByID(@PathVariable("id") long id) {
-//        getById(id);
-//    }
-//
-//    @MessageMapping("/add")
-//    @SendTo("/topic/board")
-//    public Board addBoard(Board board) {
-//        add(board);
-//        return board;
-//    }
+    @MessageMapping("/board/update/{id}")
+    @SendTo("/topic/board/{id}")
+    public Board updateBoard(Board board, @DestinationVariable long id) {
+        return update(board, id).getBody();
+    }
+
+    @MessageMapping("/board/remove/{id}")
+    @SendTo("/topic/board/{id}")
+    public Board removeBoard(@DestinationVariable long id) {
+        remove(id);
+        return null;
+    }
 }
