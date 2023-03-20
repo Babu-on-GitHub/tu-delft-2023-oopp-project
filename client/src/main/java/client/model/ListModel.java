@@ -3,7 +3,6 @@ package client.model;
 import client.utils.ServerUtils;
 import commons.Card;
 import commons.CardList;
-import org.checkerframework.checker.units.qual.C;
 
 import java.util.ArrayList;
 import java.util.List;

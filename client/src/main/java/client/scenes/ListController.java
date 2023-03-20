@@ -5,7 +5,6 @@ import client.model.CardModel;
 import client.model.ListModel;
 import client.utils.ServerUtils;
 import commons.Card;
-import commons.CardList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,12 +13,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
-import javafx.scene.Node;
-import org.checkerframework.checker.units.qual.C;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class ListController implements Initializable {
