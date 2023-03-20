@@ -19,7 +19,7 @@ public class Board {
 
     private String title;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL)
     @OrderColumn
     private List<CardList> lists;
 

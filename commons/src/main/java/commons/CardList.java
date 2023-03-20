@@ -20,12 +20,12 @@ public class CardList {
 
     private String title;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL)
     @OrderColumn
     private List<Card> cards;
 
-    @ManyToOne
-    Board board;
+//    @ManyToOne
+//    Board board;
 
     @SuppressWarnings("unused")
     public CardList(){

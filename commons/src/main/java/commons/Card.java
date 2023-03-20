@@ -21,15 +21,15 @@ public class Card {
 
     private String description;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL)
     @OrderColumn
     private List<Task> subTasks;
 
     @ManyToMany(cascade = CascadeType.ALL)
     private Set<Tag> tags;
 
-    @ManyToOne
-    CardList cardList;
+//    @ManyToOne
+//    CardList cardList;
 
     @SuppressWarnings("unused")
     public Card() {
