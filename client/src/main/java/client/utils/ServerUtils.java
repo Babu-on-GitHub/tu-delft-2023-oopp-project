@@ -90,6 +90,7 @@ public class ServerUtils {
         try {
             String response = get("api/status", new GenericType<>() {});
             if (response.equals("Running")) {
+                session = connect(websocketUrl);
                 return true;
             } else {
                 SERVER = oldServer;
@@ -163,7 +164,7 @@ public class ServerUtils {
         return put("api/board/update/" + id, board, new GenericType<>() {});
     }
 
-    private  StompSession session = connect(websocketUrl);
+    private  StompSession session;
 
     private StompSession connect(String url) {
         var client = new StandardWebSocketClient();
