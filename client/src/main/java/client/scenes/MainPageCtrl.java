@@ -1,7 +1,12 @@
 package client.scenes;
 
+import client.model.BoardModel;
+import client.model.ListModel;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
+import commons.Board;
+import commons.CardList;
+import jakarta.ws.rs.BadRequestException;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -34,6 +39,8 @@ public class MainPageCtrl implements Initializable {
     @FXML
     private ScrollPane boardScrollPane;
 
+    private BoardModel board;
+
 
     @Inject
     public MainPageCtrl(ServerUtils server, MainCtrl mainCtrl) {
@@ -48,6 +55,17 @@ public class MainPageCtrl implements Initializable {
         //This makes the lists to fill the entire height of their parent
         boardScrollPane.setFitToHeight(true);
         listOfLists.setSpacing(20);
+
+        if(board == null){
+            try {
+                board = new BoardModel( server.getBoardById(1L));
+            }catch(BadRequestException e){
+                Board toAdd = new Board();
+                toAdd = server.addBoard(toAdd);
+                board = new BoardModel(toAdd);
+            }
+
+        }
 
 //        deleteListButton.setGraphic(new FontIcon(Feather.TRASH));
 //        deleteCardButton.setGraphic(new FontIcon(Feather.TRASH));
@@ -68,8 +86,14 @@ public class MainPageCtrl implements Initializable {
     @FXML
     public void addListButton(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("ReworkedList.fxml"));
-        Node newList = loader.load();
 
+        ListModel newChild = new ListModel(new CardList(),board);
+
+        board.addList(newChild);
+
+        loader.setController(new ListController(newChild));
+
+        Node newList = loader.load();
         listOfLists.getChildren().add(newList);
     }
 //    @FXML

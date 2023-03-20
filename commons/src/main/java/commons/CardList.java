@@ -29,7 +29,6 @@ public class CardList {
 
     @SuppressWarnings("unused")
     public CardList(){
-
     }
 
     /**
