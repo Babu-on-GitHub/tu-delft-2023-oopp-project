@@ -122,48 +122,6 @@ public class CardList {
         cards.add(card);
     }
 
-
-    public void assign(CardList other) {
-        this.title = other.title;
-        if (other.cards == null) {
-            if (cards != null)
-                cards.clear();
-            return;
-        }
-
-        // remove all the cards that are present in only this
-        List<Card> cardsToRemove = new ArrayList<>();
-        for (Card card : cards) {
-            boolean found = false;
-            for (Card otherCard : other.cards) {
-                if (card.getId() == otherCard.getId()) {
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
-                cardsToRemove.add(card);
-            }
-        }
-        cards.removeAll(cardsToRemove);
-
-
-        // assign all the cards that are present to other
-        for (Card otherCard : other.cards) {
-            boolean found = false;
-            for (Card card : cards) {
-                if (card.getId() == otherCard.getId()) {
-                    found = true;
-                    card.assign(otherCard);
-                    break;
-                }
-            }
-            if (!found) {
-                cards.add(otherCard);
-            }
-        }
-    }
-
     public void sync() {
         timestamp = new Timestamp(System.currentTimeMillis());
     }

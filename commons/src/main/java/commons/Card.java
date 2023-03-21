@@ -6,8 +6,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -146,55 +144,6 @@ public class Card {
      */
     public void setTags(Set<Tag> tags) {
         this.tags = tags;
-    }
-
-    public void assign(Card other) {
-        this.title = other.title;
-        this.description = other.description;
-        if (this.tags == null)
-            this.tags = new HashSet<>();
-        this.tags.clear();
-
-        if (other.tags != null)
-            this.tags.addAll(other.tags);
-
-        if (other.subTasks == null) {
-            if (this.subTasks != null) {
-                this.subTasks.clear();
-            }
-            return;
-        }
-
-        // delete all subtasks that are not in the other card
-        List<Task> tasksToRemove = new ArrayList<>();
-        for (Task task : subTasks) {
-            boolean found = false;
-            for (Task otherTask : other.subTasks) {
-                if (task.getId() == otherTask.getId()) {
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
-                tasksToRemove.add(task);
-            }
-        }
-        subTasks.removeAll(tasksToRemove);
-
-        // assign all subtasks that are in the other card
-        for (Task otherTask : other.subTasks) {
-            boolean found = false;
-            for (Task task : subTasks) {
-                if (task.getId() == otherTask.getId()) {
-                    task.assign(otherTask);
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
-                subTasks.add(otherTask);
-            }
-        }
     }
 
     @Override

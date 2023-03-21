@@ -109,11 +109,8 @@ public class CardListController {
             return ResponseEntity.badRequest().build();
         }
 
-        var storedList = stored.get();
-        storedList.sync();
-
-        storedList.assign(cardList);
-        var saved = cardListRepository.save(storedList);
+        cardList.sync();
+        var saved = cardListRepository.save(cardList);
         return ResponseEntity.ok(saved);
     }
 }

@@ -3,13 +3,11 @@ package client.scenes;
 
 import client.model.CardModel;
 import client.model.ListModel;
-import client.utils.ServerUtils;
 import commons.Card;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;

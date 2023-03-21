@@ -140,11 +140,9 @@ public class BoardController {
             log.warning("Something went wrong while updating board");
             return ResponseEntity.badRequest().build();
         }
-        var storedBoard = stored.get();
-        storedBoard.assign(board);
-        storedBoard.sync();
 
-        var saved = boardRepository.save(storedBoard);
+        board.sync();
+        var saved = boardRepository.save(board);
         return ResponseEntity.ok(saved);
     }
 }

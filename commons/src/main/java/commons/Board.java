@@ -126,54 +126,6 @@ public class Board {
         lists.add(list);
     }
 
-    public void assign(Board other) {
-        this.title = other.title;
-        if (other.lists == null) {
-            if (lists == null) return;
-            lists.clear();
-            return;
-        }
-
-        // remove all the lists that are only present in this
-        List<CardList> toRemove = new ArrayList<>();
-        for (CardList list : lists) {
-            boolean found = false;
-            for (CardList otherList : other.lists) {
-                if (list.getId() == otherList.getId()) {
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
-                toRemove.add(list);
-            }
-        }
-        lists.removeAll(toRemove);
-
-        // find all the lists that have shared id, and assign them
-        for (CardList list : lists) {
-            for (CardList otherList : other.lists) {
-                if (list.getId() == otherList.getId()) {
-                    list.assign(otherList);
-                }
-            }
-        }
-
-        // add all the lists that are only present in other
-        for (CardList otherList : other.lists) {
-            boolean found = false;
-            for (CardList list : lists) {
-                if (list.getId() == otherList.getId()) {
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
-                lists.add(otherList);
-            }
-        }
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
