@@ -6,7 +6,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import org.apache.commons.lang3.NotImplementedException;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -15,45 +17,35 @@ public class CardController implements Initializable {
 
     private CardModel card;
 
+    private ListController parent;
+
+    @FXML
+    private AnchorPane cardContainer;
+
     @FXML
     private TextField cardTitle;
 
     @SuppressWarnings("unused")
     public CardController(){}
 
-    public CardController(CardModel card){
+    public CardController(CardModel card, ListController parent){
         this.card = card;
+
+        this.parent = parent;
     }
 
     @FXML
     public void deleteCardButton(ActionEvent event) {
-        Button pressed = (Button) event.getSource();
-
-        var toDelete = pressed.getParent();
-        var listOfToDelete = (VBox) toDelete.getParent();
-
-        card.deleteCard();
-
-        listOfToDelete.getChildren().remove(toDelete);
+        deleteCard();
     }
 
-//    @FXML
-//    public void deleteCardButton(ActionEvent event) throws IOException {
-//        Button pressed = (Button) event.getSource();
-//
-//        Card toDelete =
-//
-//        VBox cardListContainer = (VBox) cardToDelete.getParent();
-//        cardListContainer.getChildren().remove(cardToDelete);
-//
-//        ServerUtils utils = new ServerUtils();
-//        //utils.deleteCardById();
-//    }
+    public void deleteCard() {
+        card.deleteCard();
+        parent.getCardsContainer().getChildren().remove(cardContainer);
+    }
 
     public void updateTitle(){
-//        card.setTitle(cardTitle.getText());
-//        ServerUtils utils = new ServerUtils();
-//        card = utils.updateCardById(card.getId(),card);
+        throw new NotImplementedException();
     }
 
     @Override

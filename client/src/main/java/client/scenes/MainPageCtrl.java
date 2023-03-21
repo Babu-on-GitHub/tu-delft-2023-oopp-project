@@ -21,6 +21,7 @@ import javafx.event.ActionEvent;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class MainPageCtrl implements Initializable {
@@ -87,59 +88,29 @@ public class MainPageCtrl implements Initializable {
 
     @FXML
     public void addListButton(ActionEvent event) throws IOException {
+        ListModel model = new ListModel(new CardList(), board);
+        addList(model); // important: keep order of these two the same
+        board.addList(model);
+    }
+
+    public void recreateChildren(List<ListModel> arr) throws IOException {
+        listOfLists.getChildren().clear();
+        for (ListModel model : arr)
+            addList(model);
+    }
+
+    public void addList(ListModel model) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("ReworkedList.fxml"));
 
-        ListModel newChild = new ListModel(new CardList(),board);
-
-        board.addList(newChild);
-
-        loader.setController(new ListController(newChild));
+        var controller = new ListController(model, this);
+        loader.setController(controller);
+        model.setController(controller);
 
         Node newList = loader.load();
         listOfLists.getChildren().add(newList);
     }
-//    @FXML
-//    public void addListButton(ActionEvent event) throws IOException {
-//        FXMLLoader loader = new FXMLLoader(getClass().getResource("List.fxml"));
-//        loader.setController(this);
-//        VBox newList = loader.load();
-//
-//        listOfLists.getChildren().add(newList);
-//    }
 
-    @FXML
-    public void addCardButton(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("Card.fxml"));
-        loader.setController(this);
-        StackPane newCard = loader.load();
-
-        Button pressed = (Button) event.getSource();
-        VBox wholeList = (VBox) pressed.getParent().getParent();
-        VBox listVbox = (VBox) ((ScrollPane) wholeList.getChildren().get(2)).getContent();
-
-        listVbox.getChildren().add(newCard);
+    public HBox getListsContainer() {
+        return listOfLists;
     }
-
-    @FXML
-    public void deleteCardButton(ActionEvent event) {
-        Button pressed = (Button) event.getSource();
-
-        StackPane toDelete = (StackPane) pressed.getParent().getParent().getParent();
-        VBox listOfToDelete = (VBox) toDelete.getParent();
-
-        listOfToDelete.getChildren().remove(toDelete);
-    }
-
-    @FXML
-    public void deleteListButton(ActionEvent event) {
-        Button pressed = (Button) event.getSource();
-
-        var toDelete = (VBox) pressed.getParent().getParent();
-        var listOfLists = (HBox) toDelete.getParent();
-
-        listOfLists.getChildren().remove(toDelete);
-    }
-
-
-
 }

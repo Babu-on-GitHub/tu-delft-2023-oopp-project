@@ -13,9 +13,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
+import org.apache.commons.lang3.NotImplementedException;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class ListController implements Initializable {
@@ -24,12 +26,15 @@ public class ListController implements Initializable {
     private VBox cardListContainer;
 
     @FXML
-    private ScrollPane scrollPane;
+    private BorderPane listContainer;
 
     @FXML
+    private ScrollPane scrollPane;
+    @FXML
     private TextField listTitle;
-
     private ListModel listModel;
+    private MainPageCtrl parent;
+
 
 
     @SuppressWarnings("unused")
@@ -39,40 +44,53 @@ public class ListController implements Initializable {
         this.listModel = cardList;
     }
 
-    public void addCardButton(ActionEvent event) throws IOException {
+    public ListController(ListModel cardList, MainPageCtrl parent) {
+        this.listModel = cardList;
+        listModel.setController(this);
+        this.parent = parent;
+    }
+
+    public void recreateChildren(ArrayList<CardModel> temp) throws IOException {
+        cardListContainer.getChildren().clear();
+        for (CardModel card : temp)
+            addCard(card);
+    }
+
+    public void addCard(CardModel model) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("ReworkedCard.fxml"));
+        var controller = new CardController(model, this);
+        model.setController(controller);
+        loader.setController(controller);
 
-        CardModel newChild = new CardModel(new Card(),listModel);
-
-        ServerUtils utils = new ServerUtils();
-
-        listModel.addCard(newChild);
-
-        loader.setController(new CardController(newChild));
         AnchorPane newCard = loader.load();
-
         cardListContainer.getChildren().add(newCard);
     }
 
+    public void addCardButton(ActionEvent event) throws IOException {
+        CardModel newCard = new CardModel(new Card(), listModel);
+        addCard(newCard); // keep this order of add card and listModel.addCard
+        listModel.addCard(newCard);
+    }
+
+
     @FXML
     public void deleteListButton(ActionEvent event) {
-        Button pressed = (Button) event.getSource();
+        deleteList();
+    }
 
-        var toDelete = pressed.getParent().getParent();
-        var listOfLists = (HBox) toDelete.getParent();
-
+    public void deleteList() {
         listModel.deleteList();
-
-        listOfLists.getChildren().remove(toDelete);
-
+        parent.getListsContainer().getChildren().remove(listContainer);
     }
 
     public void updateTitle(){
-//        cardList.setTitle(listTitle.getText());
-//        ServerUtils utils = new ServerUtils();
-//        cardList = utils.updateCardListById(cardList.getId(),cardList);
+        // not implemented
+        throw new NotImplementedException();
     }
 
+    public VBox getCardsContainer() {
+        return cardListContainer;
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

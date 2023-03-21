@@ -32,6 +32,7 @@ public class Board {
 
     /**
      * Constructor with all parameters
+     *
      * @param id
      * @param title
      * @param lists
@@ -44,6 +45,7 @@ public class Board {
 
     /**
      * Constructor without id
+     *
      * @param title
      * @param lists
      */
@@ -54,11 +56,13 @@ public class Board {
 
     /**
      * Constructor only with title
+     *
      * @param title
      */
     public Board(String title) {
         this.title = title;
         lists = new ArrayList<>();
+
     }
 
     public Timestamp getTimestamp() {

@@ -19,17 +19,13 @@ public class Card {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
     private String title;
-
     private Timestamp timestamp;
 
     private String description;
-
     @ManyToMany(cascade = CascadeType.ALL)
     @OrderColumn
     private List<Task> subTasks;
-
     @ManyToMany(cascade = CascadeType.ALL)
     private Set<Tag> tags;
 
@@ -48,14 +44,16 @@ public class Card {
 
     /**
      * Constructor with given title
+     *
      * @param title
      */
-    public Card(String title){
+    public Card(String title) {
         this.title = title;
     }
 
     /**
      * Constructor with all parameters
+     *
      * @param id
      * @param title
      * @param description

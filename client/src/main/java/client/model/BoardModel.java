@@ -7,28 +7,29 @@ import commons.CardList;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class BoardModel {
+    static Logger log = Logger.getLogger(BoardModel.class.getName());
     private Board board;
-    private List<ListModel> children;
-
+    private List<ListModel> children = new ArrayList<>();
     private MainPageCtrl controller;
 
-    private MainPageCtrl getController() {
+    public MainPageCtrl getController() {
         return controller;
     }
+
     public void setController(MainPageCtrl controller) {
         this.controller = controller;
     }
 
-    public void updateChild(CardList cardList){
-        for(int i=0;i<board.getLists().size();i++){
+    public void updateChild(CardList cardList) {
+        for (int i = 0; i < board.getLists().size(); i++) {
             var list = board.getLists().get(i);
-            if( list.getId() == cardList.getId()){
+            if (list.getId() == cardList.getId()) {
                 board.getLists().set(i, cardList);
             }
         }
-        this.update();
     }
 
     public BoardModel(Board board) {
@@ -51,59 +52,156 @@ public class BoardModel {
         this.children = children;
     }
 
-    public void addList(ListModel listModel){
+    public void addList(ListModel listModel) {
         if (this.getChildren() == null) {
             this.setChildren(new ArrayList<>());
         }
-        if(board.getLists() == null){
+        if (board.getLists() == null) {
             board.setLists(new ArrayList<>());
         }
 
-        listModel.update();
+        var newList = listModel.getCardList();
+        ServerUtils utils = new ServerUtils();
+        var req = utils.addCardList(newList, board);
+        if (req.isEmpty()) {
+            log.warning("Adding new list failed");
+            return;
+        }
+        newList = req.get();
+        listModel.setCardList(newList);
 
-        board.getLists().add(listModel.getCardList());
-
+        board.add(newList);
         children.add(listModel);
 
-        this.update();
+        update();
+        quietTest();
     }
 
-    public void deleteList(ListModel listModel){
+    public void deleteList(ListModel listModel) {
+        ServerUtils utils = new ServerUtils();
         long id = listModel.getCardList().getId();
-        for(int i = 0; i<board.getLists().size(); i++){
+        for (int i = 0; i < board.getLists().size(); i++) {
             CardList list = board.getLists().get(i);
-            if(list.getId()==id){
+            if (list.getId() == id) {
                 board.getLists().remove(list);
-                //utils.deleteCardListById(list.getId());
             }
         }
         children.remove(listModel);
 
-        this.update();
+        utils.deleteCardListById(id, board.getId());
+
+        quietTest();
     }
 
-    public void update(){
-        var utils = new ServerUtils();
-        if(board.getId() == 0 ) {
-            var res = utils.addBoard(board);
-            if(!res.isEmpty()) {
-                board = res.get();
+    public boolean update() {
+        ServerUtils utils = new ServerUtils();
+        var res = utils.getBoardById(board.getId());
+        if (res.isEmpty()) {
+            log.info("Adding new board..");
+            var req = utils.addBoard(board);
+            if (req.isEmpty()) {
+                log.warning("BoardModel update failed");
+                return false;
             }
+            board = req.get();
+
+            updateChildren();
+            return false;
         }
-        else board = utils.updateBoardById(board.getId(), board).get();
-        this.updateChildren();
+
+        var serverBoard = res.get();
+
+        if (serverBoard.equals(board))
+            return false;
+
+        var serverTimestamp = serverBoard.getTimestamp();
+        var localTimestamp = board.getTimestamp();
+
+        if (serverTimestamp.after(localTimestamp)) {
+            log.info("Server-side board is newer, overwriting local");
+            board = serverBoard;
+            updateChildren();
+
+            return true;
+        }
+
+        log.info("Overwriting server-side board..");
+
+        var newBoard = utils.updateBoardById(board.getId(), board);
+        if (newBoard.isEmpty()) {
+            log.warning("BoardModel update failed");
+            return false;
+        }
+
+        return false;
     }
 
+    public void updateChildren() {
+        if (board.getLists() == null) return;
 
-    public void updateChildren(){
-        if(board.getLists()==null||children==null) return;
-        for(var list: board.getLists()){
-            for(var child: children){
-                if(child.getCardList().getId() == list.getId()){
-                    child.setCardList(list);
-                    child.updateChildren();
-                }
-            }
+        if (tryToUpdateChildrenNaively()) return;
+
+        log.info("Naive update failed, rebuilding fully..");
+
+        var temp = new ArrayList<ListModel>();
+        for (int i = 0; i < board.getLists().size(); i++)
+            temp.add(null);
+
+        for (int i = 0; i < board.getLists().size(); i++) {
+            var model = new ListModel(board.getLists().get(i), this);
+            temp.set(i, model);
         }
+
+        children = temp;
+        try {
+            controller.recreateChildren(temp);
+        } catch (Exception e) {
+            log.warning("Problems during board children recreation..");
+        }
+
+        for (ListModel child : children)
+            child.updateChildren();
+
+        quietTest();
+    }
+
+    public boolean tryToUpdateChildrenNaively() {
+        if (board == null || board.getLists() == null) return false;
+        if (board.getLists().size() != children.size()) return false;
+
+        for (int i = 0; i < board.getLists().size(); i++) {
+            var list = board.getLists().get(i);
+            var child = children.get(i);
+
+            if (list.getId() != child.getCardList().getId()) return false;
+        }
+
+        for (int i = 0; i < board.getLists().size(); i++) {
+            var list = board.getLists().get(i);
+            var child = children.get(i);
+
+            child.setCardList(list);
+            child.updateChildren();
+        }
+
+        return true;
+    }
+
+    private boolean coherencyTest() {
+        if (board.getLists() == null && children == null) return true;
+        if (board.getLists() == null || children == null) return false;
+        if (board.getLists().size() != children.size()) return false;
+        for (int i = 0; i < board.getLists().size(); i++) {
+            var first = board.getLists().get(i);
+            var second = children.get(i).getCardList();
+            if (first != second) return false;
+        }
+        return true;
+    }
+
+    public void quietTest() {
+        var isCoherent = coherencyTest();
+        if (!isCoherent)
+            log.severe("BoardModel is not coherent");
     }
 }

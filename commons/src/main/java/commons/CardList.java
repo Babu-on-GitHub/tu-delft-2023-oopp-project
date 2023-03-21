@@ -21,7 +21,6 @@ public class CardList {
 
     private Timestamp timestamp;
     private String title;
-
     @ManyToMany(cascade = CascadeType.ALL)
     @OrderColumn
     private List<Card> cards;
@@ -31,12 +30,13 @@ public class CardList {
     }
 
     @SuppressWarnings("unused")
-    public CardList(){
+    public CardList() {
         this.cards = new ArrayList<>();
     }
 
     /**
      * Constructor with all parameters
+     *
      * @param id
      * @param title
      * @param cards
@@ -49,6 +49,7 @@ public class CardList {
 
     /**
      * Constructor without id
+     *
      * @param title
      * @param cards
      */
@@ -59,6 +60,7 @@ public class CardList {
 
     /**
      * Constructor only with title
+     *
      * @param title
      */
     public CardList(String title) {
@@ -120,6 +122,7 @@ public class CardList {
         cards.add(card);
     }
 
+
     public void assign(CardList other) {
         this.title = other.title;
         if (other.cards == null) {
@@ -164,7 +167,6 @@ public class CardList {
     public void sync() {
         timestamp = new Timestamp(System.currentTimeMillis());
     }
-
 
     @Override
     public boolean equals(Object o) {
