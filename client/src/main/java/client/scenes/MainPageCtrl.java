@@ -6,28 +6,29 @@ import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Board;
 import commons.CardList;
-import jakarta.ws.rs.BadRequestException;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 
 import javafx.event.ActionEvent;
+import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 
 public class MainPageCtrl implements Initializable {
+
+    static Logger log = Logger.getLogger(MainPageCtrl.class.getName());
 
     private final ServerUtils server;
 
@@ -37,7 +38,7 @@ public class MainPageCtrl implements Initializable {
     private TextField boardName;
 
     @FXML
-    private HBox listOfLists;
+    private HBox cardListsContainer;
 
     @FXML
     private ScrollPane boardScrollPane;
@@ -53,7 +54,7 @@ public class MainPageCtrl implements Initializable {
     private ScrollPane boardListScrollPane;
 
     @FXML
-    private VBox listOfBoards;
+    private VBox boardsListContainer;
 
 
 
@@ -61,6 +62,7 @@ public class MainPageCtrl implements Initializable {
     public MainPageCtrl(ServerUtils server, MainCtrl mainCtrl) {
         this.server = server;
         this.mainCtrl = mainCtrl;
+        boardList = new ArrayList<>();
     }
 
     @Override
@@ -69,35 +71,32 @@ public class MainPageCtrl implements Initializable {
 
         //This makes the lists to fill the entire height of their parent
         boardScrollPane.setFitToHeight(true);
-        listOfLists.setSpacing(20);
+        cardListsContainer.setSpacing(20);
 
-        if(board == null){
-            try {
-                board = new BoardModel( server.getBoardById(1L));
-            }catch(BadRequestException e){
-                Board toAdd = new Board();
-                toAdd = server.addBoard(toAdd);
-                board = new BoardModel(toAdd);
-            }
+        initializeBoards();
 
-        }
+        board.setController(this);
+        board.update();
+        board.updateChildren();
 
         //makes board overview resize correctly
         splitPane.setResizableWithParent(boardListScrollPane.getParent(), false);
 
-        //makes the boards fill the width of the board list
+        //makes the boards fill width of the board list
         boardListScrollPane.setFitToWidth(true);
 
         try {
             showAllBoards();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.warning("Something went wrong when showing existing boards");
         }
 
     }
 
     public void refresh() {
-        // do nothing
+        board.update();
+        //TODO: sockets
+        board.updateChildren();
     }
 
     @FXML
@@ -107,91 +106,93 @@ public class MainPageCtrl implements Initializable {
 
     @FXML
     public void addListButton(ActionEvent event) throws IOException {
+        ListModel model = new ListModel(new CardList(), board);
+        addList(model); // important: keep order of these two the same
+        board.addList(model);
+    }
+
+    public void recreateChildren(List<ListModel> arr) throws IOException {
+        cardListsContainer.getChildren().clear();
+        for (ListModel model : arr)
+            addList(model);
+    }
+
+    public void addList(ListModel model) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("ReworkedList.fxml"));
 
-        ListModel newChild = new ListModel(new CardList(),board);
-
-        board.addList(newChild);
-
-        loader.setController(new ListController(newChild));
+        var controller = new ListController(model, this);
+        loader.setController(controller);
+        model.setController(controller);
 
         Node newList = loader.load();
-        listOfLists.getChildren().add(newList);
-    }
-//    @FXML
-//    public void addListButton(ActionEvent event) throws IOException {
-//        FXMLLoader loader = new FXMLLoader(getClass().getResource("List.fxml"));
-//        loader.setController(this);
-//        VBox newList = loader.load();
-//
-//        listOfLists.getChildren().add(newList);
-//    }
-
-    @FXML
-    public void addCardButton(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("Card.fxml"));
-        loader.setController(this);
-        StackPane newCard = loader.load();
-
-        Button pressed = (Button) event.getSource();
-        VBox wholeList = (VBox) pressed.getParent().getParent();
-        VBox listVbox = (VBox) ((ScrollPane) wholeList.getChildren().get(2)).getContent();
-
-        listVbox.getChildren().add(newCard);
+        cardListsContainer.getChildren().add(newList);
     }
 
-    @FXML
-    public void deleteCardButton(ActionEvent event) {
-        Button pressed = (Button) event.getSource();
-
-        StackPane toDelete = (StackPane) pressed.getParent().getParent().getParent();
-        VBox listOfToDelete = (VBox) toDelete.getParent();
-
-        listOfToDelete.getChildren().remove(toDelete);
+    public HBox getListsContainer() {
+        return cardListsContainer;
     }
 
-    @FXML
-    public void deleteListButton(ActionEvent event) {
-        Button pressed = (Button) event.getSource();
-
-        var toDelete = (VBox) pressed.getParent().getParent();
-        var listOfLists = (HBox) toDelete.getParent();
-
-        listOfLists.getChildren().remove(toDelete);
+    public void setBoardOverview(Board board) {
+        this.board = new BoardModel(board);
+        cardListsContainer.getChildren().clear();
+        this.board.setController(this);
+        this.board.update();
+        this.board.updateChildren();
     }
 
-
-
-    public void setBoardOverview(BoardModel boardModel) {
-        this.board = boardModel;
-        //TODO clear overview and show new board
+    public void initializeBoards(){
+        ServerUtils utils = new ServerUtils();
+        if(board == null) {
+            var res = server.getBoardById(1);
+            if (res.isPresent()) {
+                board = new BoardModel(res.get());
+                board.setController(this);
+            }
+            else {
+                Board toAdd = new Board();
+                var added = server.addBoard(toAdd);
+                if (added.isEmpty())
+                    throw new RuntimeException("Server Request failed");
+                board = new BoardModel(added.get());
+            }
+        }
+        var newBoardList = utils.getBoards();
+        if(newBoardList.isEmpty()){
+            boardList.add(board.getBoard());
+        }else{
+            boardList = newBoardList.get();
+        }
     }
 
     public void showAllBoards() throws IOException {
         ServerUtils utils = new ServerUtils();
-        boardList = utils.getBoards(); //this will be changed to fetching the boards of the users.
+
         for(var newBoard : boardList){
-            var newModel = new BoardModel(newBoard);
-            addBoardListItemToList(newModel);
+            addBoardListItemToList(newBoard);
         }
 
     }
 
-    public void addBoardListItemToList(BoardModel model) throws IOException {
+    public void addBoardListItemToList(Board board) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("BoardsListItem.fxml"));
 
-        loader.setController(new BoardsListItemCtrl(model, this));
+        loader.setController(new BoardsListItemCtrl(board, this));
 
         AnchorPane toAdd = loader.load();
 
-        listOfBoards.getChildren().add(toAdd);
+        boardsListContainer.getChildren().add(toAdd);
     }
 
     @FXML
     public void addBoardButton(ActionEvent event) throws IOException {
-        BoardModel newBoardModel = new BoardModel(new Board());
-        newBoardModel.update();
-        addBoardListItemToList(newBoardModel);
+        ServerUtils utils = new ServerUtils();
+        Board board = new Board();
+        var added = utils.addBoard(board);
+        if(added.isEmpty()){
+            log.warning("Failed to add new board to server");
+            return;
+        }
+        addBoardListItemToList(added.get());
     }
 
 }

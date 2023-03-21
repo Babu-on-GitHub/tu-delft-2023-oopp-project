@@ -19,6 +19,7 @@ import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 
@@ -104,64 +105,137 @@ public class ServerUtils {
         }
     }
 
-    public List<Card> getCards() {
-        return get("api/card", new GenericType<>() {});
+    public Optional<List<Card>> getCards() {
+        try {
+            return Optional.of(get("api/card", new GenericType<>() {
+            }));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 
-    public Card getCardById(long id){
-        return get("api/card/"+id, new GenericType<>(){});
+    public Optional<Card> getCardById(long id){
+        try {
+            return Optional.of(get("api/card/" + id, new GenericType<>() {
+            }));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 
-    public Card addCard(Card card) {
-        return post("api/card/add", card, new GenericType<>() {});
+    public Optional<Card> addCard(Card card, CardList list) {
+        try {
+            return Optional.of(post("api/list/add/" + list.getId(), card, new GenericType<>() {
+            }));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 
-    public boolean deleteCardById(long id) {
-        return delete("api/card/delete/" + id, new GenericType<>() {});
+    public Optional<Boolean> deleteCardById(long cardId, long listId) {
+        try {
+            return Optional.of(delete("api/list/delete/" + cardId + "/from/" + listId, new GenericType<>() {
+            }));
+        } catch (Exception e) {
+            return Optional.empty();
+        }    }
+
+    public Optional<Card> updateCardById(long id, Card card) {
+        try {
+            return Optional.of(put("api/card/update/" + id, card, new GenericType<>() {
+            }));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 
-    public Card updateCardById(long id, Card card) {
-        return put("api/card/update/" + id, card, new GenericType<>() {});
+    public Optional<List<CardList>> getCardLists() {
+        try {
+            return Optional.of(get("api/list", new GenericType<>() {
+            }));
+        } catch (Exception e) {
+            return Optional.empty();
+        }    }
+
+    public Optional<CardList> getCardListById(long id){
+        try {
+            return Optional.of(get("api/list/" + id, new GenericType<>() {
+            }));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 
-    public List<CardList> getCardLists() {
-        return get("api/list", new GenericType<>() {});
+    public Optional<CardList> addCardList(CardList list, Board board) {
+        try {
+            return Optional.of(post("api/board/add/" + board.getId(), list, new GenericType<>() {
+            }));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 
-    public CardList getCardListById(long id){
-        return get("api/list/"+id, new GenericType<>(){});
+    public Optional<Boolean> deleteCardListById(long listId, long boardId) {
+        try {
+            return Optional.of(delete("api/board/delete/" + listId + "/from/" + boardId, new GenericType<>() {
+            }));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 
-    public CardList addCardList(CardList list) {
-        return post("api/list/add", list, new GenericType<>() {});
+    public Optional<CardList> updateCardListById(long id, CardList list) {
+        try {
+            return Optional.of(put("api/list/update/" + id, list, new GenericType<>() {
+            }));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 
-    public boolean deleteCardListById(long id) {
-        return delete("api/list/remove/" + id, new GenericType<>() {});
+    public Optional<List<Board>> getBoards() {
+        try {
+            return Optional.of(get("api/board", new GenericType<>() {
+            }));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 
-    public CardList updateCardListById(long id, CardList list) {
-        return put("api/list/update/" + id, list, new GenericType<>() {});
+    public Optional<Board> getBoardById(long id) {
+        try {
+            return Optional.of(get("api/board/" + id, new GenericType<>() {
+            }));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 
-    public List<Board> getBoards() {
-        return get("api/board", new GenericType<>() {});
+    public Optional<Board> addBoard(Board board) {
+        try {
+            return Optional.of(post("api/board/create", board, new GenericType<>() {
+            }));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 
-    public Board getBoardById(long id){
-        return get("api/board/"+id, new GenericType<>(){});
+    public Optional<Boolean> deleteBoardById(long id) {
+        try {
+            return Optional.of(delete("api/board/delete/" + id, new GenericType<>() {
+            }));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 
-    public Board addBoard(Board board) {
-        return post("api/board/add", board, new GenericType<>() {});
-    }
-
-    public boolean deleteBoardById(long id) {
-        return delete("api/board/delete/" + id, new GenericType<>() {});
-    }
-
-    public Board updateBoardById(long id, Board board) {
-        return put("api/board/update/" + id, board, new GenericType<>() {});
+    public Optional<Board> updateBoardById(long id, Board board) {
+        try {
+            return Optional.of(put("api/board/update/" + id, board, new GenericType<>() {
+            }));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 
     private  StompSession session;

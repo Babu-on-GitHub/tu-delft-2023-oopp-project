@@ -33,7 +33,7 @@
                      <children>
                         <ScrollPane fx:id="boardListScrollPane" layoutY="65.0" prefHeight="532.0" prefWidth="268.0" AnchorPane.bottomAnchor="65.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="65.0">
                            <content>
-                              <VBox fx:id="listOfBoards" />
+                              <VBox fx:id="boardsListContainer" />
                            </content>
                         </ScrollPane>
                         <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#addBoardButton" prefHeight="25.0" prefWidth="154.0" text="Add Board" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="14.0" />
@@ -42,7 +42,7 @@
                   </AnchorPane>
                   <ScrollPane fx:id="boardScrollPane" prefHeight="652.0" prefWidth="216.0">
                      <content>
-                        <HBox id="list_container" fx:id="listOfLists" stylesheets="@main_styles.css" />
+                        <HBox id="list_container" fx:id="cardListsContainer" stylesheets="@main_styles.css" />
                      </content>
                   </ScrollPane>
                </items>

@@ -1,6 +1,7 @@
 package client.scenes;
 
 import client.model.BoardModel;
+import commons.Board;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.layout.VBox;
@@ -11,16 +12,15 @@ public class BoardsListItemCtrl {
 
     private MainPageCtrl mainPageCtrl;
 
-    private BoardModel boardModel;
+    private Board board;
 
-    public BoardsListItemCtrl(BoardModel boardModel,MainPageCtrl mainPageCtrl) {
+    public BoardsListItemCtrl(Board board,MainPageCtrl mainPageCtrl) {
         this.mainPageCtrl = mainPageCtrl;
-        this.boardModel = boardModel;
+        this.board = board;
     }
 
-    @FXML
-    public void setBoardButton(ActionEvent event){
-        mainPageCtrl.setBoardOverview(boardModel);
+    public void setBoardButton(){
+        mainPageCtrl.setBoardOverview(board);
     }
 
 }
