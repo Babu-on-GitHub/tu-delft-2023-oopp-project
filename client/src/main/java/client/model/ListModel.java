@@ -1,6 +1,5 @@
 package client.model;
 
-import client.scenes.ListController;
 import client.utils.ServerUtils;
 import commons.Card;
 import commons.CardList;
@@ -13,27 +12,9 @@ public class ListModel {
     private BoardModel parent;
     private List<CardModel> children;
 
-    private ListController controller;
-
     public ListModel(CardList cardList, BoardModel parent) {
         this.cardList = cardList;
         this.parent = parent;
-    }
-
-    /**
-     * Getter for controller
-     */
-    public ListController getController() {
-        return controller;
-    }
-
-    /**
-     * Setter for controller
-     *
-     * @param controller Value for controller
-     */
-    public void setController(ListController controller) {
-        this.controller = controller;
     }
 
     public CardList getCardList() {
@@ -125,5 +106,4 @@ public class ListModel {
         this.update();
         parent.updateChild(this.getCardList());
     }
-
 }

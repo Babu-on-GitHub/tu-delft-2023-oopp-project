@@ -22,7 +22,6 @@ import javafx.event.ActionEvent;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
 
 public class MainPageCtrl implements Initializable {
@@ -40,28 +39,6 @@ public class MainPageCtrl implements Initializable {
     @FXML
     private ScrollPane boardScrollPane;
 
-    @FXML VBox boardListContainer;
-
-    @FXML ScrollPane boardListScrollPane;
-
-    private List<Board> boardList;
-
-    /**
-     * Getter for board
-     */
-    public BoardModel getBoard() {
-        return board;
-    }
-
-    /**
-     * Setter for board
-     *
-     * @param board Value for board
-     */
-    public void setBoard(BoardModel board) {
-        this.board = board;
-    }
-
     private BoardModel board;
 
 
@@ -77,32 +54,24 @@ public class MainPageCtrl implements Initializable {
 
         //This makes the lists to fill the entire height of their parent
         boardScrollPane.setFitToHeight(true);
-        listOfLists.setSpacing(15);
+        listOfLists.setSpacing(20);
 
-        boardListContainer.setSpacing(10);
-        boardListScrollPane.setFitToWidth(true);
+        if(board == null){
+            try {
+                board = new BoardModel( server.getBoardById(1L));
+            }catch(BadRequestException e){
+                Board toAdd = new Board();
+                toAdd = server.addBoard(toAdd);
+                board = new BoardModel(toAdd);
+            }
 
-    }
+        }
 
-    public void recreateChildren(List<ListModel> arr) throws IOException {
-        clearBoard();
-        for (ListModel model : arr)
-            addList(model);
-    }
-
-    public void addList(ListModel model) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("ReworkedList.fxml"));
-
-        var controller = new ListController(model, this);
-        loader.setController(controller);
-        model.setController(controller);
-
-        Node newList = loader.load();
-        listOfLists.getChildren().add(newList);
-    }
-
-    private void clearBoard(){
-        listOfLists.getChildren().clear();
+//        deleteListButton.setGraphic(new FontIcon(Feather.TRASH));
+//        deleteCardButton.setGraphic(new FontIcon(Feather.TRASH));
+//
+//        addCardButton.setGraphic(new FontIcon(Feather.PLUS));
+//        addListButton.setGraphic(new FontIcon(Feather.PLUS));
     }
 
     public void refresh() {
@@ -116,16 +85,25 @@ public class MainPageCtrl implements Initializable {
 
     @FXML
     public void addListButton(ActionEvent event) throws IOException {
-        ListModel model = new ListModel(new CardList(), board);
-        addList(model); // important: keep order of these two the same
-        board.addList(model);
-    }
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("ReworkedList.fxml"));
 
-    @FXML
-    public void addBoardButton(ActionEvent event) {
-        //do nothing
-    }
+        ListModel newChild = new ListModel(new CardList(),board);
 
+        board.addList(newChild);
+
+        loader.setController(new ListController(newChild));
+
+        Node newList = loader.load();
+        listOfLists.getChildren().add(newList);
+    }
+//    @FXML
+//    public void addListButton(ActionEvent event) throws IOException {
+//        FXMLLoader loader = new FXMLLoader(getClass().getResource("List.fxml"));
+//        loader.setController(this);
+//        VBox newList = loader.load();
+//
+//        listOfLists.getChildren().add(newList);
+//    }
 
     @FXML
     public void addCardButton(ActionEvent event) throws IOException {
