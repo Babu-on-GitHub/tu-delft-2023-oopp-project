@@ -13,7 +13,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -22,6 +24,7 @@ import javafx.event.ActionEvent;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class MainPageCtrl implements Initializable {
@@ -40,6 +43,18 @@ public class MainPageCtrl implements Initializable {
     private ScrollPane boardScrollPane;
 
     private BoardModel board;
+
+    private List<Board> boardList;
+
+    @FXML
+    private SplitPane splitPane;
+
+    @FXML
+    private ScrollPane boardListScrollPane;
+
+    @FXML
+    private VBox listOfBoards;
+
 
 
     @Inject
@@ -67,11 +82,18 @@ public class MainPageCtrl implements Initializable {
 
         }
 
-//        deleteListButton.setGraphic(new FontIcon(Feather.TRASH));
-//        deleteCardButton.setGraphic(new FontIcon(Feather.TRASH));
-//
-//        addCardButton.setGraphic(new FontIcon(Feather.PLUS));
-//        addListButton.setGraphic(new FontIcon(Feather.PLUS));
+        //makes board overview resize correctly
+        splitPane.setResizableWithParent(boardListScrollPane.getParent(), false);
+
+        //makes the boards fill the width of the board list
+        boardListScrollPane.setFitToWidth(true);
+
+        try {
+            showAllBoards();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public void refresh() {
@@ -139,5 +161,37 @@ public class MainPageCtrl implements Initializable {
     }
 
 
+
+    public void setBoardOverview(BoardModel boardModel) {
+        this.board = boardModel;
+        //TODO clear overview and show new board
+    }
+
+    public void showAllBoards() throws IOException {
+        ServerUtils utils = new ServerUtils();
+        boardList = utils.getBoards(); //this will be changed to fetching the boards of the users.
+        for(var newBoard : boardList){
+            var newModel = new BoardModel(newBoard);
+            addBoardListItemToList(newModel);
+        }
+
+    }
+
+    public void addBoardListItemToList(BoardModel model) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("BoardsListItem.fxml"));
+
+        loader.setController(new BoardsListItemCtrl(model, this));
+
+        AnchorPane toAdd = loader.load();
+
+        listOfBoards.getChildren().add(toAdd);
+    }
+
+    @FXML
+    public void addBoardButton(ActionEvent event) throws IOException {
+        BoardModel newBoardModel = new BoardModel(new Board());
+        newBoardModel.update();
+        addBoardListItemToList(newBoardModel);
+    }
 
 }
