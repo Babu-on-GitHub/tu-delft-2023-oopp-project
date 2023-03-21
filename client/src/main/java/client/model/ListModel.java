@@ -66,20 +66,19 @@ public class ListModel {
         }
         var newCard = cardModel.getCard();
 
-        var req = utils.addCard(newCard);
-        if (req == null) {
+        var req = utils.addCard(newCard, cardList);
+        if (req.isEmpty()) {
             log.warning("Failed to add card to server");
             return;
         }
 
-        newCard = utils.getCardById(req.getId());
+        newCard = req.get();
         cardModel.setCard(newCard);
 
         cardList.add(newCard);
         children.add(cardModel);
 
-        if (update())
-            log.warning("Repeatedly adding card, since server overwrote local");
+        update();
         quietTest();
     }
 
@@ -103,7 +102,7 @@ public class ListModel {
 
         children.remove(cardModel);
 
-        utils.deleteCardById(id);
+        utils.deleteCardById(id, cardList.getId());
 
         if (update()) {
             log.warning("Repeatedly deleting card, since server overwrote local");
@@ -115,36 +114,49 @@ public class ListModel {
     public boolean update() {
         ServerUtils utils = new ServerUtils();
         var res = utils.getCardListById(cardList.getId());
-        if (res == null) {
+        if (res.isEmpty()) {
             log.info("Adding new card list..");
-            var newCardList = utils.addCardList(cardList);
-            if (newCardList == null) {
+            var newCardList = utils.addCardList(cardList, parent.getBoard());
+            if (newCardList.isEmpty()) {
                 log.warning("Failed to add card list");
                 return false;
             }
 
-            cardList = utils.getCardListById(newCardList.getId());
+            cardList = newCardList.get();
 
             updateChildren();
             parent.updateChild(cardList);
             return false;
         }
 
-        if (utils.getCardListById(cardList.getId()).equals(cardList)) return false;
+        var fetchedCardList = res.get();
+
+        if (fetchedCardList.equals(cardList)) return false;
+
+        var serverTimestamp = fetchedCardList.getTimestamp();
+        var localTimestamp = cardList.getTimestamp();
+
+        if (serverTimestamp.after(localTimestamp)) {
+            log.info("Server timestamp is newer, overwriting local list");
+            cardList = fetchedCardList;
+
+            updateChildren();
+            parent.updateChild(cardList);
+            return true;
+        }
 
         log.info("Overwriting server-stored list...");
 
-        var newCardList = utils.updateCardListById(cardList.getId(), cardList);
-        if (newCardList == null) {
+        var updatedCardList = utils.updateCardListById(cardList.getId(), cardList);
+        if (updatedCardList.isEmpty()) {
             log.warning("Failed to update, trying to revert");
             return false;
         }
 
-        cardList = utils.getCardListById(newCardList.getId());
+        cardList = updatedCardList.get();
 
         updateChildren();
         parent.updateChild(this.getCardList());
-
         return false;
     }
 

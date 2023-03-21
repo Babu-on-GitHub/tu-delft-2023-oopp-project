@@ -18,6 +18,8 @@ public class Card {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String title;
+    private Timestamp timestamp;
+
     private String description;
     @ManyToMany(cascade = CascadeType.ALL)
     @OrderColumn
@@ -25,8 +27,14 @@ public class Card {
     @ManyToMany(cascade = CascadeType.ALL)
     private Set<Tag> tags;
 
-//    @ManyToOne
-//    CardList cardList;
+
+    public Timestamp getTimestamp() {
+        return timestamp;
+    }
+
+    public void sync() {
+        this.timestamp = new Timestamp(System.currentTimeMillis());
+    }
 
     @SuppressWarnings("unused")
     public Card() {
@@ -34,14 +42,16 @@ public class Card {
 
     /**
      * Constructor with given title
+     *
      * @param title
      */
-    public Card(String title){
+    public Card(String title) {
         this.title = title;
     }
 
     /**
      * Constructor with all parameters
+     *
      * @param id
      * @param title
      * @param description

@@ -23,7 +23,6 @@ public class BoardModel {
         this.controller = controller;
     }
 
-
     public void updateChild(CardList cardList) {
         for (int i = 0; i < board.getLists().size(); i++) {
             var list = board.getLists().get(i);
@@ -53,29 +52,32 @@ public class BoardModel {
         this.children = children;
     }
 
-    public void addList(ListModel listModel){
+    public void addList(ListModel listModel) {
         if (this.getChildren() == null) {
             this.setChildren(new ArrayList<>());
         }
-        if(board.getLists() == null){
+        if (board.getLists() == null) {
             board.setLists(new ArrayList<>());
         }
 
         var newList = listModel.getCardList();
         ServerUtils utils = new ServerUtils();
-        newList = utils.addCardList(newList);
-
+        var req = utils.addCardList(newList, board);
+        if (req.isEmpty()) {
+            log.warning("Adding new list failed");
+            return;
+        }
+        newList = req.get();
         listModel.setCardList(newList);
 
         board.add(newList);
         children.add(listModel);
 
-        if (update())
-            log.warning("BoardModel was overriden by server");
+        update();
         quietTest();
     }
 
-    public void deleteList(ListModel listModel){
+    public void deleteList(ListModel listModel) {
         ServerUtils utils = new ServerUtils();
         long id = listModel.getCardList().getId();
         for (int i = 0; i < board.getLists().size(); i++) {
@@ -86,11 +88,7 @@ public class BoardModel {
         }
         children.remove(listModel);
 
-        utils.deleteCardListById(id);
-
-        if (update()) {
-            log.warning("BoardModel was overriden by server");
-        }
+        utils.deleteCardListById(id, board.getId());
 
         quietTest();
     }
@@ -98,30 +96,42 @@ public class BoardModel {
     public boolean update() {
         ServerUtils utils = new ServerUtils();
         var res = utils.getBoardById(board.getId());
-        if (res == null) {
+        if (res.isEmpty()) {
             log.info("Adding new board..");
-            var newBoard = utils.addBoard(board);
-            if (newBoard == null) {
+            var req = utils.addBoard(board);
+            if (req.isEmpty()) {
                 log.warning("BoardModel update failed");
                 return false;
             }
-            board = utils.getBoardById(newBoard.getId());
+            board = req.get();
 
             updateChildren();
             return false;
         }
 
-        if (res.equals(board))
+        var serverBoard = res.get();
+
+        if (serverBoard.equals(board))
             return false;
 
+        var serverTimestamp = serverBoard.getTimestamp();
+        var localTimestamp = board.getTimestamp();
+
+        if (serverTimestamp.after(localTimestamp)) {
+            log.info("Server-side board is newer, overwriting local");
+            board = serverBoard;
+            updateChildren();
+
+            return true;
+        }
+
+        log.info("Overwriting server-side board..");
+
         var newBoard = utils.updateBoardById(board.getId(), board);
-        if (newBoard == null) {
+        if (newBoard.isEmpty()) {
             log.warning("BoardModel update failed");
             return false;
         }
-
-        board = utils.getBoardById(newBoard.getId());
-        updateChildren();
 
         return false;
     }
@@ -145,8 +155,7 @@ public class BoardModel {
         children = temp;
         try {
             controller.recreateChildren(temp);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             log.warning("Problems during board children recreation..");
         }
 

@@ -41,31 +41,32 @@ public class CardModel {
     public void update(){
         ServerUtils utils = new ServerUtils();
         var res = utils.getCardById(card.getId());
-        if (res == null) {
+        if (res.isEmpty()) {
             log.info("Adding new card..");
 
-            var newCard = utils.addCard(card);
-            if (newCard == null) {
+            var newCardOpt = utils.addCard(card, parent.getCardList());
+            if (newCardOpt.isEmpty()) {
                 log.warning("Failed to add card");
                 return;
             }
-
-            card = utils.getCardById(newCard.getId());
+            var newCard = newCardOpt.get();
+            card = newCard;
 
             parent.updateChild(card);
             return;
         }
 
-        if (utils.getCardById(card.getId()).equals(card))
+        var fetchedCard = res.get();
+
+        if (fetchedCard.equals(card))
             return;
 
         var newCard = utils.updateCardById(card.getId(), card);
-        if (newCard == null) {
+        if (newCard.isEmpty()) {
             log.warning("Failed to update card");
             return;
         }
-
-        card = utils.getCardById(newCard.getId());
+        card = newCard.get();
 
         this.updateChildren();
         parent.updateChild(this.getCard());

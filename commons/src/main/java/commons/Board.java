@@ -5,6 +5,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +17,8 @@ public class Board {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
+    private Timestamp timestamp;
 
     private String title;
 
@@ -29,6 +32,7 @@ public class Board {
 
     /**
      * Constructor with all parameters
+     *
      * @param id
      * @param title
      * @param lists
@@ -41,6 +45,7 @@ public class Board {
 
     /**
      * Constructor without id
+     *
      * @param title
      * @param lists
      */
@@ -51,6 +56,7 @@ public class Board {
 
     /**
      * Constructor only with title
+     *
      * @param title
      */
     public Board(String title) {
@@ -59,8 +65,12 @@ public class Board {
 
     }
 
-    public void add(CardList list) {
-        lists.add(list);
+    public Timestamp getTimestamp() {
+        return timestamp;
+    }
+
+    public void sync() {
+        this.timestamp = new Timestamp(System.currentTimeMillis());
     }
 
     /**
@@ -109,6 +119,11 @@ public class Board {
      */
     public void setLists(List<CardList> lists) {
         this.lists = lists;
+    }
+
+
+    public void add(CardList list) {
+        lists.add(list);
     }
 
     @Override
