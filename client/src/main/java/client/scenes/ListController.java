@@ -115,9 +115,6 @@ public class ListController implements Initializable {
 
     @FXML
     void dragOver(DragEvent event) {
-
-        System.out.println("card chosen: " + whichIndexToDropIn(event.getSceneY()));
-
         if (event.getGestureSource() != cardListContainer && event.getDragboard().hasContent(CARD)) {
             event.acceptTransferModes(TransferMode.MOVE);
         }
@@ -131,18 +128,29 @@ public class ListController implements Initializable {
             var card = (Card) dragboard.getContent(CARD);
             var model = new CardModel(card, listModel);
 
-            insertCard(model, whichIndexToDropIn(event.getSceneY()));
+            if (listModel.getCardList().getCards().contains(card)) {
+                dragboard.setContent(null);
+                var oldIndex = listModel.getCardList().getCards().indexOf(card);
+                var newIndex = whichIndexToDropIn(event.getSceneY());
+                if (oldIndex == newIndex)
+                    return;
+                if (oldIndex < newIndex)
+                    newIndex--;
 
-            listModel.insertCard(model, whichIndexToDropIn(event.getSceneY()));
+                listModel.moveCard(oldIndex, newIndex);
+                return;
+            }
+
+            var index = whichIndexToDropIn(event.getSceneY());
+            insertCard(model, index);
+            listModel.insertCard(model, index);
         }
-        event.setDropCompleted(true);
 
         event.consume();
     }
 
     @FXML
-    void dragDone(DragEvent event) {
-
+    void dragDone(DragEvent event) throws IOException {
     }
 
     @FXML

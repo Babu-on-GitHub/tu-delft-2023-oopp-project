@@ -64,7 +64,7 @@ public class CardListController {
         return ResponseEntity.ok(res);
     }
 
-    @PostMapping(path = "/insert/{listId}/at/{index}")
+    @PostMapping(path = "/insert/{listId}/to/{index}")
     public ResponseEntity<Card> insert(@PathVariable("listId") long listId,
                                        @PathVariable("index") int index, @RequestBody Card card) {
         var listOptional = cardListRepository.findById(listId);
