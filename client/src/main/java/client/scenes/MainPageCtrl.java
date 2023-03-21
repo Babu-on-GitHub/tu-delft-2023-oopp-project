@@ -56,26 +56,29 @@ public class MainPageCtrl implements Initializable {
         boardScrollPane.setFitToHeight(true);
         listOfLists.setSpacing(20);
 
-        if(board == null){
-            try {
-                board = new BoardModel( server.getBoardById(1L));
-            }catch(BadRequestException e){
-                Board toAdd = new Board();
-                toAdd = server.addBoard(toAdd);
-                board = new BoardModel(toAdd);
+        if(board == null) {
+            var res = server.getBoardById(1);
+            if (res.isPresent()) {
+                board = new BoardModel(res.get());
+                board.setController(this);
             }
-
+            else {
+                Board toAdd = new Board();
+                var added = server.addBoard(toAdd);
+                if (added.isEmpty())
+                    throw new RuntimeException("Server Request failed");
+                board = new BoardModel(added.get());
+            }
         }
-
-//        deleteListButton.setGraphic(new FontIcon(Feather.TRASH));
-//        deleteCardButton.setGraphic(new FontIcon(Feather.TRASH));
-//
-//        addCardButton.setGraphic(new FontIcon(Feather.PLUS));
-//        addListButton.setGraphic(new FontIcon(Feather.PLUS));
+        board.setController(this);
+        board.update();
+        board.updateChildren();
     }
 
     public void refresh() {
-        // do nothing
+        board.update();
+        //TODO: sockets
+        board.updateChildren();
     }
 
     @FXML

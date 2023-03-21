@@ -1,5 +1,7 @@
 package client.model;
 
+import client.scenes.MainCtrl;
+import client.scenes.MainPageCtrl;
 import client.utils.ServerUtils;
 import commons.Board;
 import commons.CardList;
@@ -10,6 +12,15 @@ import java.util.List;
 public class BoardModel {
     private Board board;
     private List<ListModel> children;
+
+    private MainPageCtrl controller;
+
+    private MainPageCtrl getController() {
+        return controller;
+    }
+    public void setController(MainPageCtrl controller) {
+        this.controller = controller;
+    }
 
     public void updateChild(CardList cardList){
         for(int i=0;i<board.getLists().size();i++){
@@ -74,8 +85,8 @@ public class BoardModel {
 
     public void update(){
         var utils = new ServerUtils();
-        if(board.getId() == 0 ) board = utils.addBoard(board);
-        else board = utils.updateBoardById(board.getId(), board);
+        if(board.getId() == 0 ) board = utils.addBoard(board).get();
+        else board = utils.updateBoardById(board.getId(), board).get();
         this.updateChildren();
     }
 

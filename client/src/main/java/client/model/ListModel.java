@@ -78,8 +78,8 @@ public class ListModel {
 
     public void update(){
         ServerUtils utils = new ServerUtils();
-        if(cardList.getId()==0) cardList = utils.addCardList(cardList);
-        else cardList = utils.updateCardListById(cardList.getId(),cardList);
+        if(cardList.getId()==0) cardList = utils.addCardList(cardList, parent.getBoard()).get();
+        else cardList = utils.updateCardListById(cardList.getId(),cardList).get();
         this.updateChildren();
         parent.updateChild(this.getCardList());
     }
