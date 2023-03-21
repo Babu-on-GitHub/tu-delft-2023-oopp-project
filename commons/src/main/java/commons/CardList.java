@@ -6,6 +6,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,21 +19,24 @@ public class CardList {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    private Timestamp timestamp;
     private String title;
-
     @ManyToMany(cascade = CascadeType.ALL)
     @OrderColumn
     private List<Card> cards;
 
-//    @ManyToOne
-//    Board board;
+    public Timestamp getTimestamp() {
+        return timestamp;
+    }
 
     @SuppressWarnings("unused")
-    public CardList(){
+    public CardList() {
+        this.cards = new ArrayList<>();
     }
 
     /**
      * Constructor with all parameters
+     *
      * @param id
      * @param title
      * @param cards
@@ -45,6 +49,7 @@ public class CardList {
 
     /**
      * Constructor without id
+     *
      * @param title
      * @param cards
      */
@@ -55,6 +60,7 @@ public class CardList {
 
     /**
      * Constructor only with title
+     *
      * @param title
      */
     public CardList(String title) {
@@ -108,6 +114,16 @@ public class CardList {
      */
     public void setCards(List<Card> cards) {
         this.cards = cards;
+    }
+
+    public void add(Card card) {
+        if (cards == null)
+            cards = new ArrayList<>();
+        cards.add(card);
+    }
+
+    public void sync() {
+        timestamp = new Timestamp(System.currentTimeMillis());
     }
 
     @Override
