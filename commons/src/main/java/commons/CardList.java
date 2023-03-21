@@ -6,6 +6,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,17 +19,20 @@ public class CardList {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    private Timestamp timestamp;
     private String title;
 
     @ManyToMany(cascade = CascadeType.ALL)
     @OrderColumn
     private List<Card> cards;
 
-//    @ManyToOne
-//    Board board;
+    public Timestamp getTimestamp() {
+        return timestamp;
+    }
 
     @SuppressWarnings("unused")
     public CardList(){
+        this.cards = new ArrayList<>();
     }
 
     /**
@@ -109,6 +113,58 @@ public class CardList {
     public void setCards(List<Card> cards) {
         this.cards = cards;
     }
+
+    public void add(Card card) {
+        if (cards == null)
+            cards = new ArrayList<>();
+        cards.add(card);
+    }
+
+    public void assign(CardList other) {
+        this.title = other.title;
+        if (other.cards == null) {
+            if (cards != null)
+                cards.clear();
+            return;
+        }
+
+        // remove all the cards that are present in only this
+        List<Card> cardsToRemove = new ArrayList<>();
+        for (Card card : cards) {
+            boolean found = false;
+            for (Card otherCard : other.cards) {
+                if (card.getId() == otherCard.getId()) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                cardsToRemove.add(card);
+            }
+        }
+        cards.removeAll(cardsToRemove);
+
+
+        // assign all the cards that are present to other
+        for (Card otherCard : other.cards) {
+            boolean found = false;
+            for (Card card : cards) {
+                if (card.getId() == otherCard.getId()) {
+                    found = true;
+                    card.assign(otherCard);
+                    break;
+                }
+            }
+            if (!found) {
+                cards.add(otherCard);
+            }
+        }
+    }
+
+    public void sync() {
+        timestamp = new Timestamp(System.currentTimeMillis());
+    }
+
 
     @Override
     public boolean equals(Object o) {

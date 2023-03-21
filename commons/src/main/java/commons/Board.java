@@ -5,6 +5,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +17,8 @@ public class Board {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
+    private Timestamp timestamp;
 
     private String title;
 
@@ -56,6 +59,14 @@ public class Board {
     public Board(String title) {
         this.title = title;
         lists = new ArrayList<>();
+    }
+
+    public Timestamp getTimestamp() {
+        return timestamp;
+    }
+
+    public void sync() {
+        this.timestamp = new Timestamp(System.currentTimeMillis());
     }
 
     /**
@@ -104,6 +115,59 @@ public class Board {
      */
     public void setLists(List<CardList> lists) {
         this.lists = lists;
+    }
+
+
+    public void add(CardList list) {
+        lists.add(list);
+    }
+
+    public void assign(Board other) {
+        this.title = other.title;
+        if (other.lists == null) {
+            if (lists == null) return;
+            lists.clear();
+            return;
+        }
+
+        // remove all the lists that are only present in this
+        List<CardList> toRemove = new ArrayList<>();
+        for (CardList list : lists) {
+            boolean found = false;
+            for (CardList otherList : other.lists) {
+                if (list.getId() == otherList.getId()) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                toRemove.add(list);
+            }
+        }
+        lists.removeAll(toRemove);
+
+        // find all the lists that have shared id, and assign them
+        for (CardList list : lists) {
+            for (CardList otherList : other.lists) {
+                if (list.getId() == otherList.getId()) {
+                    list.assign(otherList);
+                }
+            }
+        }
+
+        // add all the lists that are only present in other
+        for (CardList otherList : other.lists) {
+            boolean found = false;
+            for (CardList list : lists) {
+                if (list.getId() == otherList.getId()) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                lists.add(otherList);
+            }
+        }
     }
 
     @Override
