@@ -15,6 +15,10 @@
  */
 package client.scenes;
 
+import client.model.BoardModel;
+import client.utils.ServerUtils;
+import commons.Board;
+import jakarta.ws.rs.BadRequestException;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -47,6 +51,24 @@ public class MainCtrl {
     }
 
     public void showMainPage() {
+
+        var board = mainPageCtrl.getBoard();
+
+        ServerUtils utils = new ServerUtils();
+
+        if(board == null){
+            try {
+                mainPageCtrl.setBoard( new  BoardModel( utils.getBoardById(1L)));
+                mainPageCtrl.getBoard().setController(mainPageCtrl);
+            }catch(BadRequestException e){
+                Board toAdd = new Board();
+                toAdd = utils.addBoard(toAdd);
+                mainPageCtrl.setBoard( new BoardModel(toAdd));
+                mainPageCtrl.getBoard().setController(mainPageCtrl);
+            }
+
+        }
+
         primaryStage.setTitle("Board Overview");
         primaryStage.setScene(mainPage);
         mainPageCtrl.refresh();

@@ -1,5 +1,6 @@
 package client.model;
 
+import client.scenes.MainPageCtrl;
 import client.utils.ServerUtils;
 import commons.Board;
 import commons.CardList;
@@ -10,6 +11,24 @@ import java.util.List;
 public class BoardModel {
     private Board board;
     private List<ListModel> children;
+
+    private MainPageCtrl controller;
+
+    /**
+     * Getter for controller
+     */
+    public MainPageCtrl getController() {
+        return controller;
+    }
+
+    /**
+     * Setter for controller
+     *
+     * @param controller Value for controller
+     */
+    public void setController(MainPageCtrl controller) {
+        this.controller = controller;
+    }
 
     public void updateChild(CardList cardList){
         for(int i=0;i<board.getLists().size();i++){
@@ -81,14 +100,38 @@ public class BoardModel {
 
 
     public void updateChildren(){
-        if(board.getLists()==null||children==null) return;
-        for(var list: board.getLists()){
-            for(var child: children){
-                if(child.getCardList().getId() == list.getId()){
+        var temp = new ArrayList<ListModel>();
+        for (int i = 0; i < board.getLists().size(); i++)
+            temp.add(null);
+
+        for (int i = 0; i < board.getLists().size(); i++) {
+            var list = board.getLists().get(i);
+            for (ListModel child : children) {
+                if (child.getCardList().getId() == list.getId()) {
                     child.setCardList(list);
-                    child.updateChildren();
+                    temp.set(i, child);
                 }
             }
+        }
+
+        for (int i = 0; i < temp.size(); i++) {
+            if (temp.get(i) == null) {
+                var model = new ListModel(board.getLists().get(i), this);
+                temp.set(i, model);
+            }
+        }
+
+        children = temp;
+        try {
+            controller.recreateChildren(temp);
+        }
+        catch (Exception e) {
+            log.warning("Problems during board children recreation..");
+        }
+
+        for (ListModel child : children) {
+            child.updateChildren();
+            child.setParent(this);
         }
     }
 }
