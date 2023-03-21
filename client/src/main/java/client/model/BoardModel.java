@@ -1,6 +1,5 @@
 package client.model;
 
-import client.scenes.MainCtrl;
 import client.scenes.MainPageCtrl;
 import client.utils.ServerUtils;
 import commons.Board;
