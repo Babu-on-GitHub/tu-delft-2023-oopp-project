@@ -16,20 +16,20 @@ import javafx.scene.layout.*;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class ListController implements Initializable {
 
     @FXML
     private VBox cardListContainer;
-
     @FXML
     private ScrollPane scrollPane;
-
     @FXML
     private TextField listTitle;
-
     private ListModel listModel;
+    private MainPageCtrl parent;
+
 
 
     @SuppressWarnings("unused")
@@ -37,6 +37,28 @@ public class ListController implements Initializable {
 
     public ListController(ListModel cardList){
         this.listModel = cardList;
+    }
+
+    public ListController(ListModel cardList, MainPageCtrl parent) {
+        this.listModel = cardList;
+        listModel.setController(this);
+        this.parent = parent;
+    }
+
+    public void recreateChildren(ArrayList<CardModel> temp) throws IOException {
+        cardListContainer.getChildren().clear();
+        for (CardModel card : temp)
+            addCard(card);
+    }
+
+    public void addCard(CardModel model) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("ReworkedCard.fxml"));
+        var controller = new CardController(model);
+        model.setController(controller);
+        loader.setController(controller);
+
+        AnchorPane newCard = loader.load();
+        cardListContainer.getChildren().add(newCard);
     }
 
     public void addCardButton(ActionEvent event) throws IOException {

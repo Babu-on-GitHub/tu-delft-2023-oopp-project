@@ -5,6 +5,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Set;
 
@@ -16,15 +17,11 @@ public class Card {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
     private String title;
-
     private String description;
-
     @ManyToMany(cascade = CascadeType.ALL)
     @OrderColumn
     private List<Task> subTasks;
-
     @ManyToMany(cascade = CascadeType.ALL)
     private Set<Tag> tags;
 

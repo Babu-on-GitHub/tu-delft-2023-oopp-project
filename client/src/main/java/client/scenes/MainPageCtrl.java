@@ -22,6 +22,7 @@ import javafx.event.ActionEvent;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class MainPageCtrl implements Initializable {
@@ -65,7 +66,9 @@ public class MainPageCtrl implements Initializable {
                 board = new BoardModel(toAdd);
             }
 
+
         }
+        board.setController(this);
 
 //        deleteListButton.setGraphic(new FontIcon(Feather.TRASH));
 //        deleteCardButton.setGraphic(new FontIcon(Feather.TRASH));
@@ -138,6 +141,21 @@ public class MainPageCtrl implements Initializable {
         listOfLists.getChildren().remove(toDelete);
     }
 
+    public void recreateChildren(List<ListModel> arr) throws IOException {
+        listOfLists.getChildren().clear();
+        for (ListModel model : arr)
+            addList(model);
+    }
 
+    public void addList(ListModel model) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("ReworkedList.fxml"));
+
+        var controller = new ListController(model, this);
+        loader.setController(controller);
+        model.setController(controller);
+
+        Node newList = loader.load();
+        listOfLists.getChildren().add(newList);
+    }
 
 }

@@ -6,6 +6,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,9 +18,7 @@ public class CardList {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
     private String title;
-
     @ManyToMany(cascade = CascadeType.ALL)
     @OrderColumn
     private List<Card> cards;
@@ -108,6 +107,12 @@ public class CardList {
      */
     public void setCards(List<Card> cards) {
         this.cards = cards;
+    }
+
+    public void add(Card card) {
+        if (cards == null)
+            cards = new ArrayList<>();
+        cards.add(card);
     }
 
     @Override

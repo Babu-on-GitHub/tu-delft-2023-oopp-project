@@ -56,6 +56,11 @@ public class Board {
     public Board(String title) {
         this.title = title;
         lists = new ArrayList<>();
+
+    }
+
+    public void add(CardList list) {
+        lists.add(list);
     }
 
     /**
