@@ -25,7 +25,12 @@ public class CardModel {
 
     public void update(){
         ServerUtils utils = new ServerUtils();
-        if(card.getId() == 0) card = utils.addCard(card, parent.getCardList()).get();
+        if(card.getId() == 0) {
+            var res = utils.addCard(card, parent.getCardList());
+            if(!res.isEmpty()) {
+                card = res.get();
+            }
+        }
         else card = utils.updateCardById(card.getId(),card).get();
         this.updateChildren();
         parent.updateChild(this.getCard());

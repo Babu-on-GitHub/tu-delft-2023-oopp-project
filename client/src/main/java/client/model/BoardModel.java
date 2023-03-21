@@ -84,7 +84,12 @@ public class BoardModel {
 
     public void update(){
         var utils = new ServerUtils();
-        if(board.getId() == 0 ) board = utils.addBoard(board).get();
+        if(board.getId() == 0 ) {
+            var res = utils.addBoard(board);
+            if(!res.isEmpty()) {
+                board = res.get();
+            }
+        }
         else board = utils.updateBoardById(board.getId(), board).get();
         this.updateChildren();
     }

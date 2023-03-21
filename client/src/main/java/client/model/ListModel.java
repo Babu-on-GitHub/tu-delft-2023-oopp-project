@@ -78,7 +78,12 @@ public class ListModel {
 
     public void update(){
         ServerUtils utils = new ServerUtils();
-        if(cardList.getId()==0) cardList = utils.addCardList(cardList, parent.getBoard()).get();
+        if(cardList.getId()==0) {
+            var res = utils.addCardList(cardList, parent.getBoard());
+            if(!res.isEmpty()) {
+                cardList = res.get();
+            }
+        }
         else cardList = utils.updateCardListById(cardList.getId(),cardList).get();
         this.updateChildren();
         parent.updateChild(this.getCardList());
