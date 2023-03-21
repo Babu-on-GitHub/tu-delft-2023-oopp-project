@@ -6,6 +6,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Bounds;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.DataFormat;
@@ -50,8 +51,45 @@ public class ListController implements Initializable {
         listOfLists.getChildren().remove(toDelete);
     }
 
+    private int whichIndexToDropIn(double absolutePosition) {
+        Bounds boundsInScene = cardListContainer.localToScene(cardListContainer.getBoundsInLocal());
+        var relativePosition = absolutePosition - boundsInScene.getMinY();
+
+        var scrollPosition = scrollPane.getVvalue() / (scrollPane.getVmax() - scrollPane.getVmin());
+        var scrollPaneHeight = scrollPane.getLayoutBounds().getMaxY() - scrollPane.getLayoutBounds().getMinY();
+        var scrollPaneContentHeight = cardListContainer.getLayoutBounds().getMaxY() -
+                cardListContainer.getLayoutBounds().getMinY();
+        var scrollHeight = scrollPosition * (scrollPaneContentHeight - scrollPaneHeight);
+
+        var position = relativePosition + scrollHeight;
+
+        double minDistance = Double.MAX_VALUE;
+        int minIndex = 0;
+        for (var x : cardListContainer.getChildren()) {
+            var card = (AnchorPane) x;
+            var cardPosition = card.getLayoutY();
+
+            var distanceToBottom = Math.abs(cardPosition - position);
+            var distanceToTop = Math.abs(cardPosition + card.getHeight() - position);
+
+            if (distanceToBottom < minDistance) {
+                minDistance = distanceToBottom;
+                minIndex = cardListContainer.getChildren().indexOf(card);
+            }
+            if (distanceToTop < minDistance) {
+                minDistance = distanceToTop;
+                minIndex = cardListContainer.getChildren().indexOf(card) + 1;
+            }
+        }
+
+        return minIndex;
+    }
+
     @FXML
     void dragOver(DragEvent event) {
+
+        System.out.println("card chosen: " + whichIndexToDropIn(event.getSceneY()));
+
         if (event.getGestureSource() != cardListContainer && event.getDragboard().hasContent(CARD)) {
             event.acceptTransferModes(TransferMode.MOVE);
         }
