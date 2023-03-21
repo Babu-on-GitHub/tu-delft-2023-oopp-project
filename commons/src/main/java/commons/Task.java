@@ -77,6 +77,14 @@ public class Task implements Serializable {
         this.title = title;
     }
 
+    public void assign(Task other) {
+        if (other == null || other.title == null) {
+            return;
+        }
+        this.title = other.title;
+    }
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -17,20 +17,31 @@ package client.utils;
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
+import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.ExecutionException;
+import java.util.function.Consumer;
 
 import commons.Board;
 import commons.Card;
 import commons.CardList;
+import org.checkerframework.checker.nullness.Opt;
 import org.glassfish.jersey.client.ClientConfig;
 
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
+import org.springframework.messaging.converter.MappingJackson2MessageConverter;
+import org.springframework.messaging.simp.stomp.*;
+import org.springframework.web.socket.client.standard.StandardWebSocketClient;
+import org.springframework.web.socket.messaging.WebSocketStompClient;
 
 public class ServerUtils {
 
     private String SERVER;
+
+    private String websocketUrl;
 
     private <T> T get(String endpoint, GenericType<T> type) {
         return ClientBuilder.newClient(new ClientConfig()) //
@@ -66,6 +77,7 @@ public class ServerUtils {
 
     public ServerUtils(){
         this.SERVER = "http://localhost:8080";
+        this.websocketUrl = "ws://localhost:8080/websocket";
     }
 
     public boolean chooseServer(String server) {
@@ -73,79 +85,202 @@ public class ServerUtils {
             return false;
 
         var oldServer = SERVER;
-        SERVER = server;
+        var oldWebsocketurl = websocketUrl;
+        SERVER = "http://" + server;
+        websocketUrl = "ws://" + server + "/websocket";
 
         try {
             String response = get("api/status", new GenericType<>() {});
             if (response.equals("Running")) {
+                session = connect(websocketUrl);
                 return true;
             } else {
                 SERVER = oldServer;
+                websocketUrl = oldWebsocketurl;
                 return false;
             }
         } catch (Exception e) {
             SERVER = oldServer;
+            websocketUrl = oldWebsocketurl;
             return false;
         }
     }
 
-    public List<Card> getCards() {
-        return get("api/card", new GenericType<>() {});
+    public Optional<List<Card>> getCards() {
+        try {
+            return Optional.of(get("api/card", new GenericType<>() {
+            }));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 
-    public Card getCardById(long id){
-        return get("api/card/"+id, new GenericType<>(){});
+    public Optional<Card> getCardById(long id){
+        try {
+            return Optional.of(get("api/card/" + id, new GenericType<>() {
+            }));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 
-    public Card addCard(Card card) {
-        return post("api/card/add", card, new GenericType<>() {});
+    public Optional<Card> addCard(Card card, CardList list) {
+        try {
+            return Optional.of(post("api/list/add/" + list.getId(), card, new GenericType<>() {
+            }));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 
-    public boolean deleteCardById(long id) {
-        return delete("api/card/delete/" + id, new GenericType<>() {});
+    public Optional<Card> insertCard(Card card, int position, CardList list) {
+        try {
+            return Optional.of(post("api/list/insert/" + list.getId() + "/to/" + position, card, new GenericType<>() {
+            }));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 
-    public Card updateCardById(long id, Card card) {
-        return put("api/card/update/" + id, card, new GenericType<>() {});
+    public Optional<Boolean> deleteCardById(long cardId, long listId) {
+        try {
+            return Optional.of(delete("api/list/delete/" + cardId + "/from/" + listId, new GenericType<>() {
+            }));
+        } catch (Exception e) {
+            return Optional.empty();
+        }    }
+
+    public Optional<Card> updateCardById(long id, Card card) {
+        try {
+            return Optional.of(put("api/card/update/" + id, card, new GenericType<>() {
+            }));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 
-    public List<CardList> getCardLists() {
-        return get("api/list", new GenericType<>() {});
+    public Optional<List<CardList>> getCardLists() {
+        try {
+            return Optional.of(get("api/list", new GenericType<>() {
+            }));
+        } catch (Exception e) {
+            return Optional.empty();
+        }    }
+
+    public Optional<CardList> getCardListById(long id){
+        try {
+            return Optional.of(get("api/list/" + id, new GenericType<>() {
+            }));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 
-    public CardList getCardListById(long id){
-        return get("api/list/"+id, new GenericType<>(){});
+    public Optional<CardList> addCardList(CardList list, Board board) {
+        try {
+            return Optional.of(post("api/board/add/" + board.getId(), list, new GenericType<>() {
+            }));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 
-    public CardList addCardList(CardList list) {
-        return post("api/list/add", list, new GenericType<>() {});
+    public Optional<Boolean> deleteCardListById(long listId, long boardId) {
+        try {
+            return Optional.of(delete("api/board/delete/" + listId + "/from/" + boardId, new GenericType<>() {
+            }));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 
-    public boolean deleteCardListById(long id) {
-        return delete("api/list/remove/" + id, new GenericType<>() {});
+    public Optional<CardList> updateCardListById(long id, CardList list) {
+        try {
+            return Optional.of(put("api/list/update/" + id, list, new GenericType<>() {
+            }));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 
-    public CardList updateCardListById(long id, CardList list) {
-        return put("api/list/update/" + id, list, new GenericType<>() {});
+    public Optional<List<Board>> getBoards() {
+        try {
+            return Optional.of(get("api/board", new GenericType<>() {
+            }));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 
-    public List<Board> getBoards() {
-        return get("api/board", new GenericType<>() {});
+    public Optional<Board> getBoardById(long id) {
+        try {
+            return Optional.of(get("api/board/" + id, new GenericType<>() {
+            }));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 
-    public Board getBoardById(long id){
-        return get("api/board/"+id, new GenericType<>(){});
+    public Optional<Board> addBoard(Board board) {
+        try {
+            return Optional.of(post("api/board/create", board, new GenericType<>() {
+            }));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 
-    public Board addBoard(Board board) {
-        return post("api/board/add", board, new GenericType<>() {});
+    public Optional<Boolean> deleteBoardById(long id) {
+        try {
+            return Optional.of(delete("api/board/delete/" + id, new GenericType<>() {
+            }));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 
-    public boolean deleteBoardById(long id) {
-        return delete("api/board/delete/" + id, new GenericType<>() {});
+    public Optional<Board> updateBoardById(long id, Board board) {
+        try {
+            return Optional.of(put("api/board/update/" + id, board, new GenericType<>() {
+            }));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 
-    public Board updateBoardById(long id, Board board) {
-        return put("api/board/update/" + id, board, new GenericType<>() {});
+    private  StompSession session;
+
+    private StompSession connect(String url) {
+        var client = new StandardWebSocketClient();
+        var stomp = new WebSocketStompClient(client);
+        stomp.setMessageConverter(new MappingJackson2MessageConverter());
+        try {
+            return stomp.connectAsync(url, new StompSessionHandlerAdapter() {}).get();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        }
+        throw new IllegalStateException();
     }
+
+    public <T> void registerForMessages(String dest, Class<T> type, Consumer<T> consumer) {
+        session.subscribe(dest, new StompFrameHandler() {
+            @Override
+            public Type getPayloadType(StompHeaders headers) {
+                return type;
+            }
+
+            @SuppressWarnings("unchecked")
+            @Override
+            public void handleFrame(StompHeaders headers, Object payload) {
+                consumer.accept((T) payload);
+            }
+        });
+    }
+
+    public void send(String dest, Object o) {
+        session.send(dest, o);
+    }
+
 }

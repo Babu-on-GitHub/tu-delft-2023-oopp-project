@@ -7,56 +7,80 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.*;
 import javafx.scene.layout.VBox;
+import client.model.CardModel;
+import javafx.fxml.Initializable;
+import javafx.scene.layout.AnchorPane;
+import org.apache.commons.lang3.NotImplementedException;
 
 import static client.scenes.ListController.CARD;
 
 
-public class CardController {
+import java.net.URL;
+import java.util.ResourceBundle;
 
+public class CardController implements Initializable {
+
+    private CardModel card;
+
+    private ListController parent;
+
+    @FXML
+    private AnchorPane cardContainer;
+
+    @FXML
+    private TextField cardTitle;
 
     @SuppressWarnings("unused")
-    public CardController(){}
+    public CardController() {
+    }
 
     @FXML
     private VBox cardListContainer;
-    @FXML
-    public TextField cardTitle;
-    @FXML
-    public void deleteCardButton(ActionEvent event) {
-        Button pressed = (Button) event.getSource();
 
-        var toDelete = pressed.getParent();
-        var listOfToDelete = (VBox) toDelete.getParent();
+    public CardController(CardModel card, ListController parent) {
+        this.card = card;
 
-        listOfToDelete.getChildren().remove(toDelete);
+        this.parent = parent;
     }
 
     @FXML
     public void dragDetected(MouseEvent event) {
 
-        var title = cardTitle.getText();
-        Card card = new Card(title);
-        Dragboard dragboard = cardTitle.startDragAndDrop(TransferMode.MOVE);
+        Dragboard dragboard = cardContainer.startDragAndDrop(TransferMode.MOVE);
 
         ClipboardContent content = new ClipboardContent();
-        content.put(CARD,card);
+        content.put(CARD, card.getCard());
         dragboard.setContent(content);
         event.consume();
     }
 
     @FXML
     void dragDone(DragEvent event) {
-        var parent = ((TextField) event.getGestureSource()).getParent().getParent();
         if (event.getDragboard().hasContent(CARD) && event.getGestureTarget() != null) {
-            var startPosition = cardTitle.getParent();
-            var listOfToDelete = (VBox) startPosition.getParent();
-            listOfToDelete.getChildren().remove(startPosition);
+            deleteCard();
         }
     }
 
-    /**
-     * TODO insert card at correct location
-     * TODO fix card deletion when dragging away
-     */
+    public void deleteCardButton(ActionEvent event) {
+        deleteCard();
+    }
 
+    public void deleteCard() {
+        card.deleteCard();
+        parent.getCardsContainer().getChildren().remove(cardContainer);
+    }
+
+    public void updateTitle() {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+
+        cardTitle.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                updateTitle();
+            }
+        });
+    }
 }

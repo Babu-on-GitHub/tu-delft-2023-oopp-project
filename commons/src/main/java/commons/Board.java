@@ -6,6 +6,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,9 +19,11 @@ public class Board implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    private Timestamp timestamp;
+
     private String title;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL)
     @OrderColumn
     private List<CardList> lists;
 
@@ -30,6 +33,7 @@ public class Board implements Serializable {
 
     /**
      * Constructor with all parameters
+     *
      * @param id
      * @param title
      * @param lists
@@ -42,6 +46,7 @@ public class Board implements Serializable {
 
     /**
      * Constructor without id
+     *
      * @param title
      * @param lists
      */
@@ -52,11 +57,21 @@ public class Board implements Serializable {
 
     /**
      * Constructor only with title
+     *
      * @param title
      */
     public Board(String title) {
         this.title = title;
         lists = new ArrayList<>();
+
+    }
+
+    public Timestamp getTimestamp() {
+        return timestamp;
+    }
+
+    public void sync() {
+        this.timestamp = new Timestamp(System.currentTimeMillis());
     }
 
     /**
@@ -105,6 +120,11 @@ public class Board implements Serializable {
      */
     public void setLists(List<CardList> lists) {
         this.lists = lists;
+    }
+
+
+    public void add(CardList list) {
+        lists.add(list);
     }
 
     @Override

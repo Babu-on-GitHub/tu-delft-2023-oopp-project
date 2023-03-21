@@ -15,24 +15,25 @@
  */
 package client;
 
-import static com.google.inject.Guice.createInjector;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
-
 import atlantafx.base.theme.PrimerLight;
 import client.scenes.MainCtrl;
 import client.scenes.MainPageCtrl;
 import client.scenes.ServerChoiceCtrl;
-
 import com.google.inject.Injector;
 import javafx.application.Application;
 import javafx.stage.Stage;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+
+import static com.google.inject.Guice.createInjector;
+
 
 public class Main extends Application {
 
     private static final Injector INJECTOR = createInjector(new MyModule());
     private static final MyFXML FXML = new MyFXML(INJECTOR);
+
 
     public static void main(String[] args) throws URISyntaxException {
         launch();
@@ -47,5 +48,7 @@ public class Main extends Application {
 
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
         mainCtrl.initialize(primaryStage, mainPage, serverCtrl);
+
+        WebsocketClient client = new WebsocketClient();
     }
 }
