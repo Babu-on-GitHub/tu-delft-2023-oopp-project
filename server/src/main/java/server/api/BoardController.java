@@ -89,6 +89,10 @@ public class BoardController {
             log.warning("Trying to delete non existing board");
             return ResponseEntity.badRequest().build();
         }
+        if(id == 1){
+            log.warning("Deleting default board is prohibited");
+            return ResponseEntity.badRequest().build();
+        }
         boardRepository.deleteById(id);
         return ResponseEntity.ok(true);
     }
