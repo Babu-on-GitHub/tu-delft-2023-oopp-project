@@ -10,10 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.input.DataFormat;
-import javafx.scene.input.DragEvent;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.TransferMode;
+import javafx.scene.input.*;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import org.apache.commons.lang3.NotImplementedException;
@@ -25,7 +22,9 @@ import java.util.ResourceBundle;
 
 public class ListController implements Initializable {
 
-    public static final DataFormat CARD = new DataFormat("myCardMimeType");
+    public static final DataFormat CARD_ID = new DataFormat("cardId");
+    public static final DataFormat TARGET_LIST = new DataFormat("targetList");
+    public static final DataFormat TARGET_INDEX = new DataFormat("targetIndex");
     @FXML
     private VBox cardListContainer;
 
@@ -67,6 +66,15 @@ public class ListController implements Initializable {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("ReworkedCard.fxml"));
         var controller = new CardController(model, this);
         model.setController(controller);
+        loader.setController(controller);
+
+        AnchorPane newCard = loader.load();
+        cardListContainer.getChildren().add(index, newCard);
+    }
+
+    public void moveCard(CardModel model, int index) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("ReworkedCard.fxml"));
+        var controller = model.getController();
         loader.setController(controller);
 
         AnchorPane newCard = loader.load();
@@ -115,7 +123,7 @@ public class ListController implements Initializable {
 
     @FXML
     void dragOver(DragEvent event) {
-        if (event.getGestureSource() != cardListContainer && event.getDragboard().hasContent(CARD)) {
+        if (event.getGestureSource() != cardListContainer && event.getDragboard().hasContent(CARD_ID)) {
             event.acceptTransferModes(TransferMode.MOVE);
         }
         event.consume();
@@ -124,26 +132,26 @@ public class ListController implements Initializable {
     @FXML
     void drop(DragEvent event) throws IOException {
         Dragboard dragboard = event.getDragboard();
-        if (dragboard.hasContent(CARD)) {
-            var card = (Card) dragboard.getContent(CARD);
-            var model = new CardModel(card, listModel);
-
-            if (listModel.getCardList().getCards().contains(card)) {
+        if (dragboard.hasContent(CARD_ID)) {
+            var cardId = (Long) dragboard.getContent(CARD_ID);
+            var index = whichIndexToDropIn(event.getSceneY());
+            var cardOpt = listModel.getCardList().getCards().stream().
+                    filter(x -> x.getId() == cardId).findFirst();
+            if (cardOpt.isPresent()) {
                 dragboard.setContent(null);
-                var oldIndex = listModel.getCardList().getCards().indexOf(card);
-                var newIndex = whichIndexToDropIn(event.getSceneY());
-                if (oldIndex == newIndex)
+                var oldIndex = listModel.getCardList().getCards().
+                        indexOf(cardOpt.get());
+                if (oldIndex == index)
                     return;
-                if (oldIndex < newIndex)
-                    newIndex--;
-
-                listModel.moveCard(oldIndex, newIndex);
-                return;
+                if (oldIndex < index)
+                    index--;
             }
 
-            var index = whichIndexToDropIn(event.getSceneY());
-            insertCard(model, index);
-            listModel.insertCard(model, index);
+            ClipboardContent content = new ClipboardContent();
+            content.put(CARD_ID, cardId);
+            content.put(TARGET_INDEX, index);
+            content.put(TARGET_LIST, listModel.getCardList().getId());
+            dragboard.setContent(content);
         }
 
         event.consume();
@@ -165,11 +173,14 @@ public class ListController implements Initializable {
 
     public void updateTitle() {
         // not implemented
-        throw new NotImplementedException();
     }
 
     public VBox getCardsContainer() {
         return cardListContainer;
+    }
+
+    public MainPageCtrl getParent() {
+        return parent;
     }
 
     @Override

@@ -86,7 +86,7 @@ public class ListModel {
         cardList.getCards().add(position, card.getCard());
         children.add(position, card);
         var utils = new ServerUtils();
-        var res = utils.updateCardListById(cardList.getId(), cardList);
+        var res = utils.insertCard(card.getCard(), position, cardList);
         if (res.isEmpty()) {
             log.warning("Failed to update card list with id " + cardList.getId() + " in local model");
             return;

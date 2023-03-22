@@ -26,7 +26,6 @@ import java.util.function.Consumer;
 import commons.Board;
 import commons.Card;
 import commons.CardList;
-import org.checkerframework.checker.nullness.Opt;
 import org.glassfish.jersey.client.ClientConfig;
 
 import jakarta.ws.rs.client.ClientBuilder;
@@ -248,6 +247,16 @@ public class ServerUtils {
         }
     }
 
+    public Optional<Boolean> moveCard(long cardId, long listId, int position, long boardId) {
+        try {
+            return Optional.of(post("api/board/moveCard/" + cardId + "/to/" + listId + "/at/" + position +
+                    "/located/" + boardId, null, new GenericType<>() {
+            }));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+
     private  StompSession session;
 
     private StompSession connect(String url) {
@@ -282,5 +291,7 @@ public class ServerUtils {
     public void send(String dest, Object o) {
         session.send(dest, o);
     }
+
+
 
 }

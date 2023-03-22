@@ -109,4 +109,8 @@ public class MainPageCtrl implements Initializable {
     public HBox getListsContainer() {
         return listOfLists;
     }
+
+    public BoardModel getModel() {
+        return board;
+    }
 }

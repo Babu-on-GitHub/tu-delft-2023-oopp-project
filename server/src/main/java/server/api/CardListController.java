@@ -64,28 +64,6 @@ public class CardListController {
         return ResponseEntity.ok(res);
     }
 
-    @PostMapping(path = "/insert/{listId}/to/{index}")
-    public ResponseEntity<Card> insert(@PathVariable("listId") long listId,
-                                       @PathVariable("index") int index, @RequestBody Card card) {
-        var listOptional = cardListRepository.findById(listId);
-        if (listOptional.isEmpty()) {
-            log.warning("Trying to add card into non-existent list");
-            return ResponseEntity.badRequest().build();
-        }
-
-        log.info("Trying to insert card: " + card.getId() + " into list: " + listId + " at index: " + index);
-
-        var list = listOptional.get();
-        card.sync();
-        list.getCards().add(index, card);
-        list.sync();
-        cardListRepository.save(list);
-
-        log.info("Card inserted with new id: " + card.getId());
-
-        return ResponseEntity.ok(card);
-    }
-
     @DeleteMapping(path = "/delete/{cardId}/from/{listId}")
     public ResponseEntity<Boolean> remove(@PathVariable("cardId") long cardId, @PathVariable("listId") long listId) {
         log.info("Deleting card: " + cardId + " from list: " + listId);
