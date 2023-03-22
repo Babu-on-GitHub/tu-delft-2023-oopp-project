@@ -74,7 +74,7 @@ public class ServerUtils {
                 .delete(type);
     }
 
-    public ServerUtils(){
+    public ServerUtils() {
         this.SERVER = "http://localhost:8080";
         this.websocketUrl = "ws://localhost:8080/websocket";
     }
@@ -89,7 +89,8 @@ public class ServerUtils {
         websocketUrl = "ws://" + server + "/websocket";
 
         try {
-            String response = get("api/status", new GenericType<>() {});
+            String response = get("api/status", new GenericType<>() {
+            });
             if (response.equals("Running")) {
                 session = connect(websocketUrl);
                 return true;
@@ -114,7 +115,7 @@ public class ServerUtils {
         }
     }
 
-    public Optional<Card> getCardById(long id){
+    public Optional<Card> getCardById(long id) {
         try {
             return Optional.of(get("api/card/" + id, new GenericType<>() {
             }));
@@ -147,7 +148,8 @@ public class ServerUtils {
             }));
         } catch (Exception e) {
             return Optional.empty();
-        }    }
+        }
+    }
 
     public Optional<Card> updateCardById(long id, Card card) {
         try {
@@ -164,9 +166,10 @@ public class ServerUtils {
             }));
         } catch (Exception e) {
             return Optional.empty();
-        }    }
+        }
+    }
 
-    public Optional<CardList> getCardListById(long id){
+    public Optional<CardList> getCardListById(long id) {
         try {
             return Optional.of(get("api/list/" + id, new GenericType<>() {
             }));
@@ -249,22 +252,24 @@ public class ServerUtils {
 
     public Optional<Boolean> moveCard(long cardId, long listId, int position, long boardId) {
         try {
-            return Optional.of(post("api/board/moveCard/" + cardId + "/to/" + listId + "/at/" + position +
-                    "/located/" + boardId, null, new GenericType<>() {
+            var reqString = "api/board/moveCard/" + cardId + "/to/" + listId + "/at/" + position +
+                    "/located/" + boardId;
+            return Optional.of(post(reqString, null, new GenericType<>() {
             }));
         } catch (Exception e) {
             return Optional.empty();
         }
     }
 
-    private  StompSession session;
+    private StompSession session;
 
     private StompSession connect(String url) {
         var client = new StandardWebSocketClient();
         var stomp = new WebSocketStompClient(client);
         stomp.setMessageConverter(new MappingJackson2MessageConverter());
         try {
-            return stomp.connectAsync(url, new StompSessionHandlerAdapter() {}).get();
+            return stomp.connectAsync(url, new StompSessionHandlerAdapter() {
+            }).get();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         } catch (ExecutionException e) {
@@ -291,7 +296,6 @@ public class ServerUtils {
     public void send(String dest, Object o) {
         session.send(dest, o);
     }
-
 
 
 }

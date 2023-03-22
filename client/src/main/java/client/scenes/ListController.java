@@ -13,7 +13,6 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.input.*;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
-import org.apache.commons.lang3.NotImplementedException;
 
 import java.io.IOException;
 import java.net.URL;
