@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Point3D?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane prefHeight="175.0" prefWidth="385.0" style="-fx-border-color: black; -fx-border-width: 1px;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:id="cardContainer">
+<AnchorPane fx:id="cardContainer" prefHeight="175.0" prefWidth="385.0" style="-fx-border-color: black; -fx-border-width: 1px;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <TextField fx:id="cardTitle" alignment="CENTER" layoutX="3.0" layoutY="2.0" prefHeight="96.0" prefWidth="381.0" text="NEW CARD" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="1.0">
          <font>
             <Font size="14.0" />
          </font>
       </TextField>
-      <Button layoutX="404.0" layoutY="144.0" mnemonicParsing="false" onAction="#deleteCardButton" prefHeight="44.0" prefWidth="169.0" text="Delete" AnchorPane.bottomAnchor="21.0" AnchorPane.rightAnchor="22.0" />
+      <Button layoutX="404.0" layoutY="144.0" mnemonicParsing="false" onAction="#deleteCardButton" prefHeight="44.0" prefWidth="169.0" text="Delete" AnchorPane.bottomAnchor="21.0" AnchorPane.rightAnchor="22.0">
+         <rotationAxis>
+            <Point3D />
+         </rotationAxis></Button>
    </children>
 </AnchorPane>
