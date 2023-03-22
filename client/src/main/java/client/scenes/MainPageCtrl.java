@@ -156,20 +156,18 @@ public class MainPageCtrl implements Initializable {
 
     public void initializeBoard(){
         ServerUtils utils = new ServerUtils();
-        //if(board == null) {
-            var res = server.getBoardById(1);
-            if (res.isPresent()) {
-                board = new BoardModel(res.get());
-                board.setController(this);
-            }
-            else {
-                Board toAdd = new Board();
-                var added = server.addBoard(toAdd);
-                if (added.isEmpty())
-                    throw new RuntimeException("Server Request failed");
-                board = new BoardModel(added.get());
-            }
-        //}
+        var res = server.getBoardById(1);
+        if (res.isPresent()) {
+            board = new BoardModel(res.get());
+            board.setController(this);
+        }
+        else {
+            Board toAdd = new Board();
+            var added = server.addBoard(toAdd);
+            if (added.isEmpty())
+                throw new RuntimeException("Server Request failed");
+            board = new BoardModel(added.get());
+        }
     }
 
     public void updateBoardList(){
