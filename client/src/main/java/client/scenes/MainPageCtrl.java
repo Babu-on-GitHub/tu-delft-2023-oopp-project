@@ -132,19 +132,13 @@ public class MainPageCtrl implements Initializable {
         return cardListsContainer;
     }
 
-    public void setBoardOverview(Board board) {
+    public void setBoardOverview(Board board) throws IOException {
         ServerUtils utils = new ServerUtils();
         var res = utils.getBoardById(board.getId());
         if(res.isEmpty()){
-            //TODO give message that board doesn't exist and delete board
-            var defaultBoard = boardList.stream().filter(q -> q.getId() == 1).findFirst();
-            if(defaultBoard.isEmpty()){
-                initializeBoard();
-                updateBoardList();
-                setBoardOverview(this.board.getBoard());
-            }else{
-                setBoardOverview(defaultBoard.get());
-            }
+            initializeBoard();
+            updateBoardList();
+            showAllBoards();
             return;
         }
         this.board = new BoardModel(res.get());

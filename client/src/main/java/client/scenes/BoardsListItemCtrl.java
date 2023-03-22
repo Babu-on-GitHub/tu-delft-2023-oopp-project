@@ -2,6 +2,8 @@ package client.scenes;
 
 import commons.Board;
 
+import java.io.IOException;
+
 
 public class BoardsListItemCtrl {
 
@@ -14,7 +16,7 @@ public class BoardsListItemCtrl {
         this.board = board;
     }
 
-    public void setBoardButton(){
+    public void setBoardButton() throws IOException {
         mainPageCtrl.setBoardOverview(board);
     }
 
