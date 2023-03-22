@@ -37,7 +37,7 @@
                            </content>
                         </ScrollPane>
                         <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#addBoardButton" prefHeight="25.0" prefWidth="154.0" text="Add Board" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="14.0" />
-                        <Button layoutX="14.0" layoutY="613.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="156.0" text="Delete board" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" />
+                        <Button layoutX="14.0" layoutY="613.0" mnemonicParsing="false" onAction="#deleteBoardButton" prefHeight="25.0" prefWidth="156.0" text="Delete board" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" />
                      </children>
                   </AnchorPane>
                   <ScrollPane fx:id="boardScrollPane" prefHeight="652.0" prefWidth="216.0">

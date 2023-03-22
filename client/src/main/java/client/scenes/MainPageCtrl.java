@@ -73,7 +73,7 @@ public class MainPageCtrl implements Initializable {
         boardScrollPane.setFitToHeight(true);
         cardListsContainer.setSpacing(20);
 
-        initializeBoards();
+        initializeBoard();
 
         board.setController(this);
         board.update();
@@ -133,16 +133,30 @@ public class MainPageCtrl implements Initializable {
     }
 
     public void setBoardOverview(Board board) {
-        this.board = new BoardModel(board);
+        ServerUtils utils = new ServerUtils();
+        var res = utils.getBoardById(board.getId());
+        if(res.isEmpty()){
+            //TODO give message that board doesn't exist and delete board
+            var defaultBoard = boardList.stream().filter(q -> q.getId() == 1).findFirst();
+            if(defaultBoard.isEmpty()){
+                initializeBoard();
+                updateBoardList();
+                setBoardOverview(this.board.getBoard());
+            }else{
+                setBoardOverview(defaultBoard.get());
+            }
+            return;
+        }
+        this.board = new BoardModel(res.get());
         cardListsContainer.getChildren().clear();
         this.board.setController(this);
         this.board.update();
         this.board.updateChildren();
     }
 
-    public void initializeBoards(){
+    public void initializeBoard(){
         ServerUtils utils = new ServerUtils();
-        if(board == null) {
+        //if(board == null) {
             var res = server.getBoardById(1);
             if (res.isPresent()) {
                 board = new BoardModel(res.get());
@@ -155,18 +169,23 @@ public class MainPageCtrl implements Initializable {
                     throw new RuntimeException("Server Request failed");
                 board = new BoardModel(added.get());
             }
-        }
+        //}
+    }
+
+    public void updateBoardList(){
+        //This will pe changed to fetch only the boards linked to the user
+        ServerUtils utils = new ServerUtils();
         var newBoardList = utils.getBoards();
         if(newBoardList.isEmpty()){
-            boardList.add(board.getBoard());
+            log.warning("Something went wrong fetching the boards");
         }else{
             boardList = newBoardList.get();
         }
     }
 
     public void showAllBoards() throws IOException {
-        ServerUtils utils = new ServerUtils();
-
+        updateBoardList();
+        boardsListContainer.getChildren().clear();
         for(var newBoard : boardList){
             addBoardListItemToList(newBoard);
         }
@@ -193,6 +212,21 @@ public class MainPageCtrl implements Initializable {
             return;
         }
         addBoardListItemToList(added.get());
+    }
+
+    @FXML
+    public void deleteBoardButton(ActionEvent event) throws IOException {
+        if(board.getBoard().getId()==1) return;
+        removeBoard(board.getBoard());
+        showAllBoards();
+        initializeBoard();
+        setBoardOverview(board.getBoard());
+    }
+
+    public void removeBoard(Board board){
+        ServerUtils utils =  new ServerUtils();
+        utils.deleteBoardById(board.getId());
+        boardList.remove(board);
     }
 
 }
