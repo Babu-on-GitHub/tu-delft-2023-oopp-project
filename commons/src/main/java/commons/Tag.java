@@ -24,8 +24,21 @@ public class Tag {
 
     }
 
+    /**
+     * Constructor with all parameters
+     * @param id
+     * @param title
+     */
     public Tag(long id, String title) {
         this.id = id;
+        this.title = title;
+    }
+
+    /**
+     * Constructor without id
+     * @param title
+     */
+    public Tag(String title) {
         this.title = title;
     }
 

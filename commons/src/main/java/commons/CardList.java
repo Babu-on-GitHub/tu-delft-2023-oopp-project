@@ -6,6 +6,8 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
@@ -17,22 +19,24 @@ public class CardList {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    private Timestamp timestamp;
     private String title;
-
-    @OneToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL)
     @OrderColumn
     private List<Card> cards;
 
-    @ManyToOne
-    Board board;
+    public Timestamp getTimestamp() {
+        return timestamp;
+    }
 
     @SuppressWarnings("unused")
-    public CardList(){
-
+    public CardList() {
+        this.cards = new ArrayList<>();
     }
 
     /**
      * Constructor with all parameters
+     *
      * @param id
      * @param title
      * @param cards
@@ -41,6 +45,27 @@ public class CardList {
         this.id = id;
         this.title = title;
         this.cards = cards;
+    }
+
+    /**
+     * Constructor without id
+     *
+     * @param title
+     * @param cards
+     */
+    public CardList(String title, List<Card> cards) {
+        this.title = title;
+        this.cards = cards;
+    }
+
+    /**
+     * Constructor only with title
+     *
+     * @param title
+     */
+    public CardList(String title) {
+        this.title = title;
+        cards = new ArrayList<>();
     }
 
     /**
@@ -89,6 +114,16 @@ public class CardList {
      */
     public void setCards(List<Card> cards) {
         this.cards = cards;
+    }
+
+    public void add(Card card) {
+        if (cards == null)
+            cards = new ArrayList<>();
+        cards.add(card);
+    }
+
+    public void sync() {
+        timestamp = new Timestamp(System.currentTimeMillis());
     }
 
     @Override

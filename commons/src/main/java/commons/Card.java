@@ -5,6 +5,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Set;
 
@@ -16,20 +17,24 @@ public class Card {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
     private String title;
+    private Timestamp timestamp;
 
     private String description;
-
-    @OneToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL)
     @OrderColumn
     private List<Task> subTasks;
-
     @ManyToMany(cascade = CascadeType.ALL)
     private Set<Tag> tags;
 
-    @ManyToOne
-    CardList cardList;
+
+    public Timestamp getTimestamp() {
+        return timestamp;
+    }
+
+    public void sync() {
+        this.timestamp = new Timestamp(System.currentTimeMillis());
+    }
 
     @SuppressWarnings("unused")
     public Card() {
@@ -37,14 +42,16 @@ public class Card {
 
     /**
      * Constructor with given title
+     *
      * @param title
      */
-    public Card(String title){
+    public Card(String title) {
         this.title = title;
     }
 
     /**
      * Constructor with all parameters
+     *
      * @param id
      * @param title
      * @param description

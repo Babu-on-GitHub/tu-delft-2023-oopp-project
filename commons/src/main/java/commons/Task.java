@@ -25,8 +25,21 @@ public class Task {
 
     }
 
+    /**
+     * Constructor with all parameters
+     * @param id
+     * @param title
+     */
     public Task(long id, String title) {
         this.id = id;
+        this.title = title;
+    }
+
+    /**
+     * Constructor without id
+     * @param title
+     */
+    public Task(String title) {
         this.title = title;
     }
 
@@ -61,6 +74,14 @@ public class Task {
     public void setTitle(String title) {
         this.title = title;
     }
+
+    public void assign(Task other) {
+        if (other == null || other.title == null) {
+            return;
+        }
+        this.title = other.title;
+    }
+
 
     @Override
     public boolean equals(Object o) {

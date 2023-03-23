@@ -20,17 +20,17 @@
       <ScrollPane hbarPolicy="NEVER" prefHeight="401.0" prefWidth="198.0" vbarPolicy="ALWAYS">
          <content>
             <VBox fx:id="list" prefHeight="302.0" prefWidth="185.0">
-               <fx:include source="Card.fxml" />
                <padding>
                   <Insets left="5.0" right="5.0" />
                </padding>
             </VBox>
          </content>
       </ScrollPane>
-      <HBox alignment="CENTER" prefHeight="46.0" prefWidth="198.0" spacing="50">
+      <HBox fx:id="listButtons" alignment="CENTER" prefHeight="46.0" prefWidth="198.0" spacing="50">
          <children>
-            <Button mnemonicParsing="false" onAction="#addCardButtonPress" text="Add Card" textAlignment="CENTER" />
-            <Button alignment="TOP_LEFT" mnemonicParsing="false" text="Delete List" />
+            <Button fx:id="addCardButton" mnemonicParsing="false" onAction="#addCardButton" text="Add Card" textAlignment="CENTER" />
+            <Button fx:id="deleteListButton" alignment="TOP_LEFT" mnemonicParsing="false" text="Delete List"
+                    onAction="#deleteListButton"/>
          </children></HBox>
    </children>
 </VBox>

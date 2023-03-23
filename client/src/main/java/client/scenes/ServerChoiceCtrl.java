@@ -5,8 +5,6 @@ import com.google.inject.Inject;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
-import java.io.IOException;
-
 public class ServerChoiceCtrl {
     private ServerUtils utils;
 
@@ -21,16 +19,11 @@ public class ServerChoiceCtrl {
         this.ctrl = ctrl;
     }
 
-
-
-    public void handleConnectButton() throws IOException {
-        this.utils = new ServerUtils();
-        String userInput =serverTextField.getText();
-        userInput = utils.choseServer(userInput);
-        if (userInput.equals("successfully connected")) {
+    public void handleConnectButton() {
+        String userInput = serverTextField.getText();
+        if (utils.chooseServer(userInput))
             ctrl.showMainPage();
-        }
+        else
+            serverTextField.setStyle("-fx-border-color: red;");
     }
-
-
 }

@@ -5,6 +5,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
@@ -16,9 +18,11 @@ public class Board {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    private Timestamp timestamp;
+
     private String title;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL)
     @OrderColumn
     private List<CardList> lists;
 
@@ -28,6 +32,7 @@ public class Board {
 
     /**
      * Constructor with all parameters
+     *
      * @param id
      * @param title
      * @param lists
@@ -36,6 +41,36 @@ public class Board {
         this.id = id;
         this.title = title;
         this.lists = lists;
+    }
+
+    /**
+     * Constructor without id
+     *
+     * @param title
+     * @param lists
+     */
+    public Board(String title, List<CardList> lists) {
+        this.title = title;
+        this.lists = lists;
+    }
+
+    /**
+     * Constructor only with title
+     *
+     * @param title
+     */
+    public Board(String title) {
+        this.title = title;
+        lists = new ArrayList<>();
+
+    }
+
+    public Timestamp getTimestamp() {
+        return timestamp;
+    }
+
+    public void sync() {
+        this.timestamp = new Timestamp(System.currentTimeMillis());
     }
 
     /**
@@ -84,6 +119,11 @@ public class Board {
      */
     public void setLists(List<CardList> lists) {
         this.lists = lists;
+    }
+
+
+    public void add(CardList list) {
+        lists.add(list);
     }
 
     @Override
