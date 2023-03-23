@@ -5,6 +5,7 @@ import commons.CardList;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import server.database.BoardRepository;
+import server.services.BoardService;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -15,25 +16,25 @@ public class BoardController {
 
     static Logger log = Logger.getLogger(BoardController.class.getName());
 
-    private BoardRepository boardRepository;
+    private BoardService boardService;
 
-    public BoardController(BoardRepository boardRepository){
-        this.boardRepository = boardRepository;
+    public BoardController(BoardService boardService){
+        this.boardService = boardService;
     }
 
     @GetMapping(path = { "", "/" })
     public List<Board> getAll() {
-        return boardRepository.findAll();
+        return boardService.findAllBoards();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Board> getById(@PathVariable("id") long id) {
         log.info("Getting board: " + id);
-        if (id < 0 || !boardRepository.existsById(id)) {
+        if (id < 0 || boardService.getBoardById(id) == null) {
             log.warning("Trying to get non existing board");
             return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.ok(boardRepository.findById(id).get());
+        return ResponseEntity.ok(boardService.getBoardById(id));
     }
 
     @PostMapping(path = "/create")
@@ -44,7 +45,7 @@ public class BoardController {
         }
 
         board.sync();
-        var saved = boardRepository.save(board);
+        var saved = boardService.saveBoard(board);
 
         log.info("Created board: " + saved.getId());
 
@@ -60,19 +61,19 @@ public class BoardController {
 
         log.info("Adding list: " + list.getId() + " to board: " + boardId);
 
-        var boardOptional = boardRepository.findById(boardId);
-        if (boardOptional.isEmpty()) {
+        var boardOptional = boardService.getBoardById(boardId);
+        if (boardOptional == null) {
             log.warning("Trying to add list into non-existent board");
             return ResponseEntity.badRequest().build();
         }
 
-        var board = boardOptional.get();
+        var board = boardService.getBoardById(boardId);
 
         list.sync();
         board.getLists().add(list);
 
         board.sync();
-        boardRepository.save(board);
+        boardService.saveBoard(board);
 
         // extract the newly assigned id from the db
         var ret = board.getLists().get(board.getLists().size() - 1);
@@ -85,11 +86,11 @@ public class BoardController {
     @DeleteMapping(path = "/delete/{id}")
     public ResponseEntity<Boolean> delete(@PathVariable("id") long id) {
         log.info("Deleting board: " + id);
-        if (id < 0 || !boardRepository.existsById(id)) {
+        if (id < 0 || boardService.getBoardById(id) == null) {
             log.warning("Trying to delete non existing board");
             return ResponseEntity.badRequest().build();
         }
-        boardRepository.deleteById(id);
+        boardService.deleteBoardById(id);
         return ResponseEntity.ok(true);
     }
 
@@ -97,19 +98,19 @@ public class BoardController {
     public ResponseEntity<Boolean> remove(@PathVariable("listId") long listId, @PathVariable("boardId") long boardId) {
         log.info("Deleting board: " + listId + " from board: " + boardId);
 
-        var boardOptional = boardRepository.findById(boardId);
-        if (boardOptional.isEmpty()) {
+        var boardOptional = boardService.getBoardById(boardId);
+        if (boardOptional == null) {
             log.warning("Trying to delete list from non-existent board");
             return ResponseEntity.badRequest().build();
         }
 
-        var board = boardOptional.get();
+        var board = boardService.getBoardById(boardId);
         var lists = board.getLists();
         for (int i = 0; i < lists.size(); i++) {
             if (lists.get(i).getId() == listId) {
                 lists.remove(i);
                 board.sync();
-                boardRepository.save(board);
+                boardService.saveBoard(board);
                 return ResponseEntity.ok(true);
             }
         }
@@ -127,7 +128,7 @@ public class BoardController {
 
         log.info("Updating board: " + board.getId());
 
-        if (!boardRepository.existsById(id)) {
+        if (boardService.getBoardById(id) == null) {
             log.warning("Trying to update non existing board");
             return ResponseEntity.badRequest().build();
         }
@@ -135,14 +136,14 @@ public class BoardController {
         if (id != board.getId())
             log.warning("Ids are not coherent in board update");
 
-        var stored = boardRepository.findById(id);
-        if (stored.isEmpty()) {
+        var stored = boardService.getBoardById(id);
+        if (stored == null) {
             log.warning("Something went wrong while updating board");
             return ResponseEntity.badRequest().build();
         }
 
         board.sync();
-        var saved = boardRepository.save(board);
+        var saved = boardService.saveBoard(board);
         return ResponseEntity.ok(saved);
     }
 }

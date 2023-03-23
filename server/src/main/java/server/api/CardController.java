@@ -4,6 +4,7 @@ import commons.Card;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import server.database.CardRepository;
+import server.services.CardService;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -14,24 +15,24 @@ public class CardController {
 
     static Logger log = Logger.getLogger(CardController.class.getName());
 
-    private CardRepository cardRepository;
+    private CardService cardService;
 
-    public CardController(CardRepository cardRepository){
-        this.cardRepository = cardRepository;
+    public CardController(CardService cardService){
+        this.cardService = cardService;
     }
 
     @GetMapping(path = { "", "/" })
     public List<Card> getAll() {
-        return cardRepository.findAll();
+        return cardService.getAllCards();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Card> getById(@PathVariable("id") long id) {
-        if (id < 0 || !cardRepository.existsById(id)) {
+        if (id < 0 || cardService.getCardById(id).isEmpty()) {
             log.warning("Trying to get non existing card");
             return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.ok(cardRepository.findById(id).get());
+        return ResponseEntity.ok(cardService.getCardById(id).get());
     }
 
     @PostMapping(path = "/add")
@@ -46,7 +47,7 @@ public class CardController {
 
     @PutMapping(path = "/update/{id}")
     public ResponseEntity<Card> update(@RequestBody Card card, @PathVariable("id") long id) {
-        if (card == null || !cardRepository.existsById(id)) {
+        if (card == null || cardService.getCardById(id).isEmpty()) {
             log.warning("Trying to update non existing card");
             return ResponseEntity.badRequest().build();
         }
@@ -56,7 +57,7 @@ public class CardController {
         }
 
         card.sync();
-        var saved = cardRepository.save(card);
+        var saved = cardService.addCard(card);
         return ResponseEntity.ok(saved);
     }
 }

@@ -4,6 +4,7 @@ import commons.Board;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
+import server.services.BoardService;
 
 import java.util.ArrayList;
 
@@ -19,6 +20,6 @@ public class BoardControllerTest {
     @BeforeEach
     public void setup() {
         repository = new TestBoardRepository();
-        controller = new BoardController(repository);
+        controller = new BoardController(new BoardService(repository));
     }
 }
