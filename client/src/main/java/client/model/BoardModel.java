@@ -111,8 +111,10 @@ public class BoardModel {
 
         var serverBoard = res.get();
 
-        if (serverBoard.equals(board))
+        if (serverBoard.equals(board)) {
+            log.info("Board is up to date");
             return false;
+        }
 
         var serverTimestamp = serverBoard.getTimestamp();
         var localTimestamp = board.getTimestamp();
@@ -203,5 +205,22 @@ public class BoardModel {
         var isCoherent = coherencyTest();
         if (!isCoherent)
             log.severe("BoardModel is not coherent");
+    }
+
+    public void moveCard(CardModel card, ListModel to, int index) {
+        ServerUtils utils = new ServerUtils();
+
+        card.disown();
+
+        card.fosterBy(to, index);
+
+        var res = utils.moveCard(card.getCard().getId(), to.getCardList().getId(),
+                index, board.getId());
+        if (res.isEmpty()) {
+            log.warning("Moving card failed, updating whole board");
+        }
+
+        update();
+        quietTest();
     }
 }

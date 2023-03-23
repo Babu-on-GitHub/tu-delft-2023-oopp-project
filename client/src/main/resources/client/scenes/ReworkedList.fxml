@@ -31,7 +31,7 @@
    <center>
       <ScrollPane fx:id="scrollPane" prefHeight="484.0" prefWidth="300.0" BorderPane.alignment="CENTER">
          <content>
-            <VBox fx:id="cardListContainer" />
+            <VBox fx:id="cardListContainer" onDragDone="#dragDone" onDragDropped="#drop" onDragOver="#dragOver" prefHeight="484.0" />
          </content>
       </ScrollPane>
    </center>

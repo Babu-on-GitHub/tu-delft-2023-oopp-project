@@ -53,13 +53,12 @@ public class MainPageCtrl implements Initializable {
         boardScrollPane.setFitToHeight(true);
         listOfLists.setSpacing(20);
 
-        if(board == null) {
+        if (board == null) {
             var res = server.getBoardById(1);
             if (res.isPresent()) {
                 board = new BoardModel(res.get());
                 board.setController(this);
-            }
-            else {
+            } else {
                 Board toAdd = new Board();
                 var added = server.addBoard(toAdd);
                 if (added.isEmpty())
@@ -79,7 +78,7 @@ public class MainPageCtrl implements Initializable {
     }
 
     @FXML
-    public void optionsShowServerChoice(ActionEvent event){
+    public void optionsShowServerChoice(ActionEvent event) {
         mainCtrl.showServerChoice();
     }
 
@@ -109,5 +108,9 @@ public class MainPageCtrl implements Initializable {
 
     public HBox getListsContainer() {
         return listOfLists;
+    }
+
+    public BoardModel getModel() {
+        return board;
     }
 }
