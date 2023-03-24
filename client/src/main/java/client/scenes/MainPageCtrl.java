@@ -10,9 +10,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 
@@ -23,6 +21,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
@@ -73,25 +72,26 @@ public class MainPageCtrl implements Initializable {
         boardScrollPane.setFitToHeight(true);
         cardListsContainer.setSpacing(20);
 
-        initializeBoard();
+        //initializeBoard();
 
-        board.setController(this);
-        board.update();
-        board.updateChildren();
+        showBoard();
 
         //makes board overview resize correctly
-        splitPane.setResizableWithParent(boardListScrollPane.getParent(), false);
+        SplitPane.setResizableWithParent(boardListScrollPane.getParent(), false);
 
         //makes the boards fill width of the board list
         boardListScrollPane.setFitToWidth(true);
 
+        //updateBoardList();
         try {
-            showAllBoards();
+            showBoardsList();
         } catch (IOException e) {
-            log.warning("Something went wrong when showing existing boards");
+            log.warning("Couldn't show boards");
         }
 
     }
+
+
 
     public void refresh() {
         board.update();
@@ -132,24 +132,27 @@ public class MainPageCtrl implements Initializable {
         return cardListsContainer;
     }
 
-    public void setBoardOverview(Board board) throws IOException {
-        ServerUtils utils = new ServerUtils();
-        var res = utils.getBoardById(board.getId());
-        if(res.isEmpty()){
-            initializeBoard();
-            updateBoardList();
-            showAllBoards();
-            return;
-        }
-        this.board = new BoardModel(res.get());
-        cardListsContainer.getChildren().clear();
+    public void showBoard(){
+        if(board == null) return;
         this.board.setController(this);
         this.board.update();
         this.board.updateChildren();
     }
 
+    public void setBoardOverview(Board board) throws IOException {
+        var res = server.getBoardById(board.getId());
+        if(res.isEmpty()){
+            initializeBoard();
+            updateBoardList();
+            showBoardsList();
+            return;
+        }
+        this.board = new BoardModel(res.get());
+        cardListsContainer.getChildren().clear();
+        showBoard();
+    }
+
     public void initializeBoard(){
-        ServerUtils utils = new ServerUtils();
         var res = server.getBoardById(1);
         if (res.isPresent()) {
             board = new BoardModel(res.get());
@@ -175,8 +178,9 @@ public class MainPageCtrl implements Initializable {
         }
     }
 
-    public void showAllBoards() throws IOException {
-        updateBoardList();
+    //call updateBoardList before this one
+    public void showBoardsList() throws IOException {
+        if(boardList == null) return;
         boardsListContainer.getChildren().clear();
         for(var newBoard : boardList){
             addBoardListItemToList(newBoard);
@@ -208,11 +212,35 @@ public class MainPageCtrl implements Initializable {
 
     @FXML
     public void deleteBoardButton(ActionEvent event) throws IOException {
-        if(board.getBoard().getId()==1) return;
-        removeBoard(board.getBoard());
-        showAllBoards();
-        initializeBoard();
-        setBoardOverview(board.getBoard());
+        if(board.getBoard().getId()==1){
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Warning");
+            alert.setHeaderText("Default board cannot be deleted");
+            //alert.setContentText("Default board cannot be deleted");
+
+            alert.showAndWait();
+            return;
+        }
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Deletion Dialog");
+        alert.setHeaderText("Are you sure you want to delete the board?");
+        alert.setContentText("Click OK to proceed or Cancel to abort.");
+
+        ButtonType buttonTypeOK = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+        ButtonType buttonTypeCancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+        alert.getButtonTypes().setAll(buttonTypeOK, buttonTypeCancel);
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == buttonTypeOK){
+            removeBoard(board.getBoard());
+            showBoardsList();
+            initializeBoard();
+            setBoardOverview(board.getBoard());
+        } else {
+            return;
+        }
     }
 
     public void removeBoard(Board board){

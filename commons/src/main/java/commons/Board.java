@@ -123,6 +123,7 @@ public class Board {
 
 
     public void add(CardList list) {
+        if(lists == null) lists = new ArrayList<>();
         lists.add(list);
     }
 

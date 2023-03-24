@@ -17,8 +17,6 @@ public class Task {
 
     private String title;
 
-    @ManyToOne
-    Card card;
 
     @SuppressWarnings("unused")
     public Task(){
