@@ -11,12 +11,15 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 
 import javafx.event.ActionEvent;
 import javafx.scene.layout.VBox;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -55,6 +58,9 @@ public class MainPageCtrl implements Initializable {
     @FXML
     private VBox boardsListContainer;
 
+    @FXML
+    private ImageView deleteBoardImage;
+
 
 
     @Inject
@@ -67,6 +73,10 @@ public class MainPageCtrl implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         boardName.setText("Default board");
+
+        File file = new File("client/src/main/resources/client/icons/a.png");
+        Image image = new Image(file.toURI().toString());
+        deleteBoardImage.setImage(image);
 
         //This makes the lists to fill the entire height of their parent
         boardScrollPane.setFitToHeight(true);

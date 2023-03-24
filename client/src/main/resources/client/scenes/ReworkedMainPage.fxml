@@ -25,11 +25,7 @@
             </TextField>
             <Button contentDisplay="TOP" graphicTextGap="0.0" layoutX="59.0" layoutY="22.0" mnemonicParsing="false" onAction="#deleteBoardButton" prefHeight="58.0" prefWidth="132.0" style="-fx-background-color: inherit;" text="Delete board" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="5.0">
                <graphic>
-                  <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../icons/delete_FILL0_wght400_GRAD0_opsz48.png" />
-                     </image>
-                  </ImageView>
+                  <ImageView fx:id="deleteBoardImage" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
                </graphic></Button>
             <Button contentDisplay="TOP" graphicTextGap="0.0" layoutX="858.0" layoutY="5.0" mnemonicParsing="false" onAction="#addListButton" prefHeight="58.0" prefWidth="141.0" style="-fx-background-color: inherit;" text="Add list" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="5.0">
                <graphic>
