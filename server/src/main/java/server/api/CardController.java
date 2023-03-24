@@ -28,11 +28,13 @@ public class CardController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Card> getById(@PathVariable("id") long id) {
-        if (id < 0 || cardService.getCardById(id).isEmpty()) {
-            log.warning("Trying to get non existing card");
+        try{
+            var card = cardService.getCardById(id);
+            return ResponseEntity.ok(card);
+        }catch (IllegalArgumentException e){
+            log.warning(e.getMessage());
             return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.ok(cardService.getCardById(id).get());
     }
 
     @PostMapping(path = "/add")
@@ -47,17 +49,12 @@ public class CardController {
 
     @PutMapping(path = "/update/{id}")
     public ResponseEntity<Card> update(@RequestBody Card card, @PathVariable("id") long id) {
-        if (card == null || cardService.getCardById(id).isEmpty()) {
-            log.warning("Trying to update non existing card");
-            return ResponseEntity.badRequest().build();
-        }
-
-        if (card.getId() != id) {
-            log.warning("Ids are inconsistent in card update");
-        }
-
-        card.sync();
-        var saved = cardService.addCard(card);
-        return ResponseEntity.ok(saved);
+       try{
+           var saved = cardService.update(card, id);
+           return ResponseEntity.ok(saved);
+       }catch (IllegalArgumentException e){
+           log.warning(e.getMessage());
+           return ResponseEntity.badRequest().build();
+       }
     }
 }
