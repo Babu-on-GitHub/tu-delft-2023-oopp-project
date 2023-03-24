@@ -19,6 +19,5 @@ public class WebSocketController {
     public void message() {
         String message = "This is some info from server";
         template.convertAndSend("/topic", message);
-        System.out.println("message being sent");
     }
 }

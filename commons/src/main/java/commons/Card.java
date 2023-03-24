@@ -5,6 +5,9 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Set;
@@ -12,7 +15,7 @@ import java.util.Set;
 import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
 
 @Entity
-public class Card {
+public class Card implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -126,7 +129,7 @@ public class Card {
      *
      * @param subTasks Value for subTasks
      */
-    public void setSubTasks(List<Task> subTasks) {
+    public void setSubTasks(ArrayList<Task> subTasks) {
         this.subTasks = subTasks;
     }
 
@@ -142,7 +145,7 @@ public class Card {
      *
      * @param tags Value for tags
      */
-    public void setTags(Set<Tag> tags) {
+    public void setTags(HashSet<Tag> tags) {
         this.tags = tags;
     }
 

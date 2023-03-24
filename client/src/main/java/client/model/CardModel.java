@@ -74,4 +74,16 @@ public class CardModel {
 
     public void updateChildren() {
     }
+
+    public void disown() {
+        this.parent.getCardList().getCards().remove(this.card);
+        this.parent.getChildren().remove(this);
+        this.parent = null;
+    }
+
+    public void fosterBy(ListModel parent, int index) {
+        this.parent = parent;
+        this.parent.getChildren().add(index, this);
+        this.parent.getCardList().getCards().add(index, this.card);
+    }
 }

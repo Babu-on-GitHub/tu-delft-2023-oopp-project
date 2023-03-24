@@ -78,7 +78,43 @@ public class ListModel {
         cardList.add(newCard);
         children.add(cardModel);
 
-        update();
+        update(false);
+        quietTest();
+    }
+
+    public void insertCard(CardModel card, int position) {
+        cardList.getCards().add(position, card.getCard());
+        children.add(position, card);
+        var utils = new ServerUtils();
+        var res = utils.insertCard(card.getCard(), position, cardList);
+        if (res.isEmpty()) {
+            log.warning("Failed to update card list with id " + cardList.getId() + " in local model");
+            return;
+        }
+
+        update(false);
+        quietTest();
+    }
+
+    public void moveCard(int from, int to) {
+        var utils = new ServerUtils();
+        var card = cardList.getCards().get(from);
+        cardList.getCards().remove(from);
+        cardList.getCards().add(to, card);
+        var res = utils.deleteCardById(card.getId(), cardList.getId());
+        if (res.isEmpty()) {
+            log.warning("Failed to delete card with id " + card.getId() + " in local model");
+            return;
+        }
+
+        var opt = utils.insertCard(card, to, cardList);
+        if (opt.isEmpty()) {
+            log.severe("During move card, failed to insert");
+            return;
+        }
+
+
+        update(true);
         quietTest();
     }
 
@@ -104,14 +140,32 @@ public class ListModel {
 
         utils.deleteCardById(id, cardList.getId());
 
-        if (update()) {
-            log.warning("Repeatedly deleting card, since server overwrote local");
-            deleteCard(cardModel);
-        }
+        update(false);
         quietTest();
     }
 
-    public boolean update() {
+    public void deleteCardById(long id) {
+        ServerUtils utils = new ServerUtils();
+        boolean deletedSuccessfully = false;
+        for (var card : cardList.getCards()) {
+            if (card.getId() == id) {
+                cardList.getCards().remove(card);
+                deletedSuccessfully = true;
+                break;
+            }
+        }
+        if (!deletedSuccessfully)
+            log.warning("Failed to delete card with id " + id + " in local model");
+
+        children.removeIf(cardModel -> cardModel.getCard().getId() == id);
+
+        utils.deleteCardById(id, cardList.getId());
+
+        update(false);
+        quietTest();
+    }
+
+    public boolean update(boolean forced) {
         ServerUtils utils = new ServerUtils();
         var res = utils.getCardListById(cardList.getId());
         if (res.isEmpty()) {
@@ -131,7 +185,7 @@ public class ListModel {
 
         var fetchedCardList = res.get();
 
-        if (fetchedCardList.equals(cardList)) return false;
+        if (!forced && fetchedCardList.equals(cardList)) return false;
 
         var serverTimestamp = fetchedCardList.getTimestamp();
         var localTimestamp = cardList.getTimestamp();

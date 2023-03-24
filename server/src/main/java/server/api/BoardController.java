@@ -119,6 +119,66 @@ public class BoardController {
         return ResponseEntity.ok(false);
     }
 
+    @PostMapping(path = "moveCard/{cardId}/to/{listId}/at/{index}/located/{boardId}")
+    public ResponseEntity<Boolean> moveCard(@PathVariable("cardId") long cardId,
+                                            @PathVariable("listId") long listId,
+                                            @PathVariable("index") int index,
+                                            @PathVariable("boardId") long boardId) {
+        log.info("Moving card: " + cardId + " to list: " + listId +
+                " at index: " + index + " located in board: " + boardId);
+
+        var boardOptional = boardRepository.findById(boardId);
+        if (boardOptional.isEmpty()) {
+            log.warning("Trying to move card in non-existent board");
+            return ResponseEntity.badRequest().build();
+        }
+        var board = boardOptional.get();
+
+        var lists = board.getLists();
+        var targetListOpt = lists.stream()
+                .filter(list -> list.getId() == listId).findFirst();
+        if (targetListOpt.isEmpty()) {
+            log.warning("Trying to move card to non-existent list");
+            return ResponseEntity.badRequest().build();
+        }
+        var targetList = targetListOpt.get();
+
+        // find the card with correct ID anywhere
+        var cardOpt = lists.stream()
+                .flatMap(list -> list.getCards().stream())
+                .filter(card -> card.getId() == cardId).findFirst();
+        if (cardOpt.isEmpty()) {
+            log.warning("Trying to move non-existent card");
+            return ResponseEntity.badRequest().build();
+        }
+
+        var card = cardOpt.get();
+
+        // remove the card from the list it is currently in
+        var sourceListOpt = lists.stream()
+                .filter(list -> list.getCards().contains(card)).findFirst();
+        if (sourceListOpt.isEmpty()) {
+            log.warning("Something went wrong while moving card");
+            return ResponseEntity.badRequest().build();
+        }
+
+        var sourceList = sourceListOpt.get();
+        sourceList.getCards().remove(card);
+
+        if (index > targetList.getCards().size()) {
+            log.info("Index out of bounds, moving to the end of list");
+            index = targetList.getCards().size();
+        }
+
+        targetList.getCards().add(index, card);
+        board.sync();
+        sourceList.sync();
+        targetList.sync();
+        boardRepository.save(board);
+
+        return ResponseEntity.ok(true);
+    }
+
     @PutMapping(path = "/update/{id}")
     public ResponseEntity<Board> update(@RequestBody Board board, @PathVariable("id") long id) {
         if (board == null) {
