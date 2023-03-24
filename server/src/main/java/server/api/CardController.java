@@ -3,7 +3,7 @@ package server.api;
 import commons.Card;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import server.database.CardRepository;
+import server.services.CardService;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -14,24 +14,26 @@ public class CardController {
 
     static Logger log = Logger.getLogger(CardController.class.getName());
 
-    private CardRepository cardRepository;
+    private CardService cardService;
 
-    public CardController(CardRepository cardRepository){
-        this.cardRepository = cardRepository;
+    public CardController(CardService cardService){
+        this.cardService = cardService;
     }
 
     @GetMapping(path = { "", "/" })
     public List<Card> getAll() {
-        return cardRepository.findAll();
+        return cardService.getAllCards();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Card> getById(@PathVariable("id") long id) {
-        if (id < 0 || !cardRepository.existsById(id)) {
-            log.warning("Trying to get non existing card");
+        try{
+            var card = cardService.getCardById(id);
+            return ResponseEntity.ok(card);
+        }catch (IllegalArgumentException e){
+            log.warning(e.getMessage());
             return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.ok(cardRepository.findById(id).get());
     }
 
     @PostMapping(path = "/add")
@@ -46,17 +48,12 @@ public class CardController {
 
     @PutMapping(path = "/update/{id}")
     public ResponseEntity<Card> update(@RequestBody Card card, @PathVariable("id") long id) {
-        if (card == null || !cardRepository.existsById(id)) {
-            log.warning("Trying to update non existing card");
+        try{
+            var saved = cardService.update(card, id);
+            return ResponseEntity.ok(saved);
+        }catch (IllegalArgumentException e){
+            log.warning(e.getMessage());
             return ResponseEntity.badRequest().build();
         }
-
-        if (card.getId() != id) {
-            log.warning("Ids are inconsistent in card update");
-        }
-
-        card.sync();
-        var saved = cardRepository.save(card);
-        return ResponseEntity.ok(saved);
     }
 }

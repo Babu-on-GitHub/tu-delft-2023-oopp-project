@@ -4,7 +4,7 @@ import commons.Board;
 import commons.CardList;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import server.database.BoardRepository;
+import server.services.BoardService;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -15,108 +15,81 @@ public class BoardController {
 
     static Logger log = Logger.getLogger(BoardController.class.getName());
 
-    private BoardRepository boardRepository;
+    private BoardService boardService;
 
-    public BoardController(BoardRepository boardRepository){
-        this.boardRepository = boardRepository;
+    public BoardController(BoardService boardService){
+        this.boardService = boardService;
     }
 
     @GetMapping(path = { "", "/" })
     public List<Board> getAll() {
-        return boardRepository.findAll();
+        return boardService.findAllBoards();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Board> getById(@PathVariable("id") long id) {
-        log.info("Getting board: " + id);
-        if (id < 0 || !boardRepository.existsById(id)) {
-            log.warning("Trying to get non existing board");
+        try{
+            log.info("Getting board: " + id);
+            Board board = boardService.getBoardById(id);
+            return ResponseEntity.ok(board);
+        } catch (IllegalArgumentException e){
+            log.warning(e.getMessage());
             return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.ok(boardRepository.findById(id).get());
     }
+
 
     @PostMapping(path = "/create")
     public ResponseEntity<Board> create(@RequestBody Board board) {
-        if (board == null) {
-            log.warning("Trying to create null board");
+        try {
+            board.sync();
+            var saved = boardService.saveBoard(board);
+            log.info("Created board: " + saved.getId());
+            return ResponseEntity.ok(saved);
+        } catch (IllegalArgumentException e) {
+            log.warning(e.getMessage());
             return ResponseEntity.badRequest().build();
         }
-
-        board.sync();
-        var saved = boardRepository.save(board);
-
-        log.info("Created board: " + saved.getId());
-
-        return ResponseEntity.ok(saved);
     }
+
 
     @PostMapping(path = "/add/{id}")
     public ResponseEntity<CardList> add(@RequestBody CardList list, @PathVariable("id") long boardId) {
-        if (list == null) {
-            log.warning("Trying to add null list");
-            return ResponseEntity.badRequest().build();
-        }
 
         log.info("Adding list: " + list.getId() + " to board: " + boardId);
-
-        var boardOptional = boardRepository.findById(boardId);
-        if (boardOptional.isEmpty()) {
-            log.warning("Trying to add list into non-existent board");
+        try {
+            var ret = boardService.saveCardList(list, boardId);
+            log.info("New list id: " + ret.getId());
+            return ResponseEntity.ok(ret);
+        } catch (IllegalArgumentException e){
+            log.warning(e.getMessage());
             return ResponseEntity.badRequest().build();
         }
-
-        var board = boardOptional.get();
-
-        list.sync();
-        board.getLists().add(list);
-
-        board.sync();
-        boardRepository.save(board);
-
-        // extract the newly assigned id from the db
-        var ret = board.getLists().get(board.getLists().size() - 1);
-
-        log.info("New list id: " + ret.getId());
-
-        return ResponseEntity.ok(ret);
     }
 
     @DeleteMapping(path = "/delete/{id}")
     public ResponseEntity<Boolean> delete(@PathVariable("id") long id) {
         log.info("Deleting board: " + id);
-        if (id < 0 || !boardRepository.existsById(id)) {
-            log.warning("Trying to delete non existing board");
+        try{
+            boardService.deleteBoardById(id);
+            return ResponseEntity.ok(true);
+        } catch (IllegalArgumentException e){
+            log.warning(e.getMessage());
             return ResponseEntity.badRequest().build();
         }
-        boardRepository.deleteById(id);
-        return ResponseEntity.ok(true);
     }
 
     @DeleteMapping(path = "/delete/{listId}/from/{boardId}")
     public ResponseEntity<Boolean> remove(@PathVariable("listId") long listId, @PathVariable("boardId") long boardId) {
-        log.info("Deleting board: " + listId + " from board: " + boardId);
-
-        var boardOptional = boardRepository.findById(boardId);
-        if (boardOptional.isEmpty()) {
-            log.warning("Trying to delete list from non-existent board");
-            return ResponseEntity.badRequest().build();
+        log.info("Deleting list: " + listId + " from board: " + boardId);
+        try{
+            boardService.deleteCardListById(listId, boardId);
+            return ResponseEntity.ok(true);
         }
-
-        var board = boardOptional.get();
-        var lists = board.getLists();
-        for (int i = 0; i < lists.size(); i++) {
-            if (lists.get(i).getId() == listId) {
-                lists.remove(i);
-                board.sync();
-                boardRepository.save(board);
-                return ResponseEntity.ok(true);
-            }
+        catch (IllegalArgumentException e){
+            log.warning(e.getMessage());
+            return ResponseEntity.ok(false);
         }
-
-        log.warning("Trying to delete non-existent list");
-
-        return ResponseEntity.ok(false);
     }
 
     @PostMapping(path = "moveCard/{cardId}/to/{listId}/at/{index}/located/{boardId}")
@@ -126,83 +99,23 @@ public class BoardController {
                                             @PathVariable("boardId") long boardId) {
         log.info("Moving card: " + cardId + " to list: " + listId +
                 " at index: " + index + " located in board: " + boardId);
-
-        var boardOptional = boardRepository.findById(boardId);
-        if (boardOptional.isEmpty()) {
-            log.warning("Trying to move card in non-existent board");
-            return ResponseEntity.badRequest().build();
+        try{
+            boardService.moveCard(cardId, listId, index, boardId);
+            return ResponseEntity.ok(true);
+        } catch (IllegalArgumentException e){
+            log.warning(e.getMessage());
+            return ResponseEntity.ok(false);
         }
-        var board = boardOptional.get();
-
-        var lists = board.getLists();
-        var targetListOpt = lists.stream()
-                .filter(list -> list.getId() == listId).findFirst();
-        if (targetListOpt.isEmpty()) {
-            log.warning("Trying to move card to non-existent list");
-            return ResponseEntity.badRequest().build();
-        }
-        var targetList = targetListOpt.get();
-
-        // find the card with correct ID anywhere
-        var cardOpt = lists.stream()
-                .flatMap(list -> list.getCards().stream())
-                .filter(card -> card.getId() == cardId).findFirst();
-        if (cardOpt.isEmpty()) {
-            log.warning("Trying to move non-existent card");
-            return ResponseEntity.badRequest().build();
-        }
-
-        var card = cardOpt.get();
-
-        // remove the card from the list it is currently in
-        var sourceListOpt = lists.stream()
-                .filter(list -> list.getCards().contains(card)).findFirst();
-        if (sourceListOpt.isEmpty()) {
-            log.warning("Something went wrong while moving card");
-            return ResponseEntity.badRequest().build();
-        }
-
-        var sourceList = sourceListOpt.get();
-        sourceList.getCards().remove(card);
-
-        if (index > targetList.getCards().size()) {
-            log.info("Index out of bounds, moving to the end of list");
-            index = targetList.getCards().size();
-        }
-
-        targetList.getCards().add(index, card);
-        board.sync();
-        sourceList.sync();
-        targetList.sync();
-        boardRepository.save(board);
-
-        return ResponseEntity.ok(true);
     }
 
     @PutMapping(path = "/update/{id}")
     public ResponseEntity<Board> update(@RequestBody Board board, @PathVariable("id") long id) {
-        if (board == null) {
+        try {
+            var saved = boardService.update(board, id);
+            return ResponseEntity.ok(saved);
+        } catch (IllegalArgumentException e){
+            log.warning(e.getMessage());
             return ResponseEntity.badRequest().build();
         }
-
-        log.info("Updating board: " + board.getId());
-
-        if (!boardRepository.existsById(id)) {
-            log.warning("Trying to update non existing board");
-            return ResponseEntity.badRequest().build();
-        }
-
-        if (id != board.getId())
-            log.warning("Ids are not coherent in board update");
-
-        var stored = boardRepository.findById(id);
-        if (stored.isEmpty()) {
-            log.warning("Something went wrong while updating board");
-            return ResponseEntity.badRequest().build();
-        }
-
-        board.sync();
-        var saved = boardRepository.save(board);
-        return ResponseEntity.ok(saved);
     }
 }
