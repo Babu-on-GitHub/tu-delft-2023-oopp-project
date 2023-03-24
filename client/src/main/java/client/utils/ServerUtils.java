@@ -77,6 +77,7 @@ public class ServerUtils {
     public ServerUtils() {
         this.SERVER = "http://localhost:8080";
         this.websocketUrl = "ws://localhost:8080/websocket";
+        session = connect(websocketUrl);
     }
 
     public boolean chooseServer(String server) {
@@ -84,24 +85,24 @@ public class ServerUtils {
             return false;
 
         var oldServer = SERVER;
-        var oldWebsocketurl = websocketUrl;
+        //var oldWebsocketurl = websocketUrl;
         SERVER = "http://" + server;
-        websocketUrl = "ws://" + server + "/websocket";
+        //websocketUrl = "ws://" + server + "/websocket";
 
         try {
             String response = get("api/status", new GenericType<>() {
             });
             if (response.equals("Running")) {
-                session = connect(websocketUrl);
+                //session = connect(websocketUrl);
                 return true;
             } else {
                 SERVER = oldServer;
-                websocketUrl = oldWebsocketurl;
+                //websocketUrl = oldWebsocketurl;
                 return false;
             }
         } catch (Exception e) {
             SERVER = oldServer;
-            websocketUrl = oldWebsocketurl;
+            //websocketUrl = oldWebsocketurl;
             return false;
         }
     }
@@ -288,12 +289,14 @@ public class ServerUtils {
             @SuppressWarnings("unchecked")
             @Override
             public void handleFrame(StompHeaders headers, Object payload) {
+                System.out.println("handle frame");
                 consumer.accept((T) payload);
             }
         });
     }
 
     public void send(String dest, Object o) {
+        System.out.println("send something");
         session.send(dest, o);
     }
 

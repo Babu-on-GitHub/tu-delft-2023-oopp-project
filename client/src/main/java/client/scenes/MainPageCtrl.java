@@ -69,11 +69,14 @@ public class MainPageCtrl implements Initializable {
         board.setController(this);
         board.update();
         board.updateChildren();
+
+        server.registerForMessages("/topic/board", board.getBoard().getClass(), b ->{
+            System.out.println("Received board " + b.getId());
+        });
     }
 
     public void refresh() {
         board.update();
-        //TODO: sockets
         board.updateChildren();
     }
 
@@ -87,6 +90,7 @@ public class MainPageCtrl implements Initializable {
         ListModel model = new ListModel(new CardList(), board);
         addList(model); // important: keep order of these two the same
         board.addList(model);
+        server.send("/app/board/update",board.getBoard().getId());
     }
 
     public void recreateChildren(List<ListModel> arr) throws IOException {

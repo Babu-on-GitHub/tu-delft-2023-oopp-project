@@ -10,8 +10,6 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 
 @Configuration
 @EnableWebSocketMessageBroker
-@EnableScheduling
-@ComponentScan(basePackages = "client")
 public class WebsocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
