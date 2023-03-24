@@ -17,7 +17,7 @@
          </font>
       </TextField>
       <Separator prefHeight="6.0" prefWidth="198.0" />
-      <ScrollPane hbarPolicy="NEVER" prefHeight="401.0" prefWidth="198.0" vbarPolicy="ALWAYS">
+      <ScrollPane hbarPolicy="NEVER" prefHeight="401.0" prefWidth="198.0" vbarPolicy="ALWAYS" fx:id="scrollPane">
          <content>
             <VBox fx:id="list" prefHeight="302.0" prefWidth="185.0">
                <padding>

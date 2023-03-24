@@ -5,14 +5,13 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane prefHeight="175.0" prefWidth="385.0" style="-fx-border-color: black; -fx-border-width: 1px;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:id="cardContainer">
+<AnchorPane onDragDetected="#dragDetected" onDragDone="#dragDone" prefHeight="100.0" prefWidth="300.0" style="-fx-border-color: black; -fx-border-width: 1px;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:id="cardContainer" >
    <children>
-      <TextField fx:id="cardTitle" alignment="CENTER" layoutX="3.0" layoutY="2.0" prefHeight="96.0" prefWidth="381.0" text="NEW CARD" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="1.0">
+      <TextField fx:id="cardTitle" alignment="CENTER" layoutX="3.0" layoutY="2.0" prefHeight="60.0" prefWidth="300.0" text="NEW CARD" AnchorPane.bottomAnchor="45.0" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="1.0">
          <font>
             <Font size="14.0" />
          </font>
       </TextField>
-      <Button layoutX="404.0" layoutY="144.0" mnemonicParsing="false" onAction="#deleteCardButton" prefHeight="44.0" prefWidth="169.0" text="Delete" AnchorPane.bottomAnchor="21.0" AnchorPane.rightAnchor="22.0" />
+      <Button layoutX="404.0" layoutY="144.0" mnemonicParsing="false" onAction="#deleteCardButton" prefHeight="35.0" prefWidth="169.0" text="Delete" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="20.0" />
    </children>
 </AnchorPane>
