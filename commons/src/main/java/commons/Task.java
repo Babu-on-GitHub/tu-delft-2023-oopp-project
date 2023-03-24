@@ -6,10 +6,12 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import javax.persistence.*;
 
+import java.io.Serializable;
+
 import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
 
 @Entity
-public class Task {
+public class Task implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,8 +27,21 @@ public class Task {
 
     }
 
+    /**
+     * Constructor with all parameters
+     * @param id
+     * @param title
+     */
     public Task(long id, String title) {
         this.id = id;
+        this.title = title;
+    }
+
+    /**
+     * Constructor without id
+     * @param title
+     */
+    public Task(String title) {
         this.title = title;
     }
 
@@ -61,6 +76,14 @@ public class Task {
     public void setTitle(String title) {
         this.title = title;
     }
+
+    public void assign(Task other) {
+        if (other == null || other.title == null) {
+            return;
+        }
+        this.title = other.title;
+    }
+
 
     @Override
     public boolean equals(Object o) {

@@ -3,58 +3,57 @@ package server.api;
 import commons.Card;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import server.database.CardRepository;
+import server.services.CardService;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 @RestController
 @RequestMapping("/api/card")
 public class CardController {
 
-    private CardRepository cardRepository;
+    static Logger log = Logger.getLogger(CardController.class.getName());
 
-    public CardController(CardRepository cardRepository){
-        this.cardRepository = cardRepository;
+    private CardService cardService;
+
+    public CardController(CardService cardService){
+        this.cardService = cardService;
     }
 
     @GetMapping(path = { "", "/" })
     public List<Card> getAll() {
-        return cardRepository.findAll();
+        return cardService.getAllCards();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Card> getById(@PathVariable("id") long id) {
-        if (id < 0 || !cardRepository.existsById(id)) {
+        try{
+            var card = cardService.getCardById(id);
+            return ResponseEntity.ok(card);
+        }catch (IllegalArgumentException e){
+            log.warning(e.getMessage());
             return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.ok(cardRepository.findById(id).get());
     }
 
     @PostMapping(path = "/add")
     public ResponseEntity<Card> add(@RequestBody Card card) {
-        if(card == null){
-            return ResponseEntity.badRequest().build();
-        }
-        Card saved = cardRepository.save(card);
-        return ResponseEntity.ok(saved);
+        throw new UnsupportedOperationException();
     }
 
-    @DeleteMapping(path = "/remove/{id}")
+    @DeleteMapping(path = "/delete/{id}")
     public ResponseEntity<Boolean> remove(@PathVariable("id") long id) {
-        if(!cardRepository.existsById(id)){
-            return ResponseEntity.badRequest().build();
-        }
-        cardRepository.deleteById(id);
-        return ResponseEntity.ok(true);
+        throw new UnsupportedOperationException();
     }
 
     @PutMapping(path = "/update/{id}")
     public ResponseEntity<Card> update(@RequestBody Card card, @PathVariable("id") long id) {
-        if(card == null || !cardRepository.existsById(id)) {
+        try{
+            var saved = cardService.update(card, id);
+            return ResponseEntity.ok(saved);
+        }catch (IllegalArgumentException e){
+            log.warning(e.getMessage());
             return ResponseEntity.badRequest().build();
         }
-        cardRepository.deleteById(id);
-        var saved = cardRepository.save(card);
-        return ResponseEntity.ok(saved);
     }
 }

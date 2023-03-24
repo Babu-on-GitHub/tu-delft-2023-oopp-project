@@ -1,22 +1,28 @@
 package client.scenes;
 
+import client.model.BoardModel;
+import client.model.ListModel;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
+import commons.Board;
+import commons.CardList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
+import javafx.scene.Node;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 
 import javafx.event.ActionEvent;
+
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class MainPageCtrl implements Initializable {
+
     private final ServerUtils server;
 
     private final MainCtrl mainCtrl;
@@ -25,25 +31,13 @@ public class MainPageCtrl implements Initializable {
     private TextField boardName;
 
     @FXML
-    private Button deleteListButton;
+    private HBox listOfLists;
 
     @FXML
-    private Button addListButton;
+    private ScrollPane boardScrollPane;
 
-    @FXML
-    private Button addCardButton;
+    private BoardModel board;
 
-    @FXML
-    private StackPane card;
-
-    @FXML
-    private VBox list;
-
-    @FXML
-    private HBox listList;
-
-    @FXML
-    private Button deleteCardButton;
 
     @Inject
     public MainPageCtrl(ServerUtils server, MainCtrl mainCtrl) {
@@ -55,55 +49,68 @@ public class MainPageCtrl implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         boardName.setText("Default board");
 
-        //deleteListButton.setGraphic(new FontIcon(Feather.TRASH));
-        //deleteCardButton.setGraphic(new FontIcon(Feather.TRASH));
+        //This makes the lists to fill the entire height of their parent
+        boardScrollPane.setFitToHeight(true);
+        listOfLists.setSpacing(20);
 
-        //addCardButton.setGraphic(new FontIcon(Feather.PLUS));
-        //addListButton.setGraphic(new FontIcon(Feather.PLUS));
+        if (board == null) {
+            var res = server.getBoardById(1);
+            if (res.isPresent()) {
+                board = new BoardModel(res.get());
+                board.setController(this);
+            } else {
+                Board toAdd = new Board();
+                var added = server.addBoard(toAdd);
+                if (added.isEmpty())
+                    throw new RuntimeException("Server Request failed");
+                board = new BoardModel(added.get());
+            }
+        }
+        board.setController(this);
+        board.update();
+        board.updateChildren();
     }
 
     public void refresh() {
-        // do nothing
+        board.update();
+        //TODO: sockets
+        board.updateChildren();
     }
 
     @FXML
-    public void addCardButtonPress(ActionEvent event) throws IOException {
-        System.out.println("test button click add card");
-
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/client/scenes/Card.fxml"));
-        loader.setController(this);
-        StackPane newCard = loader.load();
-
-        list.getChildren().add(newCard);
-    }
-    @FXML
-    public void addListButton(ActionEvent event) throws IOException {
-        System.out.println("test button click");
-
-        FXMLLoader loader = new FXMLLoader(MainPageCtrl.class.getResource("List.fxml"));
-        loader.setController(this);
-        VBox newList = loader.load();
-
-        listList.getChildren().add(newList);
-
+    public void optionsShowServerChoice(ActionEvent event) {
+        mainCtrl.showServerChoice();
     }
 
     @FXML
-    public void deleteCardButton(ActionEvent event) {
-        if(!list.getChildren().isEmpty()) {
-            list.getChildren().remove(list.getChildren().size() - 1);
-        }
-        //this does not work
+    public void addListButton(ActionEvent event) throws IOException {
+        ListModel model = new ListModel(new CardList(), board);
+        addList(model); // important: keep order of these two the same
+        board.addList(model);
     }
 
-    @FXML
-    public void deleteListButton(ActionEvent event) {
-        if(!listList.getChildren().isEmpty()) {
-            listList.getChildren().remove(listList.getChildren().size() - 1);
-        }
-        //this does not work
+    public void recreateChildren(List<ListModel> arr) throws IOException {
+        listOfLists.getChildren().clear();
+        for (ListModel model : arr)
+            addList(model);
     }
 
+    public void addList(ListModel model) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("ReworkedList.fxml"));
 
+        var controller = new ListController(model, this);
+        loader.setController(controller);
+        model.setController(controller);
 
+        Node newList = loader.load();
+        listOfLists.getChildren().add(newList);
+    }
+
+    public HBox getListsContainer() {
+        return listOfLists;
+    }
+
+    public BoardModel getModel() {
+        return board;
+    }
 }

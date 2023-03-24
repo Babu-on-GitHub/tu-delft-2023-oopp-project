@@ -6,10 +6,12 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import javax.persistence.*;
 
+import java.io.Serializable;
+
 import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
 
 @Entity
-public class Tag {
+public class Tag implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,8 +26,21 @@ public class Tag {
 
     }
 
+    /**
+     * Constructor with all parameters
+     * @param id
+     * @param title
+     */
     public Tag(long id, String title) {
         this.id = id;
+        this.title = title;
+    }
+
+    /**
+     * Constructor without id
+     * @param title
+     */
+    public Tag(String title) {
         this.title = title;
     }
 

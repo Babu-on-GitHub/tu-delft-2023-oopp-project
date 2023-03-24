@@ -1,60 +1,78 @@
 package server.api;
 
+import commons.Card;
 import commons.CardList;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import server.database.CardListRepository;
+import server.services.CardListService;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 @RestController
 @RequestMapping("/api/list")
 public class CardListController {
 
-    private CardListRepository cardListRepository;
+    static Logger log = Logger.getLogger(CardListController.class.getName());
 
-    public CardListController(CardListRepository cardListRepository){
-        this.cardListRepository = cardListRepository;
+    private CardListService cardListService;
+
+    public CardListController(CardListService cardListService) {
+        this.cardListService = cardListService;
     }
 
-    @GetMapping(path = { "", "/" })
+    @GetMapping(path = {"", "/"})
     public List<CardList> getAll() {
-        return cardListRepository.findAll();
+        return cardListService.getAllCardLists();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<CardList> getById(@PathVariable("id") long id) {
-        if (id < 0 || !cardListRepository.existsById(id)) {
+        log.info("Getting card list: " + id);
+        try {
+            cardListService.getCardListById(id);
+            return ResponseEntity.ok(cardListService.getCardListById(id));
+        } catch (IllegalArgumentException e){
+            log.warning(e.getMessage());
             return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.ok(cardListRepository.findById(id).get());
     }
 
-    @PostMapping(path = "/add")
-    public ResponseEntity<CardList> add(@RequestBody CardList cardList) {
-        if(cardList == null){
+    @PostMapping(path = "/add/{id}")
+    public ResponseEntity<Card> add(@RequestBody Card card, @PathVariable("id") long listId) {
+        log.info("Adding card: " + card.getId() + " to list: " + listId);
+        try {
+            var res = cardListService.addCard(card, listId);
+            log.info("New card id: " + res.getId());
+            return ResponseEntity.ok(res);
+        }catch (IllegalArgumentException e){
+            log.warning(e.getMessage());
             return ResponseEntity.badRequest().build();
         }
-        CardList saved = cardListRepository.save(cardList);
-        return ResponseEntity.ok(saved);
     }
 
-    @DeleteMapping(path = "/remove/{id}")
-    public ResponseEntity<Boolean> remove(@PathVariable("id") long id) {
-        if(!cardListRepository.existsById(id)){
+    @DeleteMapping(path = "/delete/{cardId}/from/{listId}")
+    public ResponseEntity<Boolean> remove(@PathVariable("cardId") long cardId, @PathVariable("listId") long listId) {
+        log.info("Deleting card: " + cardId + " from list: " + listId);
+        try{
+            cardListService.removeCard(cardId, listId);
+            return ResponseEntity.ok(true);
+        }catch (IllegalArgumentException e){
+            log.warning(e.getMessage());
             return ResponseEntity.badRequest().build();
         }
-        cardListRepository.deleteById(id);
-        return ResponseEntity.ok(true);
     }
 
     @PutMapping(path = "/update/{id}")
     public ResponseEntity<CardList> update(@RequestBody CardList cardList, @PathVariable("id") long id) {
-        if(cardList == null || !cardListRepository.existsById(id)) {
+        log.info("Updating card list: " + id);
+        try{
+            var saved = cardListService.update(cardList, id);
+            return ResponseEntity.ok(saved);
+
+        }catch (IllegalArgumentException e){
+            log.warning(e.getMessage());
             return ResponseEntity.badRequest().build();
         }
-        cardListRepository.deleteById(id);
-        var saved = cardListRepository.save(cardList);
-        return ResponseEntity.ok(saved);
     }
 }
