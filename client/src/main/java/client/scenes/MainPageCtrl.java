@@ -94,6 +94,12 @@ public class MainPageCtrl implements Initializable {
 
 
     public void refresh() {
+        updateBoardList();
+        try {
+            showBoardsList();
+        } catch (IOException e) {
+            log.warning("Couldn't show boards on refresh");
+        }
         board.update();
         //TODO: sockets
         board.updateChildren();
@@ -164,6 +170,7 @@ public class MainPageCtrl implements Initializable {
             if (added.isEmpty())
                 throw new RuntimeException("Server Request failed");
             board = new BoardModel(added.get());
+            board.setController(this);
         }
     }
 
@@ -235,6 +242,7 @@ public class MainPageCtrl implements Initializable {
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == buttonTypeOK){
             removeBoard(board.getBoard());
+            updateBoardList();
             showBoardsList();
             initializeBoard();
             setBoardOverview(board.getBoard());
