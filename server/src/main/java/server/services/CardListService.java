@@ -1,15 +1,12 @@
 package server.services;
 
-import commons.Board;
 import commons.Card;
 import commons.CardList;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import server.api.CardListController;
 import server.database.CardListRepository;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.logging.Logger;
 
 @Service

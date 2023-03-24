@@ -3,7 +3,6 @@ package server.api;
 import commons.Card;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import server.database.CardRepository;
 import server.services.CardService;
 
 import java.util.List;
@@ -49,12 +48,12 @@ public class CardController {
 
     @PutMapping(path = "/update/{id}")
     public ResponseEntity<Card> update(@RequestBody Card card, @PathVariable("id") long id) {
-       try{
-           var saved = cardService.update(card, id);
-           return ResponseEntity.ok(saved);
-       }catch (IllegalArgumentException e){
-           log.warning(e.getMessage());
-           return ResponseEntity.badRequest().build();
-       }
+        try{
+            var saved = cardService.update(card, id);
+            return ResponseEntity.ok(saved);
+        }catch (IllegalArgumentException e){
+            log.warning(e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
     }
 }
