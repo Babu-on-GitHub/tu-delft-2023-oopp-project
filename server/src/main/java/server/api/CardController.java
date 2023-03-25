@@ -1,6 +1,7 @@
 package server.api;
 
 import commons.Card;
+import commons.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import server.services.CardService;
@@ -55,5 +56,15 @@ public class CardController {
             log.warning(e.getMessage());
             return ResponseEntity.badRequest().build();
         }
+    }
+
+    @PostMapping(path = "/add/{id}")
+    public ResponseEntity<Tag> addTag(@RequestBody Tag tag, @PathVariable("id") long cardId) {
+        throw new UnsupportedOperationException();
+    }
+
+    @DeleteMapping(path = "/delete/{tagId}/from/{cardId}")
+    public ResponseEntity<Boolean> removeTag(@PathVariable("tagId") long tagId, @PathVariable("cardId") long cardId) {
+        throw new UnsupportedOperationException();
     }
 }
