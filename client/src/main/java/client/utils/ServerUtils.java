@@ -17,11 +17,8 @@ package client.utils;
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
-import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.ExecutionException;
-import java.util.function.Consumer;
 
 import commons.Board;
 import commons.Card;
@@ -31,16 +28,47 @@ import org.glassfish.jersey.client.ClientConfig;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
-import org.springframework.messaging.converter.MappingJackson2MessageConverter;
-import org.springframework.messaging.simp.stomp.*;
-import org.springframework.web.socket.client.standard.StandardWebSocketClient;
-import org.springframework.web.socket.messaging.WebSocketStompClient;
 
 public class ServerUtils {
 
     private String SERVER;
 
-    private String websocketUrl;
+    private SocketUtils socketUtils;
+
+    public ServerUtils() {
+        this.SERVER = "http://localhost:8080";
+        this.socketUtils = new SocketUtils();
+        socketUtils.setServer("ws://localhost:8080/websocket");
+    }
+
+    public boolean chooseServer(String server) {
+        if (server == null)
+            return false;
+
+        var oldServer = SERVER;
+        SERVER = "http://" + server;
+        socketUtils.setServer("ws://" + server + "/websocket");
+
+        try {
+            String response = get("api/status", new GenericType<>() {
+            });
+            if (response.equals("Running")) {
+                return true;
+            } else {
+                SERVER = oldServer;
+                socketUtils.setServer("ws://" + oldServer + "/websocket");
+                return false;
+            }
+        } catch (Exception e) {
+            SERVER = oldServer;
+            socketUtils.setServer("ws://" + oldServer + "/websocket");
+            return false;
+        }
+    }
+
+    public SocketUtils getSocketUtils() {
+        return socketUtils;
+    }
 
     private <T> T get(String endpoint, GenericType<T> type) {
         return ClientBuilder.newClient(new ClientConfig()) //
@@ -74,36 +102,6 @@ public class ServerUtils {
                 .delete(type);
     }
 
-    public ServerUtils(){
-        this.SERVER = "http://localhost:8080";
-        this.websocketUrl = "ws://localhost:8080/websocket";
-    }
-
-    public boolean chooseServer(String server) {
-        if (server == null)
-            return false;
-
-        var oldServer = SERVER;
-        var oldWebsocketurl = websocketUrl;
-        SERVER = "http://" + server;
-        websocketUrl = "ws://" + server + "/websocket";
-
-        try {
-            String response = get("api/status", new GenericType<>() {});
-            if (response.equals("Running")) {
-                session = connect(websocketUrl);
-                return true;
-            } else {
-                SERVER = oldServer;
-                websocketUrl = oldWebsocketurl;
-                return false;
-            }
-        } catch (Exception e) {
-            SERVER = oldServer;
-            websocketUrl = oldWebsocketurl;
-            return false;
-        }
-    }
 
     public Optional<List<Card>> getCards() {
         try {
@@ -114,7 +112,7 @@ public class ServerUtils {
         }
     }
 
-    public Optional<Card> getCardById(long id){
+    public Optional<Card> getCardById(long id) {
         try {
             return Optional.of(get("api/card/" + id, new GenericType<>() {
             }));
@@ -132,13 +130,23 @@ public class ServerUtils {
         }
     }
 
+    public Optional<Card> insertCard(Card card, int position, CardList list) {
+        try {
+            return Optional.of(post("api/list/insert/" + list.getId() + "/to/" + position, card, new GenericType<>() {
+            }));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+
     public Optional<Boolean> deleteCardById(long cardId, long listId) {
         try {
             return Optional.of(delete("api/list/delete/" + cardId + "/from/" + listId, new GenericType<>() {
             }));
         } catch (Exception e) {
             return Optional.empty();
-        }    }
+        }
+    }
 
     public Optional<Card> updateCardById(long id, Card card) {
         try {
@@ -155,9 +163,10 @@ public class ServerUtils {
             }));
         } catch (Exception e) {
             return Optional.empty();
-        }    }
+        }
+    }
 
-    public Optional<CardList> getCardListById(long id){
+    public Optional<CardList> getCardListById(long id) {
         try {
             return Optional.of(get("api/list/" + id, new GenericType<>() {
             }));
@@ -238,39 +247,15 @@ public class ServerUtils {
         }
     }
 
-    private  StompSession session;
-
-    private StompSession connect(String url) {
-        var client = new StandardWebSocketClient();
-        var stomp = new WebSocketStompClient(client);
-        stomp.setMessageConverter(new MappingJackson2MessageConverter());
+    public Optional<Boolean> moveCard(long cardId, long listId, int position, long boardId) {
         try {
-            return stomp.connectAsync(url, new StompSessionHandlerAdapter() {}).get();
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        } catch (ExecutionException e) {
-            throw new RuntimeException(e);
+            var reqString = "api/board/moveCard/" + cardId + "/to/" + listId + "/at/" + position +
+                    "/located/" + boardId;
+            return Optional.of(post(reqString, null, new GenericType<>() {
+            }));
+        } catch (Exception e) {
+            return Optional.empty();
         }
-        throw new IllegalStateException();
-    }
-
-    public <T> void registerForMessages(String dest, Class<T> type, Consumer<T> consumer) {
-        session.subscribe(dest, new StompFrameHandler() {
-            @Override
-            public Type getPayloadType(StompHeaders headers) {
-                return type;
-            }
-
-            @SuppressWarnings("unchecked")
-            @Override
-            public void handleFrame(StompHeaders headers, Object payload) {
-                consumer.accept((T) payload);
-            }
-        });
-    }
-
-    public void send(String dest, Object o) {
-        session.send(dest, o);
     }
 
 }

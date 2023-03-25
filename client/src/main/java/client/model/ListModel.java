@@ -5,6 +5,7 @@ import client.utils.ServerUtils;
 import commons.Card;
 import commons.CardList;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -18,6 +19,8 @@ public class ListModel {
     private List<CardModel> children = new ArrayList<>();
     private ListController controller;
 
+    private ServerUtils utils;
+
     public ListController getController() {
         return controller;
     }
@@ -27,9 +30,10 @@ public class ListModel {
     }
 
 
-    public ListModel(CardList cardList, BoardModel parent) {
+    public ListModel(CardList cardList, BoardModel parent, ServerUtils utils) {
         this.cardList = cardList;
         this.parent = parent;
+        this.utils = utils;
     }
 
     public CardList getCardList() {
@@ -57,7 +61,6 @@ public class ListModel {
     }
 
     public void addCard(CardModel cardModel) {
-        ServerUtils utils = new ServerUtils();
         if (this.getChildren() == null) {
             this.setChildren(new ArrayList<>());
         }
@@ -78,7 +81,41 @@ public class ListModel {
         cardList.add(newCard);
         children.add(cardModel);
 
-        update();
+        update(false);
+        quietTest();
+    }
+
+    public void insertCard(CardModel card, int position) {
+        cardList.getCards().add(position, card.getCard());
+        children.add(position, card);
+        var res = utils.insertCard(card.getCard(), position, cardList);
+        if (res.isEmpty()) {
+            log.warning("Failed to update card list with id " + cardList.getId() + " in local model");
+            return;
+        }
+
+        update(false);
+        quietTest();
+    }
+
+    public void moveCard(int from, int to) {
+        var card = cardList.getCards().get(from);
+        cardList.getCards().remove(from);
+        cardList.getCards().add(to, card);
+        var res = utils.deleteCardById(card.getId(), cardList.getId());
+        if (res.isEmpty()) {
+            log.warning("Failed to delete card with id " + card.getId() + " in local model");
+            return;
+        }
+
+        var opt = utils.insertCard(card, to, cardList);
+        if (opt.isEmpty()) {
+            log.severe("During move card, failed to insert");
+            return;
+        }
+
+
+        update(true);
         quietTest();
     }
 
@@ -87,7 +124,6 @@ public class ListModel {
     }
 
     public void deleteCard(CardModel cardModel) {
-        ServerUtils utils = new ServerUtils();
         long id = cardModel.getCard().getId();
         boolean deletedSuccessfully = false;
         for (var card : cardList.getCards()) {
@@ -104,15 +140,31 @@ public class ListModel {
 
         utils.deleteCardById(id, cardList.getId());
 
-        if (update()) {
-            log.warning("Repeatedly deleting card, since server overwrote local");
-            deleteCard(cardModel);
-        }
+        update(false);
         quietTest();
     }
 
-    public boolean update() {
-        ServerUtils utils = new ServerUtils();
+    public void deleteCardById(long id) {
+        boolean deletedSuccessfully = false;
+        for (var card : cardList.getCards()) {
+            if (card.getId() == id) {
+                cardList.getCards().remove(card);
+                deletedSuccessfully = true;
+                break;
+            }
+        }
+        if (!deletedSuccessfully)
+            log.warning("Failed to delete card with id " + id + " in local model");
+
+        children.removeIf(cardModel -> cardModel.getCard().getId() == id);
+
+        utils.deleteCardById(id, cardList.getId());
+
+        update(false);
+        quietTest();
+    }
+
+    public boolean update(boolean forced) {
         var res = utils.getCardListById(cardList.getId());
         if (res.isEmpty()) {
             log.info("Adding new card list..");
@@ -131,7 +183,7 @@ public class ListModel {
 
         var fetchedCardList = res.get();
 
-        if (fetchedCardList.equals(cardList)) return false;
+        if (!forced && fetchedCardList.equals(cardList)) return false;
 
         var serverTimestamp = fetchedCardList.getTimestamp();
         var localTimestamp = cardList.getTimestamp();
@@ -193,15 +245,15 @@ public class ListModel {
             temp.add(null);
 
         for (int i = 0; i < cardList.getCards().size(); i++) {
-            var model = new CardModel(cardList.getCards().get(i), this);
+            var model = new CardModel(cardList.getCards().get(i), this, utils);
             temp.set(i, model);
         }
 
         children = temp;
         try {
             controller.recreateChildren(temp);
-        } catch (Exception e) {
-            log.warning("Problems during list children recreation..");
+        } catch (IOException e) {
+            log.severe("Failed to recreate children in the list");
         }
 
         for (var child : children)
