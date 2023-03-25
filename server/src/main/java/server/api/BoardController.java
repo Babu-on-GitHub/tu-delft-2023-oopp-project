@@ -17,22 +17,22 @@ public class BoardController {
 
     private BoardService boardService;
 
-    public BoardController(BoardService boardService){
+    public BoardController(BoardService boardService) {
         this.boardService = boardService;
     }
 
-    @GetMapping(path = { "", "/" })
+    @GetMapping(path = {"", "/"})
     public List<Board> getAll() {
         return boardService.findAllBoards();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Board> getById(@PathVariable("id") long id) {
-        try{
+        try {
             log.info("Getting board: " + id);
             Board board = boardService.getBoardById(id);
             return ResponseEntity.ok(board);
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             log.warning(e.getMessage());
             return ResponseEntity.badRequest().build();
         }
@@ -61,7 +61,7 @@ public class BoardController {
             var ret = boardService.saveCardList(list, boardId);
             log.info("New list id: " + ret.getId());
             return ResponseEntity.ok(ret);
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             log.warning(e.getMessage());
             return ResponseEntity.badRequest().build();
         }
@@ -70,10 +70,11 @@ public class BoardController {
     @DeleteMapping(path = "/delete/{id}")
     public ResponseEntity<Boolean> delete(@PathVariable("id") long id) {
         log.info("Deleting board: " + id);
-        try{
+
+        try {
             boardService.deleteBoardById(id);
             return ResponseEntity.ok(true);
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             log.warning(e.getMessage());
             return ResponseEntity.badRequest().build();
         }
@@ -82,11 +83,10 @@ public class BoardController {
     @DeleteMapping(path = "/delete/{listId}/from/{boardId}")
     public ResponseEntity<Boolean> remove(@PathVariable("listId") long listId, @PathVariable("boardId") long boardId) {
         log.info("Deleting list: " + listId + " from board: " + boardId);
-        try{
+        try {
             boardService.deleteCardListById(listId, boardId);
             return ResponseEntity.ok(true);
-        }
-        catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             log.warning(e.getMessage());
             return ResponseEntity.ok(false);
         }
@@ -99,10 +99,10 @@ public class BoardController {
                                             @PathVariable("boardId") long boardId) {
         log.info("Moving card: " + cardId + " to list: " + listId +
                 " at index: " + index + " located in board: " + boardId);
-        try{
+        try {
             boardService.moveCard(cardId, listId, index, boardId);
             return ResponseEntity.ok(true);
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             log.warning(e.getMessage());
             return ResponseEntity.ok(false);
         }
@@ -113,7 +113,7 @@ public class BoardController {
         try {
             var saved = boardService.update(board, id);
             return ResponseEntity.ok(saved);
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             log.warning(e.getMessage());
             return ResponseEntity.badRequest().build();
         }

@@ -19,8 +19,6 @@ public class Tag implements Serializable {
 
     private String title;
 
-    //Do the many to many mapping with card here
-
     @SuppressWarnings("unused")
     public Tag(){
 

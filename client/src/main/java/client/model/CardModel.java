@@ -13,6 +13,8 @@ public class CardModel {
     private ListModel parent;
     private CardController controller;
 
+    private ServerUtils utils;
+
     public CardController getController() {
         return controller;
     }
@@ -21,25 +23,25 @@ public class CardModel {
         this.controller = controller;
     }
 
-    public CardModel(Card card,ListModel parent){
+    public CardModel(Card card, ListModel parent, ServerUtils utils) {
         this.card = card;
         this.parent = parent;
+        this.utils = utils;
     }
 
-    public Card getCard(){
+    public Card getCard() {
         return card;
     }
 
-    public void setCard(Card newCard){
+    public void setCard(Card newCard) {
         this.card = newCard;
     }
 
-    public void deleteCard(){
+    public void deleteCard() {
         parent.deleteCard(this);
     }
 
-    public void update(){
-        ServerUtils utils = new ServerUtils();
+    public void update() {
         var res = utils.getCardById(card.getId());
         if (res.isEmpty()) {
             log.info("Adding new card..");

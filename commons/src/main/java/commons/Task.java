@@ -19,8 +19,6 @@ public class Task implements Serializable {
 
     private String title;
 
-    @ManyToOne
-    Card card;
 
     @SuppressWarnings("unused")
     public Task(){

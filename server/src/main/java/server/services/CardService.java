@@ -1,6 +1,7 @@
 package server.services;
 
 import commons.Card;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import server.database.CardRepository;
 
@@ -8,8 +9,10 @@ import java.util.List;
 
 @Service
 public class CardService {
-
     private CardRepository cardRepository;
+
+    @Autowired
+    SynchronizationService synchronizationService;
 
     public CardService(CardRepository cardRepository) {
         this.cardRepository = cardRepository;
@@ -30,16 +33,18 @@ public class CardService {
         if (card == null) {
             throw new IllegalArgumentException("Card list cannot be null");
         }
+
+        synchronizationService.addCardToUpdate(card.getId());
         return cardRepository.save(card);
     }
 
-    public Card update(Card card, long id){
+    public Card update(Card card, long id) {
         if (card == null) {
             throw new IllegalArgumentException("Trying to update non existing card");
         }
         try {
             Card cardOptional = this.getCardById(id);
-        }catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());
         }
 

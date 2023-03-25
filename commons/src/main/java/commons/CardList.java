@@ -22,7 +22,7 @@ public class CardList implements Serializable {
 
     private Timestamp timestamp;
     private String title;
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @OrderColumn
     private List<Card> cards;
 
