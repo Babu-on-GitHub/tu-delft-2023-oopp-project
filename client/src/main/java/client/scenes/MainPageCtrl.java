@@ -176,7 +176,9 @@ public class MainPageCtrl implements Initializable {
         this.board.setController(this);
         this.board.update();
         this.board.updateChildren();
-        server.getSocketUtils().registerForMessages("/topic/board/" + board.getBoard().getId(), board.getBoard().getClass(),
+        server.getSocketUtils().registerForMessages(
+                "/topic/board/" + board.getBoard().getId(),
+                board.getBoard().getClass(),
                 (board) -> {
                     Platform.runLater(new Runnable() {
                         @Override
