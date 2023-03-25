@@ -3,6 +3,7 @@ package client.scenes;
 
 import client.model.CardModel;
 import client.model.ListModel;
+import client.utils.ServerUtils;
 import commons.Card;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -37,12 +38,15 @@ public class ListController implements Initializable {
     private ListModel listModel;
     private MainPageCtrl parent;
 
+    private ServerUtils server;
+
     @SuppressWarnings("unused")
     public ListController() {
     }
 
-    public ListController(ListModel cardList) {
+    public ListController(ListModel cardList, ServerUtils server) {
         this.listModel = cardList;
+        this.server = server;
     }
 
     public ListController(ListModel cardList, MainPageCtrl parent) {
@@ -63,7 +67,7 @@ public class ListController implements Initializable {
 
     public void insertCard(CardModel model, int index) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("ReworkedCard.fxml"));
-        var controller = new CardController(model, this);
+        var controller = new CardController(model, this, server);
         model.setController(controller);
         loader.setController(controller);
 
@@ -81,7 +85,7 @@ public class ListController implements Initializable {
     }
 
     public void addCardButton(ActionEvent event) throws IOException {
-        CardModel newCard = new CardModel(new Card(), listModel);
+        CardModel newCard = new CardModel(new Card(), listModel, server);
         addCard(newCard); // keep this order of add card and listModel.addCard
         listModel.addCard(newCard);
     }

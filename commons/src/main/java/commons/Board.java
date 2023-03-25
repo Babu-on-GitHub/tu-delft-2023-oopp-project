@@ -23,7 +23,7 @@ public class Board implements Serializable {
 
     private String title;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @OrderColumn
     private List<CardList> lists;
 
@@ -124,6 +124,7 @@ public class Board implements Serializable {
 
 
     public void add(CardList list) {
+        if(lists == null) lists = new ArrayList<>();
         lists.add(list);
     }
 

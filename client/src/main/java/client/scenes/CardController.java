@@ -1,5 +1,6 @@
 package client.scenes;
 
+import client.utils.ServerUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
@@ -25,6 +26,8 @@ public class CardController implements Initializable {
 
     private ListController parent;
 
+    private ServerUtils server;
+
     @FXML
     private AnchorPane cardContainer;
 
@@ -42,10 +45,10 @@ public class CardController implements Initializable {
     @FXML
     private VBox cardListContainer;
 
-    public CardController(CardModel card, ListController parent) {
+    public CardController(CardModel card, ListController parent, ServerUtils server) {
         this.card = card;
-
         this.parent = parent;
+        this.server = server;
     }
 
     @FXML

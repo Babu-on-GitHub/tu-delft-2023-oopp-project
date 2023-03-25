@@ -5,6 +5,7 @@ import client.utils.ServerUtils;
 import commons.Board;
 import commons.CardList;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -14,6 +15,8 @@ public class BoardModel {
     private Board board;
     private List<ListModel> children = new ArrayList<>();
     private MainPageCtrl controller;
+
+    private ServerUtils utils;
 
     public MainPageCtrl getController() {
         return controller;
@@ -32,8 +35,9 @@ public class BoardModel {
         }
     }
 
-    public BoardModel(Board board) {
+    public BoardModel(Board board, ServerUtils utils) {
         this.board = board;
+        this.utils = utils;
     }
 
     public Board getBoard() {
@@ -61,7 +65,6 @@ public class BoardModel {
         }
 
         var newList = listModel.getCardList();
-        ServerUtils utils = new ServerUtils();
         var req = utils.addCardList(newList, board);
         if (req.isEmpty()) {
             log.warning("Adding new list failed");
@@ -78,7 +81,6 @@ public class BoardModel {
     }
 
     public void deleteList(ListModel listModel) {
-        ServerUtils utils = new ServerUtils();
         long id = listModel.getCardList().getId();
         for (int i = 0; i < board.getLists().size(); i++) {
             CardList list = board.getLists().get(i);
@@ -94,7 +96,6 @@ public class BoardModel {
     }
 
     public boolean update() {
-        ServerUtils utils = new ServerUtils();
         var res = utils.getBoardById(board.getId());
         if (res.isEmpty()) {
             log.info("Adding new board..");
@@ -138,6 +139,21 @@ public class BoardModel {
         return false;
     }
 
+    public void updateWithNewBoard(Board newBoard) {
+        if (board.equals(newBoard)) {
+            log.info("Board is up to date in updateWithNewBoard");
+            return;
+        }
+
+        if (newBoard == null) {
+            log.info("Board is null in updateWithNewBoard");
+            return;
+        }
+
+        board = newBoard;
+        updateChildren();
+    }
+
     public void updateChildren() {
         if (board.getLists() == null) return;
 
@@ -150,14 +166,14 @@ public class BoardModel {
             temp.add(null);
 
         for (int i = 0; i < board.getLists().size(); i++) {
-            var model = new ListModel(board.getLists().get(i), this);
+            var model = new ListModel(board.getLists().get(i), this, utils);
             temp.set(i, model);
         }
 
         children = temp;
         try {
             controller.recreateChildren(temp);
-        } catch (Exception e) {
+        } catch (IOException e) {
             log.warning("Problems during board children recreation..");
         }
 
@@ -208,8 +224,6 @@ public class BoardModel {
     }
 
     public void moveCard(CardModel card, ListModel to, int index) {
-        ServerUtils utils = new ServerUtils();
-
         card.disown();
 
         card.fosterBy(to, index);

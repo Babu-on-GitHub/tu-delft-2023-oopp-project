@@ -41,14 +41,12 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-
         Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
         var serverCtrl = FXML.load(ServerChoiceCtrl.class, "client", "scenes", "ServerChoice.fxml");
         var mainPage = FXML.load(MainPageCtrl.class, "client", "scenes", "ReworkedMainPage.fxml");
 
+
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
         mainCtrl.initialize(primaryStage, mainPage, serverCtrl);
-
-        WebsocketClient client = new WebsocketClient();
     }
 }
