@@ -54,22 +54,18 @@ public class SocketUtils {
         subscription = session.subscribe(dest, new StompFrameHandler() {
             @Override
             public Type getPayloadType(StompHeaders headers) {
-                System.out.println("getting payload type");
-                System.out.println(headers);
                 return type;
             }
 
             @SuppressWarnings("unchecked")
             @Override
             public void handleFrame(StompHeaders headers, Object payload) {
-                System.out.println("handle frame");
                 consumer.accept((T) payload);
             }
         });
     }
 
     public void send(String dest, Object o) {
-        System.out.println("send something");
         session.send(dest, o);
     }
 }

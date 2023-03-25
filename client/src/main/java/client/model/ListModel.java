@@ -249,18 +249,12 @@ public class ListModel {
             temp.set(i, model);
         }
 
-        System.out.println("Started recreation");
         children = temp;
         try {
-            System.out.println("Entered try");
             controller.recreateChildren(temp);
         } catch (IOException e) {
-            System.out.println("Entered catch");
-            throw new RuntimeException(e);
+            log.severe("Failed to recreate children in the list");
         }
-
-        System.out.println("Finished recreation");
-
 
         for (var child : children)
             child.updateChildren();

@@ -57,21 +57,9 @@ public class ListController implements Initializable {
     }
 
     public void recreateChildren(ArrayList<CardModel> temp) throws IOException {
-        System.out.println(cardListContainer.getChildren());
-        System.out.println(cardListContainer.getChildren().size());
-        for (Node node : cardListContainer.getChildren()) {
-            System.out.println(node);
-        }
-        while (!cardListContainer.getChildren().isEmpty()) {
-            System.out.println("removing");
-            cardListContainer.getChildren().remove(0);
-            System.out.println("removed");
-        }
-        System.out.println("cleared");
-        for (CardModel card : temp) {
-            System.out.println("adding card");
+        cardListContainer.getChildren().clear();
+        for (CardModel card : temp)
             addCard(card);
-        }
     }
 
     public void addCard(CardModel model) throws IOException {
