@@ -3,12 +3,14 @@ package client.scenes;
 
 import client.model.CardModel;
 import client.model.ListModel;
+import client.utils.ServerUtils;
 import commons.Card;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
+import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.*;
 import javafx.scene.control.TextField;
@@ -37,12 +39,15 @@ public class ListController implements Initializable {
     private ListModel listModel;
     private MainPageCtrl parent;
 
+    private ServerUtils server;
+
     @SuppressWarnings("unused")
     public ListController() {
     }
 
-    public ListController(ListModel cardList) {
+    public ListController(ListModel cardList, ServerUtils server) {
         this.listModel = cardList;
+        this.server = server;
     }
 
     public ListController(ListModel cardList, MainPageCtrl parent) {
@@ -52,9 +57,21 @@ public class ListController implements Initializable {
     }
 
     public void recreateChildren(ArrayList<CardModel> temp) throws IOException {
-        cardListContainer.getChildren().clear();
-        for (CardModel card : temp)
+        System.out.println(cardListContainer.getChildren());
+        System.out.println(cardListContainer.getChildren().size());
+        for (Node node : cardListContainer.getChildren()) {
+            System.out.println(node);
+        }
+        while (!cardListContainer.getChildren().isEmpty()) {
+            System.out.println("removing");
+            cardListContainer.getChildren().remove(0);
+            System.out.println("removed");
+        }
+        System.out.println("cleared");
+        for (CardModel card : temp) {
+            System.out.println("adding card");
             addCard(card);
+        }
     }
 
     public void addCard(CardModel model) throws IOException {
@@ -63,7 +80,7 @@ public class ListController implements Initializable {
 
     public void insertCard(CardModel model, int index) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("ReworkedCard.fxml"));
-        var controller = new CardController(model, this);
+        var controller = new CardController(model, this, server);
         model.setController(controller);
         loader.setController(controller);
 
@@ -81,7 +98,7 @@ public class ListController implements Initializable {
     }
 
     public void addCardButton(ActionEvent event) throws IOException {
-        CardModel newCard = new CardModel(new Card(), listModel);
+        CardModel newCard = new CardModel(new Card(), listModel, server);
         addCard(newCard); // keep this order of add card and listModel.addCard
         listModel.addCard(newCard);
     }

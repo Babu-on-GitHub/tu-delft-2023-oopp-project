@@ -2,6 +2,7 @@ package server.services;
 
 import commons.Card;
 import commons.CardList;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import server.api.CardListController;
 import server.database.CardListRepository;
@@ -12,7 +13,11 @@ import java.util.logging.Logger;
 @Service
 public class CardListService {
 
-    static Logger log = Logger.getLogger(CardListController.class.getName());
+    private static final Logger log = Logger.getLogger(CardListController.class.getName());
+
+    @Autowired
+    SynchronizationService synchronizationService;
+
     private CardListRepository cardListRepository;
 
     public CardListService(CardListRepository cardListRepository) {
@@ -34,6 +39,8 @@ public class CardListService {
         if (cardList == null) {
             throw new IllegalArgumentException("Card list cannot be null");
         }
+
+        synchronizationService.addListToUpdate(cardList.getId());
         return cardListRepository.save(cardList);
     }
 
@@ -43,7 +50,7 @@ public class CardListService {
         }
         try {
             var listOptional = this.getCardListById(listId);
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Trying to add card into non-existent list");
         }
 
@@ -61,7 +68,7 @@ public class CardListService {
         return res;
     }
 
-    public void removeCard(long cardId, long listId){
+    public void removeCard(long cardId, long listId) {
         if (this.getCardListById(listId) == null) {
             throw new IllegalArgumentException("Trying to delete card from non existing card list");
         }
@@ -77,13 +84,13 @@ public class CardListService {
         this.saveCardList(list);
     }
 
-    public CardList update (CardList cardList, long id){
+    public CardList update(CardList cardList, long id) {
         if (cardList == null) {
             throw new IllegalArgumentException("Trying to update non existing card list");
         }
         try {
             var cardListOptional = this.getCardListById(id);
-        }catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());
         }
         if (cardList.getId() != id) {

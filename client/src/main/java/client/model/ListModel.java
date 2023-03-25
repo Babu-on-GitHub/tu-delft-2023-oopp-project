@@ -5,6 +5,7 @@ import client.utils.ServerUtils;
 import commons.Card;
 import commons.CardList;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -18,6 +19,8 @@ public class ListModel {
     private List<CardModel> children = new ArrayList<>();
     private ListController controller;
 
+    private ServerUtils utils;
+
     public ListController getController() {
         return controller;
     }
@@ -27,9 +30,10 @@ public class ListModel {
     }
 
 
-    public ListModel(CardList cardList, BoardModel parent) {
+    public ListModel(CardList cardList, BoardModel parent, ServerUtils utils) {
         this.cardList = cardList;
         this.parent = parent;
+        this.utils = utils;
     }
 
     public CardList getCardList() {
@@ -57,7 +61,6 @@ public class ListModel {
     }
 
     public void addCard(CardModel cardModel) {
-        ServerUtils utils = new ServerUtils();
         if (this.getChildren() == null) {
             this.setChildren(new ArrayList<>());
         }
@@ -85,7 +88,6 @@ public class ListModel {
     public void insertCard(CardModel card, int position) {
         cardList.getCards().add(position, card.getCard());
         children.add(position, card);
-        var utils = new ServerUtils();
         var res = utils.insertCard(card.getCard(), position, cardList);
         if (res.isEmpty()) {
             log.warning("Failed to update card list with id " + cardList.getId() + " in local model");
@@ -97,7 +99,6 @@ public class ListModel {
     }
 
     public void moveCard(int from, int to) {
-        var utils = new ServerUtils();
         var card = cardList.getCards().get(from);
         cardList.getCards().remove(from);
         cardList.getCards().add(to, card);
@@ -123,7 +124,6 @@ public class ListModel {
     }
 
     public void deleteCard(CardModel cardModel) {
-        ServerUtils utils = new ServerUtils();
         long id = cardModel.getCard().getId();
         boolean deletedSuccessfully = false;
         for (var card : cardList.getCards()) {
@@ -145,7 +145,6 @@ public class ListModel {
     }
 
     public void deleteCardById(long id) {
-        ServerUtils utils = new ServerUtils();
         boolean deletedSuccessfully = false;
         for (var card : cardList.getCards()) {
             if (card.getId() == id) {
@@ -166,7 +165,6 @@ public class ListModel {
     }
 
     public boolean update(boolean forced) {
-        ServerUtils utils = new ServerUtils();
         var res = utils.getCardListById(cardList.getId());
         if (res.isEmpty()) {
             log.info("Adding new card list..");
@@ -247,16 +245,22 @@ public class ListModel {
             temp.add(null);
 
         for (int i = 0; i < cardList.getCards().size(); i++) {
-            var model = new CardModel(cardList.getCards().get(i), this);
+            var model = new CardModel(cardList.getCards().get(i), this, utils);
             temp.set(i, model);
         }
 
+        System.out.println("Started recreation");
         children = temp;
         try {
+            System.out.println("Entered try");
             controller.recreateChildren(temp);
-        } catch (Exception e) {
-            log.warning("Problems during list children recreation..");
+        } catch (IOException e) {
+            System.out.println("Entered catch");
+            throw new RuntimeException(e);
         }
+
+        System.out.println("Finished recreation");
+
 
         for (var child : children)
             child.updateChildren();

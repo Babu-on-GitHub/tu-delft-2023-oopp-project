@@ -6,6 +6,7 @@ import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Board;
 import commons.CardList;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -56,28 +57,38 @@ public class MainPageCtrl implements Initializable {
         if (board == null) {
             var res = server.getBoardById(1);
             if (res.isPresent()) {
-                board = new BoardModel(res.get());
+                board = new BoardModel(res.get(), server);
                 board.setController(this);
             } else {
                 Board toAdd = new Board();
                 var added = server.addBoard(toAdd);
                 if (added.isEmpty())
                     throw new RuntimeException("Server Request failed");
-                board = new BoardModel(added.get());
+                board = new BoardModel(added.get(), server);
             }
         }
         board.setController(this);
         board.update();
         board.updateChildren();
 
-        server.registerForMessages("/topic/board", board.getBoard().getClass(), b ->{
-            System.out.println("Received board " + b.getId());
-        });
+        server.getSocketUtils().connect();
+        server.getSocketUtils().registerForMessages("/topic/board/1", board.getBoard().getClass(),
+                (board) -> {
+                    Platform.runLater(new Runnable() {
+                        @Override public void run() {
+                            refreshWithBoard(board);
+                        }
+                    });
+                });
     }
 
     public void refresh() {
         board.update();
         board.updateChildren();
+    }
+
+    public void refreshWithBoard(Board b) {
+        board.updateWithNewBoard(b);
     }
 
     @FXML
@@ -87,10 +98,9 @@ public class MainPageCtrl implements Initializable {
 
     @FXML
     public void addListButton(ActionEvent event) throws IOException {
-        ListModel model = new ListModel(new CardList(), board);
+        ListModel model = new ListModel(new CardList(), board, server);
         addList(model); // important: keep order of these two the same
         board.addList(model);
-        server.send("/app/board/update",board.getBoard().getId());
     }
 
     public void recreateChildren(List<ListModel> arr) throws IOException {
