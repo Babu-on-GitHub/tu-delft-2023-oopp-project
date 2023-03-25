@@ -100,16 +100,6 @@ public class MainPageCtrl implements Initializable {
         board.updateChildren();
 
         server.getSocketUtils().connect();
-        server.getSocketUtils().registerForMessages("/topic/board/1", board.getBoard().getClass(),
-                (board) -> {
-                    Platform.runLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            refreshWithBoard(board);
-                        }
-                    });
-                });
-        //initializeBoard();
 
         showBoard();
 
@@ -186,6 +176,15 @@ public class MainPageCtrl implements Initializable {
         this.board.setController(this);
         this.board.update();
         this.board.updateChildren();
+        server.getSocketUtils().registerForMessages("/topic/board/" + board.getBoard().getId(), board.getBoard().getClass(),
+                (board) -> {
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            refreshWithBoard(board);
+                        }
+                    });
+                });
     }
 
     public void setBoardOverview(Board board) throws IOException {
