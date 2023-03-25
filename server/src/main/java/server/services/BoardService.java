@@ -3,6 +3,7 @@ package server.services;
 import commons.Board;
 import commons.CardList;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import server.api.BoardController;
 import server.database.BoardRepository;
@@ -70,6 +71,10 @@ public class BoardService {
         if (id < 0 || boardRepository.findById(id).orElse(null) == null) {
             throw new IllegalArgumentException("Invalid board id:" + id);
         }
+
+        if (id == 1)
+            throw new IllegalArgumentException("Deleting default board is prohibited");
+
         boardRepository.deleteById(id);
     }
 

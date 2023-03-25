@@ -124,6 +124,7 @@ public class Board implements Serializable {
 
 
     public void add(CardList list) {
+        if(lists == null) lists = new ArrayList<>();
         lists.add(list);
     }
 
