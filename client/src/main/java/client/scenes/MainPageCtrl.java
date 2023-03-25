@@ -61,6 +61,14 @@ public class MainPageCtrl implements Initializable {
 
     @FXML
     private ImageView deleteBoardImage;
+    @FXML
+    private ImageView addListImage;
+    @FXML
+    private ImageView addBoardImage;
+    @FXML
+    private ImageView settingsImage;
+    @FXML
+    private ImageView shareImage;
 
 
     @Inject
@@ -70,13 +78,21 @@ public class MainPageCtrl implements Initializable {
         boardList = new ArrayList<>();
     }
 
+    private void setImage(ImageView img, String path){
+        File file = new File(path);
+        Image image = new Image(file.toURI().toString());
+        img.setImage(image);
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         boardName.setText("Default board");
 
-        File file = new File("client/src/main/resources/client/icons/a.png");
-        Image image = new Image(file.toURI().toString());
-        deleteBoardImage.setImage(image);
+        setImage(deleteBoardImage,"client/src/main/resources/client/icons/delete_FILL0_wght400_GRAD0_opsz48.png");
+        setImage(shareImage,"client/src/main/resources/client/icons/share_FILL0_wght400_GRAD0_opsz48.png");
+        setImage(settingsImage,"client/src/main/resources/client/icons/settings_FILL0_wght400_GRAD0_opsz48.png");
+        setImage(addListImage,"client/src/main/resources/client/icons/add_notes_FILL0_wght400_GRAD0_opsz48.png");
+        setImage(addBoardImage,"client/src/main/resources/client/icons/new_window_FILL0_wght400_GRAD0_opsz48.png");
 
         //This makes the lists to fill the entire height of their parent
         boardScrollPane.setFitToHeight(true);
