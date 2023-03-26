@@ -88,7 +88,7 @@
                   </ImageView>
                </graphic>
             </MenuButton>
-            <Button contentDisplay="TOP" graphicTextGap="0.0" layoutX="143.0" layoutY="5.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="132.0" style="-fx-background-color: inherit;" text="Share board" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="143.0" AnchorPane.topAnchor="5.0">
+            <Button contentDisplay="TOP" graphicTextGap="0.0" layoutX="143.0" layoutY="5.0" mnemonicParsing="false" onAction="#shareButton" prefHeight="58.0" prefWidth="132.0" style="-fx-background-color: inherit;" text="Share board" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="143.0" AnchorPane.topAnchor="5.0">
                <graphic>
                   <ImageView fx:id="shareImage" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                      <image>

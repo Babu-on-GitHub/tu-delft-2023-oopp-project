@@ -11,8 +11,13 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -21,6 +26,9 @@ import javafx.scene.layout.HBox;
 import javafx.event.ActionEvent;
 import javafx.scene.layout.VBox;
 
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -324,5 +332,38 @@ public class MainPageCtrl implements Initializable {
         } else {
             return;
         }
+    }
+
+    @FXML
+    public void shareButton(ActionEvent event){
+        Dialog<String> dialog = new Dialog<>();
+        dialog.setTitle("Copy Board Id");
+
+        dialog.getDialogPane().setPrefSize(400, 80);
+
+        ButtonType copyButtonType = new ButtonType("Copy", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(copyButtonType, ButtonType.CANCEL);
+
+        String boardId = Long.toString(board.getBoard().getId());
+
+        Label keyLabel = new Label("Board Id: " + boardId);
+        keyLabel.setStyle("-fx-font-size: 15;");// Set font size to 20
+        keyLabel.setAlignment(Pos.CENTER); // Center the label
+
+        dialog.getDialogPane().setContent(keyLabel);
+
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == copyButtonType) {
+                return boardId;
+            }
+            return null;
+        });
+        Optional<String> result = dialog.showAndWait();
+
+        result.ifPresent(key -> {
+            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+            StringSelection selection = new StringSelection(key);
+            clipboard.setContents(selection, selection);
+        });
     }
 }
