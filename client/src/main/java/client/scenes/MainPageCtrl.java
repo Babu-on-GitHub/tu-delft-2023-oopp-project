@@ -212,6 +212,16 @@ public class MainPageCtrl implements Initializable {
     public void setBoardOverview(long id) throws IOException {
         var res = server.getBoardById(id);
         if (res.isEmpty()) {
+
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Warning");
+            alert.setHeaderText("This board no longer exists");
+            alert.showAndWait();
+
+            boardList.remove(id);
+            userUtils.updateUserBoards(boardList);
+            showBoardsList();
+
             initializeBoard();
             //getAllBoardsIds();
             showBoardsList();

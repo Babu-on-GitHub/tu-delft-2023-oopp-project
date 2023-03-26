@@ -16,7 +16,7 @@
 
 <BorderPane id="scene" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.MainPageCtrl">
    <top>
-      <AnchorPane prefHeight="68.0" prefWidth="1001.0" BorderPane.alignment="CENTER">
+      <AnchorPane prefHeight="68.0" prefWidth="1001.0" style="-fx-border-color: #bababa; -fx-border-width: 2px;" BorderPane.alignment="CENTER">
          <children>
             <TextField fx:id="boardName" alignment="CENTER" layoutX="206.0" layoutY="4.0" prefHeight="68.0" prefWidth="638.0" style="-fx-background-color: inherit;" text="BOARD NAME" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="200.0" AnchorPane.topAnchor="0.0">
                <font>
@@ -48,7 +48,7 @@
                <items>
                   <AnchorPane prefHeight="652.0" prefWidth="216.0">
                      <children>
-                        <ScrollPane fx:id="boardListScrollPane" layoutY="63.0" prefHeight="592.0" prefWidth="268.0" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <ScrollPane fx:id="boardListScrollPane" layoutY="63.0" prefHeight="592.0" prefWidth="268.0" style="-fx-border-color: #bababa; -fx-border-width: 1px;" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <content>
                               <VBox fx:id="boardsListContainer" />
                            </content>
@@ -63,7 +63,7 @@
                            </graphic></Button>
                      </children>
                   </AnchorPane>
-                  <ScrollPane fx:id="boardScrollPane" prefHeight="652.0" prefWidth="216.0">
+                  <ScrollPane fx:id="boardScrollPane" prefHeight="652.0" prefWidth="216.0" style="-fx-padding: 10px;">
                      <content>
                         <HBox id="list_container" fx:id="cardListsContainer" stylesheets="@main_styles.css" />
                      </content>
@@ -74,7 +74,7 @@
       </AnchorPane>
    </center>
    <bottom>
-      <AnchorPane prefHeight="78.0" prefWidth="1000.0" BorderPane.alignment="CENTER">
+      <AnchorPane prefHeight="78.0" prefWidth="1000.0" style="-fx-border-color: #bababa; -fx-border-width: 2px;" BorderPane.alignment="CENTER">
          <children>
             <MenuButton contentDisplay="CENTER" graphicTextGap="0.0" layoutX="60.0" layoutY="14.0" mnemonicParsing="false" popupSide="TOP" prefHeight="51.0" prefWidth="73.0" style="-fx-background-color: inherit;" AnchorPane.bottomAnchor="13.0" AnchorPane.leftAnchor="60.0" AnchorPane.topAnchor="14.0">
               <items>
