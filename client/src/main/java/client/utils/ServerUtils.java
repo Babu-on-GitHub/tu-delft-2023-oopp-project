@@ -41,6 +41,13 @@ public class ServerUtils {
         socketUtils.setServer("ws://localhost:8080/websocket");
     }
 
+    /**
+     * Getter for SERVER
+     */
+    public String getSERVER() {
+        return SERVER;
+    }
+
     public boolean chooseServer(String server) {
         if (server == null)
             return false;

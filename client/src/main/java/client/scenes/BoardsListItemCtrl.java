@@ -9,15 +9,15 @@ public class BoardsListItemCtrl {
 
     private MainPageCtrl mainPageCtrl;
 
-    private Board board;
+    private long boardId;
 
-    public BoardsListItemCtrl(Board board,MainPageCtrl mainPageCtrl) {
+    public BoardsListItemCtrl(long boardId,MainPageCtrl mainPageCtrl) {
         this.mainPageCtrl = mainPageCtrl;
-        this.board = board;
+        this.boardId = boardId;
     }
 
     public void setBoardButton() throws IOException {
-        mainPageCtrl.setBoardOverview(board);
+        mainPageCtrl.setBoardOverview(boardId);
     }
 
 }

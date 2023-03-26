@@ -3,6 +3,7 @@ package client.scenes;
 import client.model.BoardModel;
 import client.model.ListModel;
 import client.utils.ServerUtils;
+import client.utils.UserUtils;
 import com.google.inject.Inject;
 import commons.Board;
 import commons.CardList;
@@ -21,7 +22,9 @@ import javafx.event.ActionEvent;
 import javafx.scene.layout.VBox;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +40,8 @@ public class MainPageCtrl implements Initializable {
 
     private final MainCtrl mainCtrl;
 
+    private final UserUtils userUtils;
+
     @FXML
     private TextField boardName;
 
@@ -48,7 +53,7 @@ public class MainPageCtrl implements Initializable {
 
     private BoardModel board;
 
-    private List<Board> boardList;
+    private List<Long> boardList;
 
     @FXML
     private SplitPane splitPane;
@@ -72,9 +77,10 @@ public class MainPageCtrl implements Initializable {
 
 
     @Inject
-    public MainPageCtrl(ServerUtils server, MainCtrl mainCtrl) {
+    public MainPageCtrl(ServerUtils server, MainCtrl mainCtrl, UserUtils userUtils) {
         this.server = server;
         this.mainCtrl = mainCtrl;
+        this.userUtils = userUtils;
         boardList = new ArrayList<>();
     }
 
@@ -125,7 +131,7 @@ public class MainPageCtrl implements Initializable {
         //makes the boards fill width of the board list
         boardListScrollPane.setFitToWidth(true);
 
-        //updateBoardList();
+        boardList = userUtils.getUserBoardsIds();
         try {
             showBoardsList();
         } catch (IOException e) {
@@ -136,7 +142,7 @@ public class MainPageCtrl implements Initializable {
 
 
     public void refresh() {
-        updateBoardList();
+        boardList = userUtils.getUserBoardsIds();
         try {
             showBoardsList();
         } catch (IOException e) {
@@ -205,11 +211,11 @@ public class MainPageCtrl implements Initializable {
                 });
     }
 
-    public void setBoardOverview(Board board) throws IOException {
-        var res = server.getBoardById(board.getId());
+    public void setBoardOverview(long id) throws IOException {
+        var res = server.getBoardById(id);
         if (res.isEmpty()) {
             initializeBoard();
-            updateBoardList();
+            //getAllBoardsIds();
             showBoardsList();
             return;
         }
@@ -233,18 +239,17 @@ public class MainPageCtrl implements Initializable {
         }
     }
 
-    public void updateBoardList() {
+    public void getAllBoardsIds() {
         //This will pe changed to fetch only the boards linked to the user
-        ServerUtils utils = new ServerUtils();
-        var newBoardList = utils.getBoards();
+        var newBoardList = server.getBoards();
         if (newBoardList.isEmpty()) {
             log.warning("Something went wrong fetching the boards");
         } else {
-            boardList = newBoardList.get();
+            boardList = newBoardList.get().stream().map(Board::getId).toList();
         }
     }
 
-    //call updateBoardList before this one
+    //call getAllBoardsIds or userUtils.getUserBoardsIds() before this one
     public void showBoardsList() throws IOException {
         if (boardList == null) return;
         boardsListContainer.getChildren().clear();
@@ -254,10 +259,10 @@ public class MainPageCtrl implements Initializable {
 
     }
 
-    public void addBoardListItemToList(Board board) throws IOException {
+    public void addBoardListItemToList(long boardId) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("BoardsListItem.fxml"));
 
-        loader.setController(new BoardsListItemCtrl(board, this));
+        loader.setController(new BoardsListItemCtrl(boardId, this));
 
         AnchorPane toAdd = loader.load();
 
@@ -273,7 +278,9 @@ public class MainPageCtrl implements Initializable {
             log.warning("Failed to add new board to server");
             return;
         }
-        addBoardListItemToList(added.get());
+        boardList.add(added.get().getId());
+        userUtils.updateUserBoards(boardList);
+        addBoardListItemToList(added.get().getId());
     }
 
     @FXML
@@ -300,19 +307,14 @@ public class MainPageCtrl implements Initializable {
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == buttonTypeOK) {
-            removeBoard(board.getBoard());
-            updateBoardList();
+            server.deleteBoardById(board.getBoard().getId());
+            boardList.remove(board.getBoard().getId());
+            userUtils.updateUserBoards(boardList);
             showBoardsList();
             initializeBoard();
-            setBoardOverview(board.getBoard());
+            setBoardOverview(board.getBoard().getId());
         } else {
             return;
         }
-    }
-
-    public void removeBoard(Board board) {
-        ServerUtils utils = new ServerUtils();
-        utils.deleteBoardById(board.getId());
-        boardList.remove(board);
     }
 }

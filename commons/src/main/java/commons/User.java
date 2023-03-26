@@ -1,4 +1,4 @@
-package client.user;
+package commons;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -10,7 +10,7 @@ import java.util.List;
 public class User implements Serializable {
 
 
-    private List<ServerInfo> userServers;
+    private List<ServerInfo> serverBoardsPairs;
 
     public void save(ObjectOutputStream p) throws IOException {
         p.writeObject(this);
@@ -22,63 +22,72 @@ public class User implements Serializable {
         return u;
     }
 
-    public List<Integer> getUserBoardsIds(String server){
-        if(userServers == null){
-            userServers = new ArrayList<>();
-            List<Integer> boards = new ArrayList<>();
-            boards.add(1);
-            userServers.add(new ServerInfo(server,boards));
+    public void setUserBoardsForServer(String server, List<Long> boards){
+        var s = serverBoardsPairs.stream().filter(q->q.getServerAddress().equals(server)).findFirst();
+        if(s.isPresent()){
+            s.get().setBoardsIds(boards);
+        }else{
+            serverBoardsPairs.add(new ServerInfo(server,boards));
+        }
+    }
+
+    public List<Long> getUserBoardsIds(String server){
+        if(serverBoardsPairs == null){
+            serverBoardsPairs = new ArrayList<>();
+            List<Long> boards = new ArrayList<>();
+            boards.add(1L);
+            serverBoardsPairs.add(new ServerInfo(server,boards));
             return boards;
         }
-        for (ServerInfo userServer : userServers) {
+        for (ServerInfo userServer : serverBoardsPairs) {
             if (userServer.getServerAddress().equals(server)) {
                 var b = userServer.getBoardsIds();
                 if (b == null || b.isEmpty()){
-                    List<Integer> boards = new ArrayList<>();
-                    boards.add(1);
+                    List<Long> boards = new ArrayList<>();
+                    boards.add(1L);
                     userServer.setBoardsIds(boards);
                     return boards;
                 }
                 if(b.stream().filter(id -> id == 1).findAny().isEmpty()) {
-                    userServer.getBoardsIds().add(1);
+                    userServer.getBoardsIds().add(1L);
                     return userServer.getBoardsIds();
                 }
                 return userServer.getBoardsIds();
             }
         }
-        List<Integer> boards = new ArrayList<>();
-        boards.add(1);
-        userServers.add(new ServerInfo(server,boards));
+        List<Long> boards = new ArrayList<>();
+        boards.add(1L);
+        serverBoardsPairs.add(new ServerInfo(server,boards));
         return boards;
     }
 
     public User() {
-        userServers = new ArrayList<>();
+        serverBoardsPairs = new ArrayList<>();
     }
 
-    public User(List<ServerInfo> userServers) {
-        this.userServers = userServers;
+    public User(List<ServerInfo> serverBoardsPairs) {
+        this.serverBoardsPairs = serverBoardsPairs;
     }
 
     /**
      * Getter for userServers
      */
-    public List<ServerInfo> getUserServers() {
-        return userServers;
+    public List<ServerInfo> getServerBoardsPairs() {
+        return serverBoardsPairs;
     }
 
     /**
      * Setter for userServers
      *
-     * @param userServers Value for userServers
+     * @param serverBoardsPairs Value for userServers
      */
-    public void setUserServers(List<ServerInfo> userServers) {
-        this.userServers = userServers;
+    public void setServerBoardsPairs(List<ServerInfo> serverBoardsPairs) {
+        this.serverBoardsPairs = serverBoardsPairs;
     }
 
     private static class ServerInfo implements Serializable{
         private String serverAddress;
-        private List<Integer> boardsIds;
+        private List<Long> boardsIds;
 
         public ServerInfo() {
             boardsIds = new ArrayList<>();
@@ -89,7 +98,7 @@ public class User implements Serializable {
             boardsIds = new ArrayList<>();
         }
 
-        public ServerInfo(String serverAddress, List<Integer> boardsIds) {
+        public ServerInfo(String serverAddress, List<Long> boardsIds) {
             this.serverAddress = serverAddress;
             this.boardsIds = boardsIds;
         }
@@ -113,7 +122,7 @@ public class User implements Serializable {
         /**
          * Getter for boardsIds
          */
-        public List<Integer> getBoardsIds() {
+        public List<Long> getBoardsIds() {
             return boardsIds;
         }
 
@@ -122,7 +131,7 @@ public class User implements Serializable {
          *
          * @param boardsIds Value for boardsIds
          */
-        public void setBoardsIds(List<Integer> boardsIds) {
+        public void setBoardsIds(List<Long> boardsIds) {
             this.boardsIds = boardsIds;
         }
     }
