@@ -2,12 +2,10 @@ package client.utils;
 
 import client.scenes.MainPageCtrl;
 import com.google.inject.Inject;
-import commons.Board;
 import commons.User;
 
 import java.io.*;
 import java.util.List;
-import java.util.Optional;
 import java.util.logging.Logger;
 
 public class UserUtils {

@@ -1,6 +1,5 @@
 package client.scenes;
 
-import commons.Board;
 
 import java.io.IOException;
 
