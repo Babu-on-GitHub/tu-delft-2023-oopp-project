@@ -184,8 +184,13 @@ public class ListController implements Initializable {
 
     public void updateTitle() {
         listModel.getCardList().setTitle(listTitle.getText());
-        listModel.update(true);
+        listModel.update(false);
     }
+
+    public void overwriteTitleNode(String title) {
+        listTitle.setText(title);
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         cardListContainer.setSpacing(10);

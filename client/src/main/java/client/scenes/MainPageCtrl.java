@@ -151,6 +151,10 @@ public class MainPageCtrl implements Initializable {
         board.updateWithNewBoard(b);
     }
 
+    public void overwriteTitleNode(String text) {
+        boardName.setText(text);
+    }
+
     @FXML
     public void optionsShowServerChoice(ActionEvent event) {
         mainCtrl.showServerChoice();
