@@ -1,8 +1,11 @@
 package client.scenes;
 
 
+import client.utils.ServerUtils;
+import commons.Board;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -18,9 +21,14 @@ public class BoardsListItemCtrl implements Initializable {
     @FXML
     private ImageView icon;
 
+    @FXML
+    private Button boardItemButton;
+
     private MainPageCtrl mainPageCtrl;
 
     private long boardId;
+
+    private String boardName;
 
     public BoardsListItemCtrl(long boardId,MainPageCtrl mainPageCtrl) {
         this.mainPageCtrl = mainPageCtrl;
@@ -39,6 +47,15 @@ public class BoardsListItemCtrl implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        ServerUtils utils = mainPageCtrl.getServer();
+        var board = utils.getBoardById(boardId);
+        if(board.isEmpty()){
+            boardName = "???";
+        }
+        else{
+            boardName = board.get().getTitle();
+        }
+        boardItemButton.setText(boardName);
         if(boardId == 1){
             setImage(icon,"client/src/main/resources/client/icons/home_FILL0_wght400_GRAD0_opsz48.png");
         }else{

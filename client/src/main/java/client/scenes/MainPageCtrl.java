@@ -25,6 +25,7 @@ import javafx.scene.layout.HBox;
 
 import javafx.event.ActionEvent;
 import javafx.scene.layout.VBox;
+import javafx.stage.StageStyle;
 
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
@@ -81,6 +82,12 @@ public class MainPageCtrl implements Initializable {
     @FXML
     private ImageView shareImage;
 
+    /**
+     * Getter for server
+     */
+    public ServerUtils getServer() {
+        return server;
+    }
 
     @Inject
     public MainPageCtrl(ServerUtils server, MainCtrl mainCtrl, UserUtils userUtils) {
@@ -110,22 +117,8 @@ public class MainPageCtrl implements Initializable {
         boardScrollPane.setFitToHeight(true);
         cardListsContainer.setSpacing(20);
 
-        if (board == null) {
-            var res = server.getBoardById(1);
-            if (res.isPresent()) {
-                board = new BoardModel(res.get(), server);
-                board.setController(this);
-            } else {
-                Board toAdd = new Board();
-                var added = server.addBoard(toAdd);
-                if (added.isEmpty())
-                    throw new RuntimeException("Server Request failed");
-                board = new BoardModel(added.get(), server);
-            }
-        }
-        board.setController(this);
-        board.update();
-        board.updateChildren();
+        initializeBoard();
+
 
         server.getSocketUtils().connect();
 
@@ -228,7 +221,7 @@ public class MainPageCtrl implements Initializable {
 
             boardList.remove(id);
             userUtils.updateUserBoards(boardList);
-            showBoardsList();
+            ///showBoardsList();
 
             initializeBoard();
             //getAllBoardsIds();
@@ -247,6 +240,7 @@ public class MainPageCtrl implements Initializable {
             board.setController(this);
         } else {
             Board toAdd = new Board();
+            toAdd.setTitle("Default Board");
             var added = server.addBoard(toAdd);
             if (added.isEmpty())
                 throw new RuntimeException("Server Request failed");
@@ -347,8 +341,8 @@ public class MainPageCtrl implements Initializable {
         String boardId = Long.toString(board.getBoard().getId());
 
         Label keyLabel = new Label("Board Id: " + boardId);
-        keyLabel.setStyle("-fx-font-size: 15;");// Set font size to 20
-        keyLabel.setAlignment(Pos.CENTER); // Center the label
+        keyLabel.setStyle("-fx-font-size: 15;");
+        keyLabel.setAlignment(Pos.CENTER);
 
         dialog.getDialogPane().setContent(keyLabel);
 
