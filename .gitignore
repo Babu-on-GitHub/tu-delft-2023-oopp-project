@@ -39,3 +39,6 @@ out/
 
 ### VS Code ###
 .vscode/
+
+####Resources#####
+*.data
