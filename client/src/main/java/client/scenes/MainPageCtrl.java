@@ -25,7 +25,6 @@ import javafx.scene.layout.HBox;
 
 import javafx.event.ActionEvent;
 import javafx.scene.layout.VBox;
-import javafx.stage.StageStyle;
 
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
