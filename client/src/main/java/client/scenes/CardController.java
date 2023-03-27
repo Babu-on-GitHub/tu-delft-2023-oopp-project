@@ -120,11 +120,17 @@ public class CardController implements Initializable {
     }
 
     public void updateTitle() {
+        card.getCard().setTitle(cardTitle.getText());
+        card.update();
+    }
 
+    public void updateDescription() {
+        //TODO
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        cardTitle.setText(card.getCard().getTitle());
 
         cardTitle.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {

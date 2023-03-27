@@ -38,7 +38,7 @@ public class ListController implements Initializable {
     private ListModel listModel;
     private MainPageCtrl parent;
 
-    private ServerUtils server;
+    private ServerUtils server = new ServerUtils();
 
     @SuppressWarnings("unused")
     public ListController() {
@@ -174,10 +174,6 @@ public class ListController implements Initializable {
         parent.getListsContainer().getChildren().remove(listContainer);
     }
 
-    public void updateTitle() {
-        // not implemented
-    }
-
     public VBox getCardsContainer() {
         return cardListContainer;
     }
@@ -186,10 +182,16 @@ public class ListController implements Initializable {
         return parent;
     }
 
+    public void updateTitle() {
+        listModel.getCardList().setTitle(listTitle.getText());
+        listModel.update(true);
+    }
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         cardListContainer.setSpacing(10);
         scrollPane.setFitToWidth(true);
+
+        listTitle.setText(listModel.getCardList().getTitle());
 
         listTitle.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {

@@ -20,7 +20,7 @@ public class Card implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String title;
+    private String title = "NEW CARD";
     private Timestamp timestamp;
 
     private String description;

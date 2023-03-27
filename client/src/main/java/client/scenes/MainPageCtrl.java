@@ -62,7 +62,6 @@ public class MainPageCtrl implements Initializable {
     @FXML
     private ImageView deleteBoardImage;
 
-
     @Inject
     public MainPageCtrl(ServerUtils server, MainCtrl mainCtrl) {
         this.server = server;
@@ -116,8 +115,26 @@ public class MainPageCtrl implements Initializable {
             log.warning("Couldn't show boards");
         }
 
+        boardName.setText(board.getBoard().getTitle());
+
+        boardName.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                updateTitle();
+            }
+        });
     }
 
+    public void updateTitle(){
+        board.getBoard().setTitle(boardName.getText());
+        for (Node child : boardsListContainer.getChildren()){
+
+        }
+        board.update();
+    }
+
+    public Board getBoard(){
+        return board.getBoard();
+    }
 
     public void refresh() {
         updateBoardList();
@@ -197,6 +214,7 @@ public class MainPageCtrl implements Initializable {
             showBoardsList();
             return;
         }
+        boardName.setText(board.getTitle());
         this.board = new BoardModel(res.get(), server);
         cardListsContainer.getChildren().clear();
         showBoard();
