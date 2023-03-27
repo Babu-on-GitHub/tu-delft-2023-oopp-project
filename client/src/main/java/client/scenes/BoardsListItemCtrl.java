@@ -1,6 +1,5 @@
 package client.scenes;
 
-import client.utils.ServerUtils;
 import commons.Board;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -8,7 +7,6 @@ import javafx.scene.control.Button;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
 
