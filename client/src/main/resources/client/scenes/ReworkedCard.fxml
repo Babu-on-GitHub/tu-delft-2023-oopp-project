@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="cardContainer"  onDragDetected="#dragDetected" onDragDone="#dragDone" prefHeight="208.0" prefWidth="385.0" style="-fx-border-color: #bababa; -fx-border-width: 1px; -fx-border-radius: 20px;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="cardContainer" onDragDetected="#dragDetected" onDragDone="#dragDone" onMouseClicked="#checkDoubleClick" prefHeight="208.0" prefWidth="385.0" style="-fx-border-color: #bababa; -fx-border-width: 1px; -fx-border-radius: 20px;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <TextField fx:id="cardTitle" alignment="CENTER" layoutX="5.0" layoutY="3.0" prefHeight="111.0" prefWidth="377.0" style="-fx-background-color: inherit;" text="NEW CARD" AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="2.0">
          <font>
@@ -22,7 +22,7 @@
                </image>
             </ImageView>
          </graphic></Button>
-      <Button contentDisplay="TOP" graphicTextGap="0.0" layoutX="264.0" layoutY="114.0" mnemonicParsing="false" prefHeight="80.0" prefWidth="88.0" style="-fx-background-color: inherit;" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="20.0">
+      <Button fx:id="editButton" contentDisplay="TOP" graphicTextGap="0.0" layoutX="264.0" layoutY="114.0" mnemonicParsing="false" prefHeight="80.0" prefWidth="88.0" style="-fx-background-color: inherit;" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="20.0">
          <graphic>
             <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                <image>

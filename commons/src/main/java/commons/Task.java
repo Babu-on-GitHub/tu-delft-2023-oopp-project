@@ -19,7 +19,7 @@ public class Task implements Serializable {
 
     private String title;
 
-
+    private boolean checked;
     @SuppressWarnings("unused")
     public Task(){
 
@@ -82,6 +82,13 @@ public class Task implements Serializable {
         this.title = other.title;
     }
 
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
+    }
 
     @Override
     public boolean equals(Object o) {
