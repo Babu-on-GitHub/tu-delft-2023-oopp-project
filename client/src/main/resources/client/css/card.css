@@ -1,0 +1,23 @@
+* {
+    -border-color: #bababa;
+}
+
+.default-border {
+    -fx-border-color: -border-color !important;
+    -fx-border-width: 1px !important;
+    -fx-border-radius: 20px !important;
+}
+
+/* This highlights the top border of the card with blue */
+.highlight-top {
+    -fx-border-color: blue -border-color
+                        -border-color -border-color !important;
+    -fx-border-width: 3px 1px 1px 1px !important;
+}
+
+/* This highlights the bottom border of the card with blue */
+.highlight-bottom {
+    -fx-border-color: -border-color -border-color
+                        blue -border-color !important;
+    -fx-border-width: 1px 1px 3px 1px !important;
+}

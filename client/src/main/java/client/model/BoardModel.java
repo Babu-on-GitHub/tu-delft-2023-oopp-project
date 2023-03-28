@@ -8,6 +8,7 @@ import commons.CardList;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.logging.Logger;
 
 public class BoardModel {
@@ -236,5 +237,13 @@ public class BoardModel {
 
         update();
         quietTest();
+    }
+
+    public void forEveryCard(Consumer<CardModel> consumer) {
+        for (ListModel list : children) {
+            for (CardModel card : list.getChildren()) {
+                consumer.accept(card);
+            }
+        }
     }
 }

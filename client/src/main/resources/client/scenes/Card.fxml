@@ -16,8 +16,9 @@
 <!--</AnchorPane>-->
 
 <StackPane  prefHeight="80.0" prefWidth="219.0"
-           style="-fx-border-color: #30363d; -fx-border-radius: 5;" VBox.vgrow="NEVER"
-           xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+            styleClass="default-border" VBox.vgrow="NEVER"
+            xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
+            stylesheets="@client/css/card.css">
         <VBox.margin>
             <Insets bottom="15.0" top="15.0" />
         </VBox.margin>

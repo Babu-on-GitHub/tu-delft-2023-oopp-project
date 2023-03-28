@@ -123,6 +123,26 @@ public class CardController implements Initializable {
 
     }
 
+    public void highlightBottom() {
+        cardContainer.getStyleClass().remove("default-border");
+        // highlight the bottom border of the card
+        cardContainer.getStyleClass().add("highlight-bottom");
+    }
+
+    public void highlightTop() {
+        cardContainer.getStyleClass().remove("default-border");
+        // highlight the top border of the card
+        cardContainer.getStyleClass().add("highlight-top");
+    }
+
+    public void highlightReset() {
+        // reset the border of the card
+        cardContainer.getStyleClass().remove("highlight-bottom");
+        cardContainer.getStyleClass().remove("highlight-top");
+
+        cardContainer.getStyleClass().add("default-border");
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
