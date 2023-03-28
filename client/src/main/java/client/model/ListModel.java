@@ -289,6 +289,24 @@ public class ListModel {
         return true;
     }
 
+    public void updateTitle(String title) {
+        cardList.setTitle(title);
+
+        var res = utils.updateCardListTitleById(cardList.getId(), title);
+        if (res.isEmpty()) {
+            log.severe("Failed to update card list title");
+        }
+        else {
+            if (res.get().equals(cardList.getTitle()))
+                log.info("Successfully updated card list title");
+            else {
+                log.severe("Failed to update card list title, overwriting new name");
+                cardList.setTitle(res.get());
+                controller.overwriteTitleNode(cardList.getTitle());
+            }
+        }
+    }
+
     public void quietTest() {
         var isCoherent = coherencyTest();
         if (!isCoherent)

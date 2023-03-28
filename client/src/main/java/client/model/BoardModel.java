@@ -241,4 +241,23 @@ public class BoardModel {
         update();
         quietTest();
     }
+
+    public void updateTitle(String text) {
+        board.setTitle(text);
+        var res = utils.updateBoardTitleById(board.getId(), board.getTitle());
+        if (res.isEmpty()) {
+            log.warning("Updating board title failed");
+        }
+        else {
+            if (res.get().equals(board.getTitle())) {
+                log.info("Board title is up to date");
+            }
+            else {
+                log.severe("Board title is not up to date");
+
+                board.setTitle(res.get());
+                controller.overwriteTitleNode(board.getTitle());
+            }
+        }
+    }
 }

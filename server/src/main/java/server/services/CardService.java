@@ -60,4 +60,12 @@ public class CardService {
         cardRepository.deleteById(id);
     }
 
+    public String updateTitle(long id, String title) {
+        Card card = this.getCardById(id);
+        card.setTitle(title);
+        card.sync();
+        this.saveCard(card);
+
+        return title;
+    }
 }

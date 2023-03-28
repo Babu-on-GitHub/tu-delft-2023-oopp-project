@@ -8,6 +8,7 @@ import server.api.BoardController;
 import server.database.BoardRepository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 @Service
@@ -169,5 +170,24 @@ public class BoardService {
 
         board.sync();
         return this.saveBoard(board);
+    }
+
+    public String updateTitle(String title, long id) {
+        if (title == null) {
+            throw new IllegalArgumentException("Title is null");
+        }
+        log.info("Updating board title: " + title);
+        Optional<Board> boardOptional;
+        try {
+            boardOptional = Optional.ofNullable(this.getBoardById(id));
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Trying to update non existing board");
+        }
+
+        var board = boardOptional.get();
+        board.setTitle(title);
+        board.sync();
+        this.saveBoard(board);
+        return title;
     }
 }

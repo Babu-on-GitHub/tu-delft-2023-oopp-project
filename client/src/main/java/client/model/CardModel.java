@@ -102,4 +102,20 @@ public class CardModel {
         return utils;
     }
 
+    public void updateTitle(String newTitle) {
+        card.setTitle(newTitle);
+
+        var res = utils.updateCardTitleById(card.getId(), newTitle);
+        if (res.isEmpty())
+            log.severe("Failed to update card title");
+        else {
+            if (res.get().equals(card.getTitle()))
+                log.info("Successfully updated card title");
+            else {
+                log.severe("Failed to update card title, overwriting new name");
+                card.setTitle(res.get());
+                controller.overwriteTitleNode(card.getTitle());
+            }
+        }
+    }
 }
