@@ -38,7 +38,7 @@ public class ListController implements Initializable {
     private ListModel listModel;
     private MainPageCtrl parent;
 
-    private ServerUtils server = new ServerUtils();
+    private ServerUtils server;
 
     @SuppressWarnings("unused")
     public ListController() {
@@ -53,6 +53,7 @@ public class ListController implements Initializable {
         this.listModel = cardList;
         listModel.setController(this);
         this.parent = parent;
+        server = parent.getServer();
     }
 
     public void recreateChildren(ArrayList<CardModel> temp) throws IOException {

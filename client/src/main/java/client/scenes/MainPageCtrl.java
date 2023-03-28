@@ -126,9 +126,6 @@ public class MainPageCtrl implements Initializable {
 
     public void updateTitle(){
         board.getBoard().setTitle(boardName.getText());
-        for (Node child : boardsListContainer.getChildren()){
-
-        }
         board.update();
     }
 
@@ -316,5 +313,9 @@ public class MainPageCtrl implements Initializable {
         ServerUtils utils = new ServerUtils();
         utils.deleteBoardById(board.getId());
         boardList.remove(board);
+    }
+
+    public ServerUtils getServer() {
+        return server;
     }
 }

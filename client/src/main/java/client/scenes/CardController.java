@@ -125,7 +125,7 @@ public class CardController implements Initializable {
     }
 
     public void updateDescription() {
-        //TODO
+        //TODO  update the description of the card when it is changed through card edit menu
     }
 
     @Override
