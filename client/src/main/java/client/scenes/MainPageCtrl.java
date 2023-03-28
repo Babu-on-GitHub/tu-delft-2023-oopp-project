@@ -27,7 +27,6 @@ import javafx.scene.layout.HBox;
 
 import javafx.event.ActionEvent;
 import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.awt.*;
