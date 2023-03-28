@@ -27,6 +27,7 @@ import javafx.scene.layout.HBox;
 
 import javafx.event.ActionEvent;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.awt.*;
@@ -127,31 +128,33 @@ public class MainPageCtrl implements Initializable {
         //This makes the lists to fill the entire height of their parent
         boardScrollPane.setFitToHeight(true);
         cardListsContainer.setSpacing(20);
-
-        initializeBoard();
-
-
-        server.getSocketUtils().connect();
-
-        showBoard();
-
         //makes board overview resize correctly
         SplitPane.setResizableWithParent(boardListScrollPane.getParent(), false);
-
         //makes the boards fill width of the board list
         boardListScrollPane.setFitToWidth(true);
 
-        boardList = userUtils.getUserBoardsIds();
+
         try {
+            initializeBoard();
+
+            server.getSocketUtils().connect();
+
+            showBoard();
+
+            boardList = userUtils.getUserBoardsIds();
+
             showBoardsList();
-        } catch (IOException e) {
-            log.warning("Couldn't show boards");
+        } catch (Exception e) {
+            log.warning("Something wrong in main page init");
         }
 
     }
 
 
     public void refresh() {
+        if(!server.getSocketUtils().isConnected()){
+            server.getSocketUtils().connect();
+        }
         boardList = userUtils.getUserBoardsIds();
         try {
             showBoardsList();
@@ -306,6 +309,7 @@ public class MainPageCtrl implements Initializable {
             Parent root = fxmlLoader.load();
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL);
             stage.showAndWait();
         } catch (IOException e) {
             e.printStackTrace();

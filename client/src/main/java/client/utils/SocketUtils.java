@@ -22,6 +22,10 @@ public class SocketUtils {
         baseUrl = server;
     }
 
+    public boolean isConnected(){
+        return session != null;
+    }
+
     public void connect() {
         disconnect();
         session = connect(baseUrl);
