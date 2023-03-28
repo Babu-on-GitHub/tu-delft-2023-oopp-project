@@ -29,6 +29,15 @@ bin/
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
+*.aux
+*.fdb_latexmk
+*.fls
+*.out
+*.log
+*.fls
+*.bbl
+*.blg
+*.gz
 
 ### NetBeans ###
 /nbproject/private/
