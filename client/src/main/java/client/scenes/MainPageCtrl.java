@@ -91,13 +91,6 @@ public class MainPageCtrl implements Initializable {
     @FXML
     private ImageView changeServerImage;
 
-    /**
-     * Getter for server
-     */
-    public ServerUtils getServer() {
-        return server;
-    }
-
     @Inject
     public MainPageCtrl(ServerUtils server, MainCtrl mainCtrl, UserUtils userUtils) {
         this.server = server;
@@ -148,8 +141,28 @@ public class MainPageCtrl implements Initializable {
             log.warning("Something wrong in main page init");
         }
 
+        boardName.setText(board.getBoard().getTitle());
+
+        boardName.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                updateTitle();
+                try {
+                    showBoardsList();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
     }
 
+    public void updateTitle(){
+        board.getBoard().setTitle(boardName.getText());
+        board.update();
+    }
+
+    public Board getBoard(){
+        return board.getBoard();
+    }
 
     public void refresh() {
         if(!server.getSocketUtils().isConnected()){
@@ -169,6 +182,10 @@ public class MainPageCtrl implements Initializable {
         board.updateWithNewBoard(b);
     }
 
+    public void overwriteTitleNode(String text) {
+        boardName.setText(text);
+    }
+
     @FXML
     public void optionsShowServerChoice(ActionEvent event) {
         mainCtrl.showServerChoice();
@@ -176,6 +193,9 @@ public class MainPageCtrl implements Initializable {
 
     @FXML
     public void addListButton(ActionEvent event) throws IOException {
+        if(board.getBoard().getLists().isEmpty() && !cardListsContainer.getChildren().isEmpty()){
+            cardListsContainer.getChildren().clear();
+        }
         ListModel model = new ListModel(new CardList(), board, server);
         addList(model); // important: keep order of these two the same
         board.addList(model);
@@ -214,11 +234,29 @@ public class MainPageCtrl implements Initializable {
         return board;
     }
 
+    public void showEmptyBoardPrompt(){
+        cardListsContainer.getChildren().clear();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("EmptyBoardPrompt.fxml"));
+        Node prompt = null;
+        try {
+            prompt = loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        cardListsContainer.getChildren().add(prompt);
+    }
+
     public void showBoard() {
+        if(board.getBoard().getLists().isEmpty() && !cardListsContainer.getChildren().isEmpty()){
+            cardListsContainer.getChildren().clear();
+        }
         if (board == null) return;
         this.board.setController(this);
         this.board.update();
         this.board.updateChildren();
+        if(this.board.getChildren().isEmpty()){
+            showEmptyBoardPrompt();
+        }
         server.getSocketUtils().registerForMessages(
                 "/topic/board/" + board.getBoard().getId(),
                 board.getBoard().getClass(),
@@ -250,6 +288,7 @@ public class MainPageCtrl implements Initializable {
             showBoardsList();
             return;
         }
+        boardName.setText(board.getBoard().getTitle());
         this.board = new BoardModel(res.get(), server);
         cardListsContainer.getChildren().clear();
         showBoard();
@@ -400,5 +439,9 @@ public class MainPageCtrl implements Initializable {
             StringSelection selection = new StringSelection(key);
             clipboard.setContents(selection, selection);
         });
+    }
+
+    public ServerUtils getServer() {
+        return server;
     }
 }

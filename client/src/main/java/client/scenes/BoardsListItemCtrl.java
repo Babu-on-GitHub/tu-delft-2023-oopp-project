@@ -1,5 +1,8 @@
 package client.scenes;
 
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 
 import client.utils.ServerUtils;
 import javafx.fxml.FXML;
@@ -38,10 +41,15 @@ public class BoardsListItemCtrl implements Initializable {
         mainPageCtrl.setBoardOverview(boardId);
     }
 
+
     private void setImage(ImageView img, String path){
         File file = new File(path);
         Image image = new Image(file.toURI().toString());
         img.setImage(image);
+    }
+
+    public void updateBoardButton(String newName){
+        boardItemButton.setText(newName);
     }
 
     @Override

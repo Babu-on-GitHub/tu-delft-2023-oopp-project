@@ -75,6 +75,7 @@ public class CardModel {
     }
 
     public void updateChildren() {
+        controller.overwriteTitleNode(card.getTitle());
     }
 
     public void disown() {
