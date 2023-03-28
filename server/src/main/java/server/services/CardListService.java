@@ -8,6 +8,7 @@ import server.api.CardListController;
 import server.database.CardListRepository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 @Service
@@ -104,6 +105,26 @@ public class CardListService {
 
         cardList.sync();
         return this.saveCardList(cardList);
+    }
+
+    public String updateTitle(long id, String title) {
+        if (title == null) {
+            throw new IllegalArgumentException("Trying to update card list title with null");
+        }
+
+        Optional<CardList> cardListOptional;
+        try {
+            cardListOptional = Optional.ofNullable(getCardListById(id));
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(e.getMessage());
+        }
+
+        var cardList = cardListOptional.get();
+        cardList.setTitle(title);
+        cardList.sync();
+        this.saveCardList(cardList);
+
+        return title;
     }
 }
 

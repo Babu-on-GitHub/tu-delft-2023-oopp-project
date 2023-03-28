@@ -119,17 +119,16 @@ public class MainPageCtrl implements Initializable {
 
         boardName.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
-                updateTitle();
+                updateTitleModel();
             }
         });
     }
 
-    public void updateTitle(){
-        board.getBoard().setTitle(boardName.getText());
-        board.update();
+    public void updateTitleModel() {
+        board.updateTitle(boardName.getText());
     }
 
-    public Board getBoard(){
+    public Board getBoard() {
         return board.getBoard();
     }
 

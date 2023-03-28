@@ -32,7 +32,7 @@ public class CardListController {
         try {
             cardListService.getCardListById(id);
             return ResponseEntity.ok(cardListService.getCardListById(id));
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             log.warning(e.getMessage());
             return ResponseEntity.badRequest().build();
         }
@@ -45,7 +45,7 @@ public class CardListController {
             var res = cardListService.addCard(card, listId);
             log.info("New card id: " + res.getId());
             return ResponseEntity.ok(res);
-        }catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             log.warning(e.getMessage());
             return ResponseEntity.badRequest().build();
         }
@@ -54,10 +54,10 @@ public class CardListController {
     @DeleteMapping(path = "/delete/{cardId}/from/{listId}")
     public ResponseEntity<Boolean> remove(@PathVariable("cardId") long cardId, @PathVariable("listId") long listId) {
         log.info("Deleting card: " + cardId + " from list: " + listId);
-        try{
+        try {
             cardListService.removeCard(cardId, listId);
             return ResponseEntity.ok(true);
-        }catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             log.warning(e.getMessage());
             return ResponseEntity.badRequest().build();
         }
@@ -66,11 +66,24 @@ public class CardListController {
     @PutMapping(path = "/update/{id}")
     public ResponseEntity<CardList> update(@RequestBody CardList cardList, @PathVariable("id") long id) {
         log.info("Updating card list: " + id);
-        try{
+        try {
             var saved = cardListService.update(cardList, id);
             return ResponseEntity.ok(saved);
 
-        }catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
+            log.warning(e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PutMapping(path = "/updateTitle/{id}")
+    public ResponseEntity<String> updateTitle(@RequestBody String title, @PathVariable("id") long id) {
+        log.info("Updating card list title: " + id);
+        try {
+            var saved = cardListService.updateTitle(id, title);
+            return ResponseEntity.ok(saved);
+
+        } catch (IllegalArgumentException e) {
             log.warning(e.getMessage());
             return ResponseEntity.badRequest().build();
         }

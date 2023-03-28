@@ -16,21 +16,21 @@ public class CardController {
 
     private CardService cardService;
 
-    public CardController(CardService cardService){
+    public CardController(CardService cardService) {
         this.cardService = cardService;
     }
 
-    @GetMapping(path = { "", "/" })
+    @GetMapping(path = {"", "/"})
     public List<Card> getAll() {
         return cardService.getAllCards();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Card> getById(@PathVariable("id") long id) {
-        try{
+        try {
             var card = cardService.getCardById(id);
             return ResponseEntity.ok(card);
-        }catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             log.warning(e.getMessage());
             return ResponseEntity.badRequest().build();
         }
@@ -48,10 +48,21 @@ public class CardController {
 
     @PutMapping(path = "/update/{id}")
     public ResponseEntity<Card> update(@RequestBody Card card, @PathVariable("id") long id) {
-        try{
+        try {
             var saved = cardService.update(card, id);
             return ResponseEntity.ok(saved);
-        }catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
+            log.warning(e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PutMapping(path = "/updateTitle/{id}")
+    public ResponseEntity<String> updateTitle(@RequestBody String title, @PathVariable("id") long id) {
+        try {
+            var saved = cardService.updateTitle(id, title);
+            return ResponseEntity.ok(saved);
+        } catch (IllegalArgumentException e) {
             log.warning(e.getMessage());
             return ResponseEntity.badRequest().build();
         }
