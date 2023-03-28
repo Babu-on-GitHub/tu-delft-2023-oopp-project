@@ -47,8 +47,6 @@ public class MainCtrl {
     }
 
     public void showMainPage() {
-        mainPageCtrl.initializeBoard();
-        mainPageCtrl.updateBoardList();
         primaryStage.setTitle("Board Overview");
         primaryStage.setScene(mainPage);
         mainPageCtrl.refresh();
