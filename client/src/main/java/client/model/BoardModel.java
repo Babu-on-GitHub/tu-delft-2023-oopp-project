@@ -124,6 +124,8 @@ public class BoardModel {
         if (serverTimestamp.after(localTimestamp)) {
             log.info("Server-side board is newer, overwriting local");
             board = serverBoard;
+            controller.overwriteTitleNode(board.getTitle());
+
             updateChildren();
 
             return true;
@@ -156,6 +158,8 @@ public class BoardModel {
     }
 
     public void updateChildren() {
+        controller.overwriteTitleNode(board.getTitle());
+
         if (board.getLists() == null) return;
 
         if (tryToUpdateChildrenNaively()) return;

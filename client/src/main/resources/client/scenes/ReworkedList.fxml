@@ -12,7 +12,7 @@
 
 <BorderPane fx:id="listContainer" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="300.0" style="-fx-border-image-width: 1px; -fx-border-color: #bababa; -fx-border-radius: 20px;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <top>
-      <AnchorPane prefHeight="79.0" prefWidth="298.0" style="-fx-border-color: #bababa; -fx-border-width: #bababa;" BorderPane.alignment="CENTER">
+      <AnchorPane prefHeight="79.0" prefWidth="298.0" style="-fx-border-color: #bababa; -fx-border-width: 1px;" BorderPane.alignment="CENTER">
          <children>
             <TextField fx:id="listTitle" alignment="CENTER" prefHeight="63.0" prefWidth="274.0" text="LIST" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <font>

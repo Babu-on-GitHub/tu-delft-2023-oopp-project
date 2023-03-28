@@ -3,12 +3,19 @@ package client.scenes;
 import client.utils.ServerUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.*;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import client.model.CardModel;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 import org.apache.commons.lang3.NotImplementedException;
 
 import static client.scenes.ListController.CARD_ID;
@@ -21,7 +28,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class CardController implements Initializable {
-
+    private Stage secondStage;
     private CardModel card;
 
     private ListController parent;
@@ -34,6 +41,24 @@ public class CardController implements Initializable {
     @FXML
     private TextField cardTitle;
 
+    @FXML
+    private TextArea cardDescription;
+
+
+    @FXML
+    private VBox detailedCardBox;
+
+    @FXML
+    private VBox subtaskArea;
+
+    @FXML
+    private Button subtaskButton;
+
+    @FXML
+    private HBox tagArea;
+
+    @FXML
+    private Button tagButton;
     @SuppressWarnings("unused")
     public CardController() {
     }
@@ -49,6 +74,51 @@ public class CardController implements Initializable {
         this.card = card;
         this.parent = parent;
         this.server = server;
+    }
+
+    @FXML
+    void checkDoubleClick(MouseEvent event) throws IOException {
+        //TODO change to double click for backlog purposes
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("DetailedCard.fxml"));
+        var controller = new CardController(card, this.getParent(), server);
+        card.setController(controller);
+        loader.setController(controller);
+
+        Parent root = loader.load();
+        secondStage = new Stage();
+        secondStage.setScene(new Scene(root));
+        secondStage.initOwner(cardContainer.getScene().getWindow());
+        secondStage.show();
+    }
+    @FXML
+    void addSubtask(ActionEvent event) throws IOException {
+//        Task subtask = new Task("New Subtask");
+//        FXMLLoader loader = new FXMLLoader(getClass().getResource("Subtask.fxml"));
+//        var controller = new SubtaskController(card, server);
+//        loader.setController(controller);
+//
+//        HBox newSubtask = loader.load();
+//        card.getCard().getSubTasks().add(1,newSubtask);
+        //TODO properly add subtasks
+    }
+
+    @FXML
+    void addTag(ActionEvent event) {
+        System.out.println("add tag called");
+        // TODO creates new tag, displays it OR adds existing tag
+    }
+
+    @FXML
+    void cancelButtonAction(ActionEvent event) {
+        Stage secondStage = (Stage) detailedCardBox.getScene().getWindow();
+        secondStage.close();
+    }
+
+    @FXML
+    void saveButtonAction(ActionEvent event) {
+        Stage secondStage = (Stage) detailedCardBox.getScene().getWindow();
+        secondStage.close();
+        //TODO actually save changes
     }
 
     @FXML
@@ -119,8 +189,17 @@ public class CardController implements Initializable {
         parent.getCardsContainer().getChildren().remove(cardContainer);
     }
 
-    public void updateTitle() {
+    public void overwriteTitleNode(String text) {
+        cardTitle.setText(text);
+    }
 
+    public void updateTitle() {
+        card.getCard().setTitle(cardTitle.getText());
+        card.update();
+    }
+
+    public void updateDescription() {
+        //TODO  update the description of the card when it is changed through card edit menu
     }
 
     public void highlightBottom() {
@@ -145,6 +224,7 @@ public class CardController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        cardTitle.setText(card.getCard().getTitle());
 
         cardTitle.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {

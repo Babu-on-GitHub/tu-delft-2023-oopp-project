@@ -8,7 +8,9 @@
 <?import javafx.scene.text.Font?>
 
 <AnchorPane fx:id="cardContainer" stylesheets="@../css/card.css"
-            onDragDetected="#dragDetected" onDragDone="#dragDone"
+            onDragDetected="#dragDetected"
+            onDragDone="#dragDone"
+            onMouseClicked="#checkDoubleClick"
             prefHeight="208.0" prefWidth="385.0"
             styleClass="default-border"
             xmlns="http://javafx.com/javafx/19"
@@ -27,7 +29,7 @@
                </image>
             </ImageView>
          </graphic></Button>
-      <Button contentDisplay="TOP" graphicTextGap="0.0" layoutX="264.0" layoutY="114.0" mnemonicParsing="false" prefHeight="80.0" prefWidth="88.0" style="-fx-background-color: inherit;" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="20.0">
+      <Button fx:id="editButton" contentDisplay="TOP" graphicTextGap="0.0" layoutX="264.0" layoutY="114.0" mnemonicParsing="false" prefHeight="80.0" prefWidth="88.0" style="-fx-background-color: inherit;" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="20.0">
          <graphic>
             <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                <image>

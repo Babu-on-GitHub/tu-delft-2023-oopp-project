@@ -194,6 +194,8 @@ public class ListModel {
 
             updateChildren();
             parent.updateChild(cardList);
+            controller.overwriteTitleNode(cardList.getTitle());
+
             return true;
         }
 
@@ -234,6 +236,8 @@ public class ListModel {
     }
 
     public void updateChildren() {
+        controller.overwriteTitleNode(cardList.getTitle());
+
         if (cardList.getCards() == null) return;
 
         if (tryToUpdateChildrenNaively()) return;
