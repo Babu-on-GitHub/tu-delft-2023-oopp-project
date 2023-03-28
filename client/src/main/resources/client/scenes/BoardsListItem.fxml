@@ -6,7 +6,7 @@
 
 <AnchorPane prefHeight="25.0" prefWidth="372.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Button mnemonicParsing="false" onAction="#setBoardButton" prefHeight="38.0" prefWidth="372.0" style="-fx-background-color: inherit;" text="Board" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <Button fx:id="boardButton" mnemonicParsing="false" onAction="#setBoardButton" prefHeight="38.0" prefWidth="372.0" style="-fx-background-color: inherit;" text="Board" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <font>
             <Font size="14.0" />
          </font></Button>

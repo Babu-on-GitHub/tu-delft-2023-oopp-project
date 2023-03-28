@@ -53,6 +53,7 @@ public class ListController implements Initializable {
         this.listModel = cardList;
         listModel.setController(this);
         this.parent = parent;
+        server = parent.getServer();
     }
 
     public void recreateChildren(ArrayList<CardModel> temp) throws IOException {
@@ -174,10 +175,6 @@ public class ListController implements Initializable {
         parent.getListsContainer().getChildren().remove(listContainer);
     }
 
-    public void updateTitle() {
-        // not implemented
-    }
-
     public VBox getCardsContainer() {
         return cardListContainer;
     }
@@ -186,10 +183,21 @@ public class ListController implements Initializable {
         return parent;
     }
 
+    public void updateTitle() {
+        listModel.getCardList().setTitle(listTitle.getText());
+        listModel.update(false);
+    }
+
+    public void overwriteTitleNode(String title) {
+        listTitle.setText(title);
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         cardListContainer.setSpacing(10);
         scrollPane.setFitToWidth(true);
+
+        listTitle.setText(listModel.getCardList().getTitle());
 
         listTitle.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
