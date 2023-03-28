@@ -186,6 +186,8 @@ public class ListController implements Initializable {
         return parent;
     }
 
+
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         cardListContainer.setSpacing(10);

@@ -13,6 +13,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
@@ -25,6 +27,8 @@ import javafx.scene.layout.HBox;
 
 import javafx.event.ActionEvent;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
@@ -80,6 +84,12 @@ public class MainPageCtrl implements Initializable {
     private ImageView settingsImage;
     @FXML
     private ImageView shareImage;
+    @FXML
+    private ImageView menuPicture;
+    @FXML
+    private ImageView leaveBoardImage;
+    @FXML
+    private ImageView changeServerImage;
 
     /**
      * Getter for server
@@ -111,6 +121,9 @@ public class MainPageCtrl implements Initializable {
         setImage(settingsImage,"client/src/main/resources/client/icons/settings_FILL0_wght400_GRAD0_opsz48.png");
         setImage(addListImage,"client/src/main/resources/client/icons/add_notes_FILL0_wght400_GRAD0_opsz48.png");
         setImage(addBoardImage,"client/src/main/resources/client/icons/new_window_FILL0_wght400_GRAD0_opsz48.png");
+        setImage(menuPicture, "client/src/main/resources/client/icons/menu_FILL0_wght400_GRAD0_opsz48.png");
+        setImage(leaveBoardImage,"client/src/main/resources/client/icons/exit_to_app_FILL0_wght400_GRAD0_opsz48.png");
+        setImage(changeServerImage,"client/src/main/resources/client/icons/dns_FILL0_wght0_GRAD0_opszNaN.png");
 
         //This makes the lists to fill the entire height of their parent
         boardScrollPane.setFitToHeight(true);
@@ -185,6 +198,14 @@ public class MainPageCtrl implements Initializable {
 
     public HBox getListsContainer() {
         return cardListsContainer;
+    }
+
+    public List<Long> getBoardList() {
+        return boardList;
+    }
+
+    public UserUtils getUserUtils() {
+        return userUtils;
     }
 
     public BoardModel getModel() {
@@ -280,16 +301,16 @@ public class MainPageCtrl implements Initializable {
 
     @FXML
     public void addBoardButton(ActionEvent event) throws IOException {
-        ServerUtils utils = new ServerUtils();
-        Board board = new Board();
-        var added = utils.addBoard(board);
-        if (added.isEmpty()) {
-            log.warning("Failed to add new board to server");
-            return;
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("NewBoardScene.fxml"));
+            fxmlLoader.setController(new AddBoardController(this));
+            Parent root = fxmlLoader.load();
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        boardList.add(added.get().getId());
-        userUtils.updateUserBoards(boardList);
-        addBoardListItemToList(added.get().getId());
     }
 
     @FXML
@@ -325,6 +346,24 @@ public class MainPageCtrl implements Initializable {
         } else {
             return;
         }
+    }
+
+    @FXML
+    public void leaveBoardButton(ActionEvent event) throws IOException {
+        if (board.getBoard().getId() == 1) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Warning");
+            alert.setHeaderText("Cannot leave default board");
+            //alert.setContentText("Default board cannot be deleted");
+
+            alert.showAndWait();
+            return;
+        }
+        boardList.remove(board.getBoard().getId());
+        userUtils.updateUserBoards(boardList);
+        showBoardsList();
+        initializeBoard();
+        setBoardOverview(board.getBoard().getId());
     }
 
     @FXML
