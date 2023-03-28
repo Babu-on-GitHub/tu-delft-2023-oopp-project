@@ -203,6 +203,26 @@ public class CardController implements Initializable {
         //TODO  update the description of the card when it is changed through card edit menu
     }
 
+    public void highlightBottom() {
+        cardContainer.getStyleClass().remove("default-border");
+        // highlight the bottom border of the card
+        cardContainer.getStyleClass().add("highlight-bottom");
+    }
+
+    public void highlightTop() {
+        cardContainer.getStyleClass().remove("default-border");
+        // highlight the top border of the card
+        cardContainer.getStyleClass().add("highlight-top");
+    }
+
+    public void highlightReset() {
+        // reset the border of the card
+        cardContainer.getStyleClass().remove("highlight-bottom");
+        cardContainer.getStyleClass().remove("highlight-top");
+
+        cardContainer.getStyleClass().add("default-border");
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         cardTitle.setText(card.getCard().getTitle());
