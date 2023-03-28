@@ -12,8 +12,11 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 public class AddBoardController {
+
+    static Logger log = Logger.getLogger(AddBoardController.class.getName());
 
     @FXML
     private TextField idBar;
@@ -35,7 +38,7 @@ public class AddBoardController {
     }
 
     @FXML
-    public void joinButton(ActionEvent event) throws IOException {
+    public void joinButton(ActionEvent event) {
         try{
             long id = Long.parseLong(idBar.getText());
             Optional<Board> added = utils.getBoardById(id);
@@ -55,7 +58,7 @@ public class AddBoardController {
         }
     }
 
-    public void createButton(ActionEvent event) throws IOException {
+    public void createButton(ActionEvent event){
         if(titleBar.getText().isEmpty()){
             titleBar.setStyle("-fx-border-color: red;");
             return;
@@ -65,11 +68,16 @@ public class AddBoardController {
         var added = utils.addBoard(board);
         if (added.isEmpty()) {
             titleBar.setStyle("-fx-border-color: red;");
+            log.warning("Failed to add board");
             return;
         }
         parent.getBoardList().add(added.get().getId());
         userUtils.updateUserBoards(parent.getBoardList());
-        parent.addBoardListItemToList(added.get().getId());
+        try {
+            parent.addBoardListItemToList(added.get().getId());
+        } catch (IOException e) {
+            log.warning("Failed to show newly created board");
+        }
         closeWindow(event);
     }
 

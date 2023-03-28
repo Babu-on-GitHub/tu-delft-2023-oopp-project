@@ -149,7 +149,7 @@ public class MainPageCtrl implements Initializable {
                 try {
                     showBoardsList();
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    log.warning("Failed to show the board list on title update");
                 }
             }
         });
