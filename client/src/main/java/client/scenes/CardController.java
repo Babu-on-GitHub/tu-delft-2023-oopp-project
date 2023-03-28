@@ -119,6 +119,10 @@ public class CardController implements Initializable {
         parent.getCardsContainer().getChildren().remove(cardContainer);
     }
 
+    public void overwriteTitleNode(String text) {
+        cardTitle.setText(text);
+    }
+
     public void updateTitle() {
         card.getCard().setTitle(cardTitle.getText());
         card.update();
