@@ -33,6 +33,7 @@ public class BoardModelTest {
         boardModel.setController(controller);
         boardModel.setChildren(children);
     }
+
     @Test
     public void testUpdateChild() {
 
@@ -46,6 +47,7 @@ public class BoardModelTest {
 
         assertEquals(cardList2, board.getLists().get(0));
     }
+
     @Test
     public void testAddList() {
         CardList newList = new CardList("testList");
@@ -82,14 +84,14 @@ public class BoardModelTest {
 
     @Test
     public void getBoardTest() {
-        assertEquals(board,boardModel.getBoard());
+        assertEquals(board, boardModel.getBoard());
     }
 
     @Test
     public void setBoardTest() {
         board = new Board("testBoard123");
         boardModel.setBoard(board);
-        assertEquals(boardModel.getBoard(),board);
+        assertEquals(boardModel.getBoard(), board);
     }
 
     @Test
@@ -100,6 +102,7 @@ public class BoardModelTest {
         CardList cardList2 = new CardList("List 2");
         when(utils.addCardList(cardList2, board)).thenReturn(java.util.Optional.of(cardList2));
         boardModel.addList(new ListModel(cardList2, boardModel, null));
+
         children = boardModel.getChildren();
 
         Card card = new Card("Card 1");
@@ -108,7 +111,7 @@ public class BoardModelTest {
         utils.addCard(cardModel1.getCard(), children.get(0).getCardList());
         cardList1.add(cardModel1.getCard());
 
-        boardModel.moveCard(cardModel1, children.get(1),0);
+        boardModel.moveCard(cardModel1, children.get(1), 0);
 
         assertEquals(0, children.get(0).getChildren().size());
         assertEquals(1, children.get(1).getChildren().size());

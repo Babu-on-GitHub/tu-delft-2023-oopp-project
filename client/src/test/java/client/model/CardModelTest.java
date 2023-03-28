@@ -72,13 +72,16 @@ public class CardModelTest {
     public void testUpdate() {
         CardModel spyCardModel = spy(cardModel);
         Card newCard = mock(Card.class);
+
         when(serverUtils.updateCardById(card.getId(), card)).thenReturn(java.util.Optional.of(newCard));
         when(parent.getCardList()).thenReturn(mock(CardList.class));
         when(serverUtils.addCard(card, parent.getCardList())).thenReturn(java.util.Optional.of(newCard));
         when(serverUtils.getCardById(card.getId())).thenReturn(java.util.Optional.empty());
+
         spyCardModel.update();
         verify(serverUtils, times(1)).addCard(card, parent.getCardList());
     }
+
     @Test
     public void testDisown() {
         CardList cardList = mock(CardList.class);
@@ -95,6 +98,7 @@ public class CardModelTest {
         CardList cardList = mock(CardList.class);
         ListModel newParent = mock(ListModel.class);
         List<CardModel> children = new ArrayList<>(List.of(cardModel));
+
         when(parent.getCardList()).thenReturn(cardList);
         when(cardList.getCards()).thenReturn(new ArrayList<>(List.of(card)));
         when(newParent.getChildren()).thenReturn(children);

@@ -39,23 +39,26 @@ public class ListModelTest {
         utils = mock(ServerUtils.class);
         controller = mock(MainPageCtrl.class);
         children = new ArrayList<>();
-        boardModel =  mock(BoardModel.class);
-        cardModel = new CardModel(card,listModel , utils);
+        boardModel = mock(BoardModel.class);
+        cardModel = new CardModel(card, listModel, utils);
         cardList = new CardList();
         listModel = new ListModel(cardList, boardModel, utils);
 
 
     }
+
     @Test
     public void testGetSetController() {
         ListController listController = new ListController();
         listModel.setController(listController);
         assertEquals(listController, listModel.getController());
     }
+
     @Test
     public void testGetSetBoardTest() {
-        assertEquals(listModel.getParent(),boardModel);
+        assertEquals(listModel.getParent(), boardModel);
     }
+
     @Test
     public void testAddCard() {
         CardList cardList1 = new CardList("List 1");
@@ -71,30 +74,33 @@ public class ListModelTest {
 
     @Test
     public void testInsertCard() {
-        cardList = new CardList( "List 1");
-        card1 = new CardModel(new Card("Card 1"),listModel,utils);
-        card2 = new CardModel(new Card("Card 2"),listModel,utils);
-        card3 = new CardModel(new Card("Card 3"),listModel,utils);
+        cardList = new CardList("List 1");
+        card1 = new CardModel(new Card("Card 1"), listModel, utils);
+        card2 = new CardModel(new Card("Card 2"), listModel, utils);
+        card3 = new CardModel(new Card("Card 3"), listModel, utils);
 
         cardList.getCards().add(card1.getCard());
         cardList.getCards().add(card2.getCard());
         cardList.getCards().add(card3.getCard());
         listModel.insertCard(cardModel, 0);
+
         assertEquals(cardList.getCards().get(0), card1.getCard());
         assertEquals(cardList.getCards().size(), 3);
     }
+
     @Test
     public void testInsertCardAtPosition() {
-        cardList = new CardList( "List 1");
-        card1 = new CardModel(new Card("Card 1"),listModel,utils);
-        card2 = new CardModel(new Card("Card 2"),listModel,utils);
-        card3 = new CardModel(new Card("Card 3"),listModel,utils);
+        cardList = new CardList("List 1");
+        card1 = new CardModel(new Card("Card 1"), listModel, utils);
+        card2 = new CardModel(new Card("Card 2"), listModel, utils);
+        card3 = new CardModel(new Card("Card 3"), listModel, utils);
 
         cardList.getCards().add(card1.getCard());
         cardList.getCards().add(card2.getCard());
         cardList.getCards().add(card3.getCard());
-        listModel.insertCard(cardModel,0);
+        listModel.insertCard(cardModel, 0);
         listModel.insertCard(cardModel, 1);
+
         assertEquals(cardList.getCards().get(1), card2.getCard());
         assertEquals(cardList.getCards().size(), 3);
     }
@@ -104,9 +110,10 @@ public class ListModelTest {
         var card1test = new Card("testCard1");
         var card2test = new Card("testCard2");
         var card3test = new Card("testCard3");
-        var cardModel1 = new CardModel(card1test, listModel,utils);
-        var cardModel2 = new CardModel(card2test, listModel,utils);
-        var cardModel3 = new CardModel(card3test, listModel,utils);
+        var cardModel1 = new CardModel(card1test, listModel, utils);
+        var cardModel2 = new CardModel(card2test, listModel, utils);
+        var cardModel3 = new CardModel(card3test, listModel, utils);
+
         listModel.insertCard(cardModel1, 0);
         listModel.insertCard(cardModel2, 1);
         listModel.insertCard(cardModel3, 2);
@@ -125,7 +132,7 @@ public class ListModelTest {
     @Test
     public void testDeleteCard() {
         var card1test = new Card("testCard1");
-        var cardToDelete = new CardModel(card1test, listModel,utils);
+        var cardToDelete = new CardModel(card1test, listModel, utils);
         listModel.insertCard(cardToDelete, 0);
         listModel.deleteCard(cardToDelete);
         assertFalse(cardList.getCards().contains(cardToDelete.getCard()));
@@ -133,14 +140,15 @@ public class ListModelTest {
 
     @Test
     public void testDeleteCardIdNotFound() {
-        cardList = new CardList( "List 1");
-        card1 = new CardModel(new Card("Card 1"),listModel,utils);
-        card2 = new CardModel(new Card("Card 2"),listModel,utils);
-        card3 = new CardModel(new Card("Card 3"),listModel,utils);
+        cardList = new CardList("List 1");
+        card1 = new CardModel(new Card("Card 1"), listModel, utils);
+        card2 = new CardModel(new Card("Card 2"), listModel, utils);
+        card3 = new CardModel(new Card("Card 3"), listModel, utils);
+
         cardList.getCards().add(card1.getCard());
         cardList.getCards().add(card2.getCard());
         cardList.getCards().add(card3.getCard());
-        CardModel cardToDelete = new CardModel(new Card( "Card 4"),listModel,utils);
+        CardModel cardToDelete = new CardModel(new Card("Card 4"), listModel, utils);
 
         listModel.deleteCard(cardToDelete);
 
@@ -151,10 +159,11 @@ public class ListModelTest {
 
     @Test
     public void testDeleteCardById() {
-        cardList = new CardList( "List 1");
-        card1 = new CardModel(new Card(1,"Card 1","Description",null,null),listModel,utils);
-        card2 = new CardModel(new Card(2,"Card 2","Description",null,null),listModel,utils);
-        card3 = new CardModel(new Card(3,"Card 3","Description",null,null),listModel,utils);
+        cardList = new CardList("List 1");
+        card1 = new CardModel(new Card(1, "Card 1", "Description", null, null), listModel, utils);
+        card2 = new CardModel(new Card(2, "Card 2", "Description", null, null), listModel, utils);
+        card3 = new CardModel(new Card(3, "Card 3", "Description", null, null), listModel, utils);
+
         listModel.getCardList().getCards().add(card1.getCard());
         listModel.getCardList().getCards().add(card2.getCard());
         listModel.getCardList().getCards().add(card3.getCard());
@@ -167,20 +176,22 @@ public class ListModelTest {
 
     @Test
     public void testDeleteByIDIDnotfound() {
-        cardList = new CardList( "List 1");
-        card1 = new CardModel(new Card(1,"Card 1","Description",null,null),listModel,utils);
-        card2 = new CardModel(new Card(2,"Card 2","Description",null,null),listModel,utils);
-        card3 = new CardModel(new Card(3,"Card 3","Description",null,null),listModel,utils);
-        listModel.getCardList().getCards().add(card1.getCard());
-        listModel.getCardList().getCards().add(card2.getCard());
-        listModel.getCardList().getCards().add(card3.getCard());
+        cardList = new CardList("List 1");
+        card1 = new CardModel(new Card(1, "Card 1", "Description", null, null), listModel, utils);
+        card2 = new CardModel(new Card(2, "Card 2", "Description", null, null), listModel, utils);
+        card3 = new CardModel(new Card(3, "Card 3", "Description", null, null), listModel, utils);
+
+        List<Card> cards = listModel.getCardList().getCards();
+        cards.add(card1.getCard());
+        cards.add(card2.getCard());
+        cards.add(card3.getCard());
         long idToDelete = 5;
 
         listModel.deleteCardById(idToDelete);
 
-        assertTrue(listModel.getCardList().getCards().contains(card1.getCard()));
-        assertTrue(listModel.getCardList().getCards().contains(card2.getCard()));
-        assertTrue(listModel.getCardList().getCards().contains(card3.getCard()));
+        assertTrue(cards.contains(card1.getCard()));
+        assertTrue(cards.contains(card2.getCard()));
+        assertTrue(cards.contains(card3.getCard()));
     }
 
     @Test

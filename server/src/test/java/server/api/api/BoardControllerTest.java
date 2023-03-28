@@ -103,6 +103,7 @@ public class BoardControllerTest {
         CardList list = new CardList();
         long boardId = 1;
         when(boardService.saveCardList(list, boardId)).thenReturn(list);
+
         ResponseEntity<CardList> response = boardController.add(list, boardId);
         verify(boardService, times(1)).saveCardList(list, boardId);
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -113,6 +114,7 @@ public class BoardControllerTest {
     void testDeleteBoard() {
         long boardId = 1;
         doNothing().when(boardService).deleteBoardById(boardId);
+
         ResponseEntity<Boolean> response = boardController.delete(boardId);
         verify(boardService, times(1)).deleteBoardById(boardId);
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -124,6 +126,7 @@ public class BoardControllerTest {
         long listId = 1;
         long boardId = 2;
         doNothing().when(boardService).deleteCardListById(listId, boardId);
+
         ResponseEntity<Boolean> response = boardController.remove(listId, boardId);
         verify(boardService, times(1)).deleteCardListById(listId, boardId);
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -135,7 +138,6 @@ public class BoardControllerTest {
         long boardId = 1234;
         Board board = new Board();
         board.setId(boardId);
-
         when(boardService.update(board, boardId)).thenReturn(board);
 
         ResponseEntity<Board> response = boardController.update(board, boardId);
@@ -145,11 +147,3 @@ public class BoardControllerTest {
         verify(boardService).update(board, boardId);
     }
 }
-
-
-
-
-
-
-
-
