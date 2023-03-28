@@ -357,6 +357,7 @@ public class MainPageCtrl implements Initializable {
 
     @FXML
     public void deleteBoardButton(ActionEvent event) throws IOException {
+        //TODO make custom alerts. Default ones are ugly.
         if (board.getBoard().getId() == 1) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Warning");
@@ -410,6 +411,7 @@ public class MainPageCtrl implements Initializable {
 
     @FXML
     public void shareButton(ActionEvent event){
+        //TODO change the way this is implemented to reflect the design of the team
         Dialog<String> dialog = new Dialog<>();
         dialog.setTitle("Copy Board Id");
 
