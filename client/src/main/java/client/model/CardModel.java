@@ -29,9 +29,7 @@ public class CardModel {
         this.utils = utils;
     }
 
-    public Card getCard() {
-        return card;
-    }
+
 
     public void setCard(Card newCard) {
         this.card = newCard;
@@ -89,4 +87,19 @@ public class CardModel {
         this.parent.getChildren().add(index, this);
         this.parent.getCardList().getCards().add(index, this.card);
     }
+    public Card getCard() {
+        return card;
+    }
+    public static Logger getLog() {
+        return log;
+    }
+
+    public ListModel getParent() {
+        return parent;
+    }
+
+    public ServerUtils getUtils() {
+        return utils;
+    }
+
 }
