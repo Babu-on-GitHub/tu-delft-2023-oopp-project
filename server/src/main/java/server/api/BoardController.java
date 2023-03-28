@@ -118,4 +118,15 @@ public class BoardController {
             return ResponseEntity.badRequest().build();
         }
     }
+
+    @PutMapping(path = "/updateTitle/{id}")
+    public ResponseEntity<String> updateTitle(@RequestBody String title, @PathVariable("id") long id) {
+        try {
+            var saved = boardService.updateTitle(title, id);
+            return ResponseEntity.ok(saved);
+        } catch (IllegalArgumentException e) {
+            log.warning(e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
+    }
 }

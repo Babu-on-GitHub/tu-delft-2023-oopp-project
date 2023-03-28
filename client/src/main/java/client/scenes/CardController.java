@@ -59,6 +59,7 @@ public class CardController implements Initializable {
 
     @FXML
     private Button tagButton;
+
     @SuppressWarnings("unused")
     public CardController() {
     }
@@ -90,6 +91,7 @@ public class CardController implements Initializable {
         secondStage.initOwner(cardContainer.getScene().getWindow());
         secondStage.show();
     }
+
     @FXML
     void addSubtask(ActionEvent event) throws IOException {
 //        Task subtask = new Task("New Subtask");
@@ -193,9 +195,8 @@ public class CardController implements Initializable {
         cardTitle.setText(text);
     }
 
-    public void updateTitle() {
-        card.getCard().setTitle(cardTitle.getText());
-        card.update();
+    public void updateTitleModel() {
+        card.updateTitle(cardTitle.getText());
     }
 
     public void updateDescription() {
@@ -228,7 +229,7 @@ public class CardController implements Initializable {
 
         cardTitle.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
-                updateTitle();
+                updateTitleModel();
             }
         });
     }

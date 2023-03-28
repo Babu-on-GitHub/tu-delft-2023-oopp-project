@@ -206,9 +206,8 @@ public class ListController implements Initializable {
         return parent;
     }
 
-    public void updateTitle() {
-        listModel.getCardList().setTitle(listTitle.getText());
-        listModel.update(false);
+    public void updateTitleModel() {
+        listModel.updateTitle(listTitle.getText());
     }
 
     public void overwriteTitleNode(String title) {
@@ -224,7 +223,7 @@ public class ListController implements Initializable {
 
         listTitle.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
-                updateTitle();
+                updateTitleModel();
             }
         });
     }

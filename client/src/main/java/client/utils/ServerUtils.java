@@ -41,6 +41,13 @@ public class ServerUtils {
         socketUtils.setServer("ws://localhost:8080/websocket");
     }
 
+    /**
+     * Getter for SERVER
+     */
+    public String getSERVER() {
+        return SERVER;
+    }
+
     public boolean chooseServer(String server) {
         if (server == null)
             return false;
@@ -258,4 +265,30 @@ public class ServerUtils {
         }
     }
 
+    public Optional<String> updateBoardTitleById(long id, String title) {
+        try {
+            return Optional.of(put("api/board/updateTitle/" + id, title, new GenericType<>() {
+            }));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+
+    public Optional<String> updateCardListTitleById(long id, String title) {
+        try {
+            return Optional.of(put("api/list/updateTitle/" + id, title, new GenericType<>() {
+            }));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+
+    public Optional<String> updateCardTitleById(long id, String title) {
+        try {
+            return Optional.of(put("api/card/updateTitle/" + id, title, new GenericType<>() {
+            }));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
 }
