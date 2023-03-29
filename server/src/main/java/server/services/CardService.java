@@ -1,7 +1,6 @@
 package server.services;
 
 import commons.Card;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import server.database.CardRepository;
 
@@ -10,12 +9,11 @@ import java.util.List;
 @Service
 public class CardService {
     private CardRepository cardRepository;
-
-    @Autowired
     SynchronizationService synchronizationService;
 
-    public CardService(CardRepository cardRepository) {
+    public CardService(CardRepository cardRepository, SynchronizationService synchronizationService) {
         this.cardRepository = cardRepository;
+        this.synchronizationService = synchronizationService;
     }
 
     public List<Card> getAllCards() {

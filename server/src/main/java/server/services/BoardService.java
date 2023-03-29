@@ -2,7 +2,6 @@ package server.services;
 
 import commons.Board;
 import commons.CardList;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import server.api.BoardController;
 import server.database.BoardRepository;
@@ -16,12 +15,11 @@ public class BoardService {
     private static final Logger log = Logger.getLogger(BoardController.class.getName());
 
     private BoardRepository boardRepository;
+    private SynchronizationService synchronizationService;
 
-    @Autowired
-    SynchronizationService synchronizationService;
-
-    public BoardService(BoardRepository boardRepository) {
+    public BoardService(BoardRepository boardRepository, SynchronizationService synchronizationService) {
         this.boardRepository = boardRepository;
+        this.synchronizationService = synchronizationService;
     }
 
     public List<Board> findAllBoards() {

@@ -2,7 +2,6 @@ package server.services;
 
 import commons.Card;
 import commons.CardList;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import server.api.CardListController;
 import server.database.CardListRepository;
@@ -16,13 +15,12 @@ public class CardListService {
 
     private static final Logger log = Logger.getLogger(CardListController.class.getName());
 
-    @Autowired
-    SynchronizationService synchronizationService;
+    private final CardListRepository cardListRepository;
+    private final SynchronizationService synchronizationService;
 
-    private CardListRepository cardListRepository;
-
-    public CardListService(CardListRepository cardListRepository) {
+    public CardListService(CardListRepository cardListRepository, SynchronizationService syncronizationService) {
         this.cardListRepository = cardListRepository;
+        this.synchronizationService = syncronizationService;
     }
 
     public List<CardList> getAllCardLists() {
