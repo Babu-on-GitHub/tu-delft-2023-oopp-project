@@ -43,8 +43,6 @@ public class CardController implements Initializable {
 
     @FXML
     private TextArea cardDescription;
-
-
     @FXML
     private VBox detailedCardBox;
 
@@ -120,7 +118,14 @@ public class CardController implements Initializable {
     void saveButtonAction(ActionEvent event) {
         Stage secondStage = (Stage) detailedCardBox.getScene().getWindow();
         secondStage.close();
-        //TODO actually save changes
+
+        String newTitle = cardTitle.getText();
+        String newDescription = cardDescription.getText();
+        //List<Task> newSubtasks = subtaskArea.getChildren();
+        //Set<Tag> newTags = tagArea.getChildren();
+
+        //TODO pass list and set instead of null
+        card.updateCardDetails(true,newTitle, newDescription, null,null);
     }
 
     @FXML
@@ -199,8 +204,8 @@ public class CardController implements Initializable {
         card.updateTitle(cardTitle.getText());
     }
 
-    public void updateDescription() {
-        //TODO  update the description of the card when it is changed through card edit menu
+    public void updateDescription(String newDescription) {
+        cardDescription.setText(newDescription);
     }
 
     public void highlightBottom() {

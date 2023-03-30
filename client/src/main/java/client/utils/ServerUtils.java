@@ -19,10 +19,9 @@ import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
-import commons.Board;
-import commons.Card;
-import commons.CardList;
+import commons.*;
 import org.glassfish.jersey.client.ClientConfig;
 
 import jakarta.ws.rs.client.ClientBuilder;
@@ -267,7 +266,7 @@ public class ServerUtils {
 
     public Optional<String> updateBoardTitleById(long id, String title) {
         try {
-            return Optional.of(put("api/board/updateTitle/" + id, title, new GenericType<>() {
+            return Optional.of(put("api/board/overwriteTitleNode/" + id, title, new GenericType<>() {
             }));
         } catch (Exception e) {
             return Optional.empty();
@@ -276,7 +275,7 @@ public class ServerUtils {
 
     public Optional<String> updateCardListTitleById(long id, String title) {
         try {
-            return Optional.of(put("api/list/updateTitle/" + id, title, new GenericType<>() {
+            return Optional.of(put("api/list/overwriteTitleNode/" + id, title, new GenericType<>() {
             }));
         } catch (Exception e) {
             return Optional.empty();
@@ -285,7 +284,31 @@ public class ServerUtils {
 
     public Optional<String> updateCardTitleById(long id, String title) {
         try {
-            return Optional.of(put("api/card/updateTitle/" + id, title, new GenericType<>() {
+            return Optional.of(put("api/card/overwriteTitleNode/" + id, title, new GenericType<>() {
+            }));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+    public Optional<String> updateCardDescriptionById(long id, String description) {
+        try {
+            return Optional.of(put("api/card/updateDescription/" + id, description, new GenericType<>() {
+            }));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+    public Optional<List<Task>> updateCardSubtasksById(long id, List<Task> subtasks) {
+        try {
+            return Optional.of(put("api/card/updateSubtasks/" + id, subtasks, new GenericType<>() {
+            }));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+    public Optional<String> updateCardTagsById(long id, Set<Tag> tags) {
+        try {
+            return Optional.of(put("api/card/updateTags/" + id, tags, new GenericType<>() {
             }));
         } catch (Exception e) {
             return Optional.empty();
