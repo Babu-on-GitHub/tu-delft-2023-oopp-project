@@ -2,8 +2,7 @@ package commons;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TagTest {
 
@@ -11,6 +10,20 @@ public class TagTest {
     public void constructorTest() {
         var t = new Tag("banana");
         assertEquals(t.getTitle(), "banana");
+    }
+
+    @Test
+    public void constructorTest2() {
+        var t = new Tag(1, "pear");
+        assertEquals(t.getTitle(), "pear");
+        assertEquals(t.getId(), 1);
+    }
+
+    @Test
+    public void defaultConstructorTest() {
+        var t = new Tag();
+        assertNull(t.getTitle());
+        assertEquals(t.getId(), 0);
     }
 
     @Test

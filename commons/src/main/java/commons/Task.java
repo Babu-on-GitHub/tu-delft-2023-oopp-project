@@ -20,13 +20,15 @@ public class Task implements Serializable {
     private String title;
 
     private boolean checked;
+
     @SuppressWarnings("unused")
-    public Task(){
+    public Task() {
 
     }
 
     /**
      * Constructor with all parameters
+     *
      * @param id
      * @param title
      */
@@ -37,6 +39,7 @@ public class Task implements Serializable {
 
     /**
      * Constructor without id
+     *
      * @param title
      */
     public Task(String title) {
@@ -73,13 +76,6 @@ public class Task implements Serializable {
      */
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public void assign(Task other) {
-        if (other == null || other.title == null) {
-            return;
-        }
-        this.title = other.title;
     }
 
     public boolean isChecked() {

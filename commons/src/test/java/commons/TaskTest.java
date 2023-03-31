@@ -2,8 +2,7 @@ package commons;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TaskTest {
 
@@ -11,6 +10,20 @@ public class TaskTest {
     public void constructorTest() {
         var t = new Task("banana");
         assertEquals(t.getTitle(), "banana");
+    }
+
+    @Test
+    public void constructorTest2() {
+        var t = new Task(1, "pear");
+        assertEquals(t.getTitle(), "pear");
+        assertEquals(t.getId(), 1);
+    }
+
+    @Test
+    public void defaultConstructorTest() {
+        var t = new Task();
+        assertNull(t.getTitle());
+        assertEquals(t.getId(), 0);
     }
 
     @Test
@@ -72,5 +85,13 @@ public class TaskTest {
         var t3 = new Task("apple");
         t3.setTitle("banana");
         assertEquals(t.hashCode(), t3.hashCode());
+    }
+
+    @Test
+    public void checkedTest() {
+        var t = new Task("mango");
+        assertFalse(t.isChecked());
+        t.setChecked(true);
+        assertTrue(t.isChecked());
     }
 }
