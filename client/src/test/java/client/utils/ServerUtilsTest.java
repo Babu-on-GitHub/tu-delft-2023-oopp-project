@@ -3,46 +3,17 @@ package client.utils;
 import commons.Board;
 import commons.Card;
 import commons.CardList;
-import okhttp3.mockwebserver.MockWebServer;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
 public class ServerUtilsTest {
-
-
-    private static MockWebServer mockServer;
-
-    private ServerUtils serverUtils;
-
-    @BeforeAll
-    public static void setupServer() throws IOException {
-        mockServer = new MockWebServer();
-        mockServer.start();
-    }
+    private TestServerUtils serverUtils;
 
     @BeforeEach
     public void setUp() {
-        serverUtils = spy(ServerUtils.class);
-        //String baseUrl = String.format("localhost:%s", mockServer.getPort());
-        //serverUtils.chooseServer(baseUrl);
-    }
-
-    @AfterAll
-    public static void teardown() throws IOException {
-        mockServer.shutdown();
+        serverUtils = new TestServerUtils();
     }
 
     @Test
@@ -51,148 +22,155 @@ public class ServerUtilsTest {
     }
 
     @Test
-    void chooseServerNullTest() {
-        assertFalse(serverUtils.chooseServer(null));
-    }
-
-    @Test
-    void chooseServerInvalidServerTest() {
-        assertFalse(serverUtils.chooseServer("thisIsNotAServer"));
-    }
-
-    @Test
-    void chooseServerValidTest() {
-//        String baseUrl = String.format("http://localhost:%s", mockServer.getPort());
-//        assertTrue(serverUtils.chooseServer(baseUrl));
-    }
-
-    @Test
     void getServerUtils() {
         assertNotNull(serverUtils.getSocketUtils());
     }
 
     @Test
-    void getCardsTest() {
-        Optional<List<Card>> response = Optional.of(new ArrayList<Card>());
-        when(serverUtils.getCards()).thenReturn(response);
-        assertEquals(response, serverUtils.getCards());
+    void chooseServer() {
+        String server = "I like apples";
+        assertFalse(serverUtils.chooseServer(server));
     }
 
     @Test
-    void getCardByIdTest() {
-        Optional<Card> response = Optional.of(mock(Card.class));
-        when(serverUtils.getCardById(1L)).thenReturn(response);
-        assertEquals(response, serverUtils.getCardById(1L));
+    void setServerUtils() {
+        SocketUtils socketUtils = new TestSocketUtils();
+        serverUtils.setSocketUtils(socketUtils);
+        assertEquals(socketUtils, serverUtils.getSocketUtils());
     }
 
     @Test
-    void addCardTest() {
-        Card card = mock(Card.class);
-        CardList list = mock(CardList.class);
-        Optional<Card> response = Optional.of(card);
-        when(serverUtils.addCard(card, list)).thenReturn(response);
-        assertEquals(response, serverUtils.addCard(card, list));
+    void wrapWithHttp() {
+        String server = "I like apples";
+        assertEquals("http://" + server, serverUtils.wrapWithHttp(server));
     }
 
     @Test
-    void insertCardTest() {
-        Card card = mock(Card.class);
-        CardList cardList = mock(CardList.class);
-        Optional<Card> response = Optional.of(card);
-        when(serverUtils.insertCard(card, 1, cardList)).thenReturn(response);
-        assertEquals(response, serverUtils.insertCard(card, 1, cardList));
+    void getCards() {
+        serverUtils.getCards();
+        assertTrue(serverUtils.wasMade("get", "api/card"));
     }
 
     @Test
-    void deleteCardByIdTest() {
-        when(serverUtils.deleteCardById(1L, 1L)).thenReturn(Optional.of(Boolean.TRUE));
-        assertEquals(Optional.of(Boolean.TRUE), serverUtils.deleteCardById(1L, 1L));
+    void getCardById() {
+        serverUtils.getCardById(1);
+        assertTrue(serverUtils.wasMade("get", "api/card/1"));
     }
 
     @Test
-    void updateCardByIdTest() {
-        Card card = mock(Card.class);
-        Optional<Card> response = Optional.of(card);
-        when(serverUtils.updateCardById(1L, card)).thenReturn(response);
-        assertEquals(response, serverUtils.updateCardById(1L, card));
+    void addCard() {
+        CardList list = new CardList();
+        list.setId(5);
+
+        Card card = new Card();
+        serverUtils.addCard(card, list);
+        assertTrue(serverUtils.wasMade("post", "api/list/add/" + list.getId()));
     }
 
     @Test
-    void getCardListsTest() {
-        Optional<List<CardList>> response = Optional.of(new ArrayList<CardList>());
-        when(serverUtils.getCardLists()).thenReturn(response);
-        assertEquals(response, serverUtils.getCardLists());
+    void deleteCardById() {
+        long listId = 1, cardId = 2;
+        serverUtils.deleteCardById(cardId, listId);
+        assertTrue(serverUtils.wasMade("delete", "api/list/delete/" + cardId + "/from/" + listId));
     }
 
     @Test
-    void getCardListByIdTest() {
-        Optional<CardList> response = Optional.of(mock(CardList.class));
-        when(serverUtils.getCardListById(1L)).thenReturn(response);
-        assertEquals(response, serverUtils.getCardListById(1L));
+    void insertCard() {
+        CardList list = new CardList();
+        list.setId(5);
+
+        Card card = new Card();
+        serverUtils.insertCard(card, 1, list);
+        assertTrue(serverUtils.wasMade("post", "api/list/insert/" + list.getId() + "/to/1"));
     }
 
     @Test
-    void addCardListTest() {
-        CardList list = mock(CardList.class);
-        Board board = mock(Board.class);
-        Optional<CardList> response = Optional.of(list);
-        when(serverUtils.addCardList(list, board)).thenReturn(response);
-        assertEquals(response, serverUtils.addCardList(list, board));
+    void updateCardById() {
+        long cardId = 2;
+        Card card = new Card();
+        serverUtils.updateCardById(cardId, card);
+        assertTrue(serverUtils.wasMade("put", "api/card/update/" + cardId));
     }
 
     @Test
-    void deleteCardListByIdTest() {
-        when(serverUtils.deleteCardById(1L, 1L)).thenReturn(Optional.of(Boolean.TRUE));
-        assertEquals(Optional.of(Boolean.TRUE), serverUtils.deleteCardById(1L, 1L));
+    void getCardLists() {
+        serverUtils.getCardLists();
+        assertTrue(serverUtils.wasMade("get", "api/list"));
+    }
+
+    @Test
+    void getCardListById() {
+        long listId = 1;
+        serverUtils.getCardListById(listId);
+        assertTrue(serverUtils.wasMade("get", "api/list/" + listId));
+    }
+
+    @Test
+    void addCardList() {
+        CardList list = new CardList();
+        Board board = new Board();
+        board.setId(5);
+        serverUtils.addCardList(list, board);
+        assertTrue(serverUtils.wasMade("post", "api/board/add/" + board.getId()));
+    }
+
+    @Test
+    void deleteCardListById() {
+        long listId = 1;
+        long boardId = 5;
+        serverUtils.deleteCardListById(listId, boardId);
+        assertTrue(serverUtils.wasMade("delete", "api/board/delete/" + listId + "/from/" + boardId));
     }
 
     @Test
     void updateCardListById() {
-        CardList list = mock(CardList.class);
-        Optional<CardList> response = Optional.of(list);
-        when(serverUtils.updateCardListById(1L, list)).thenReturn(response);
-        assertEquals(response, serverUtils.updateCardListById(1L, list));
+        long listId = 1;
+        CardList list = new CardList();
+        serverUtils.updateCardListById(listId, list);
+        assertTrue(serverUtils.wasMade("put", "api/list/update/" + listId));
     }
 
     @Test
-    void getBoardsTest() {
-        Optional<List<Board>> response = Optional.of(new ArrayList<Board>());
-        when(serverUtils.getBoards()).thenReturn(response);
-        assertEquals(response, serverUtils.getBoards());
+    void getBoards() {
+        serverUtils.getBoards();
+        assertTrue(serverUtils.wasMade("get", "api/board"));
     }
 
     @Test
-    void getBoardByIdTest() {
-        Optional<Board> response = Optional.of(mock(Board.class));
-        when(serverUtils.getBoardById(1L)).thenReturn(response);
-        assertEquals(response, serverUtils.getBoardById(1L));
+    void getBoardById() {
+        long boardId = 1;
+        serverUtils.getBoardById(boardId);
+        assertTrue(serverUtils.wasMade("get", "api/board/" + boardId));
     }
 
     @Test
-    void addBoardTest() {
-        Board board = mock(Board.class);
-        Optional<Board> response = Optional.of(board);
-        when(serverUtils.addBoard(board)).thenReturn(response);
-        assertEquals(response, serverUtils.addBoard(board));
+    void addBoard() {
+        Board board = new Board();
+        serverUtils.addBoard(board);
+        assertTrue(serverUtils.wasMade("post", "api/board/create"));
     }
 
     @Test
-    void deleteBoardByIdTest() {
-        when(serverUtils.deleteBoardById(1L)).thenReturn(Optional.of(Boolean.TRUE));
-        assertEquals(Optional.of(Boolean.TRUE), serverUtils.deleteBoardById(1L));
+    void deleteBoardById() {
+        long boardId = 1;
+        serverUtils.deleteBoardById(boardId);
+        assertTrue(serverUtils.wasMade("delete", "api/board/delete/" + boardId));
     }
 
     @Test
     void updateBoardById() {
-        Board board = mock(Board.class);
-        Optional<Board> response = Optional.of(board);
-        when(serverUtils.updateBoardById(1L, board)).thenReturn(response);
-        assertEquals(response, serverUtils.updateBoardById(1L, board));
+        long boardId = 1;
+        Board board = new Board();
+        serverUtils.updateBoardById(boardId, board);
+        assertTrue(serverUtils.wasMade("put", "api/board/update/" + boardId));
     }
 
     @Test
-    void moveCardTest() {
-        when(serverUtils.moveCard(1L, 1L, 1, 1L)).thenReturn(Optional.of(Boolean.TRUE));
-        assertEquals(Optional.of(Boolean.TRUE), serverUtils.moveCard(1L, 1L, 1, 1L));
+    void moveCard() {
+        long cardId = 1, listId = 2, position = 3, boardId = 4;
+        serverUtils.moveCard(cardId, listId, (int)position, boardId);
+        assertTrue(serverUtils.wasMade("post", "api/board/moveCard/" + cardId + "/to/" + listId +
+                "/at/" + position + "/located/" + boardId));
     }
+
 }

@@ -36,9 +36,9 @@ public class ServerUtils {
     private SocketUtils socketUtils;
 
     public ServerUtils() {
-        this.SERVER = "http://localhost:8080";
+        this.SERVER = "localhost:8080";
         this.socketUtils = new SocketUtils();
-        socketUtils.setServer("ws://localhost:8080/websocket");
+        socketUtils.setServer(SERVER);
     }
 
     public boolean chooseServer(String server) {
@@ -46,8 +46,8 @@ public class ServerUtils {
             return false;
 
         var oldServer = SERVER;
-        SERVER = "http://" + server;
-        socketUtils.setServer("ws://" + server + "/websocket");
+        SERVER = server;
+        socketUtils.setServer(SERVER);
 
         try {
             String response = get("api/status", new GenericType<>() {
@@ -56,12 +56,12 @@ public class ServerUtils {
                 return true;
             } else {
                 SERVER = oldServer;
-                socketUtils.setServer("ws://" + oldServer + "/websocket");
+                socketUtils.setServer(oldServer);
                 return false;
             }
         } catch (Exception e) {
             SERVER = oldServer;
-            socketUtils.setServer("ws://" + oldServer + "/websocket");
+            socketUtils.setServer(oldServer);
             return false;
         }
     }
@@ -70,36 +70,48 @@ public class ServerUtils {
         return socketUtils;
     }
 
-    private <T> T get(String endpoint, GenericType<T> type) {
+    public void setSocketUtils(SocketUtils socketUtils) {
+        this.socketUtils = socketUtils;
+    }
+
+    protected  <T> T get(String endpoint, GenericType<T> type) {
         return ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path(endpoint) //
+                .target(wrapWithHttp(SERVER)).path(endpoint) //
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
                 .get(type);
     }
 
-    private <T> T post(String endpoint, Object body, GenericType<T> type) {
+    protected  <T> T post(String endpoint, Object body, GenericType<T> type) {
         return ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path(endpoint) //
+                .target(wrapWithHttp(SERVER)).path(endpoint) //
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
                 .post(Entity.entity(body, APPLICATION_JSON), type);
     }
 
-    private <T> T put(String endpoint, Object body, GenericType<T> type) {
+    protected  <T> T put(String endpoint, Object body, GenericType<T> type) {
         return ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path(endpoint) //
+                .target(wrapWithHttp(SERVER)).path(endpoint) //
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
                 .put(Entity.entity(body, APPLICATION_JSON), type);
     }
 
-    private <T> T delete(String endpoint, GenericType<T> type) {
+    protected  <T> T delete(String endpoint, GenericType<T> type) {
         return ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path(endpoint) //
+                .target(wrapWithHttp(SERVER)).path(endpoint) //
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
                 .delete(type);
+    }
+
+    public String wrapWithHttp(String server) {
+        if (server.startsWith("http://") || server.startsWith("https://")) {
+            return server;
+        } else {
+            return "http://" + server;
+        }
     }
 
 
