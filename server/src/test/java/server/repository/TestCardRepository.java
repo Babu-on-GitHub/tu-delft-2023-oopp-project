@@ -1,4 +1,4 @@
-package server.api;
+package server.repository;
 
 import commons.Card;
 import org.springframework.data.domain.Example;
@@ -93,6 +93,16 @@ public class TestCardRepository implements CardRepository {
 
     @Override
     public <S extends Card> S save(S entity) {
+        // if it exists
+        var toUpdate = find(entity.getId());
+        if (toUpdate.isPresent()) {
+            cards.remove(toUpdate.get());
+            cards.add(entity);
+            call("save");
+            return entity;
+        }
+
+        // otherwise
         call("save");
         entity.setId((long)cards.size());
         cards.add(entity);
