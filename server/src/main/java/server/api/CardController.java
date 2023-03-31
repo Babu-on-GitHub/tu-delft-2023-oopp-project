@@ -2,11 +2,13 @@ package server.api;
 
 import commons.Card;
 import commons.Tag;
+import commons.Task;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import server.services.CardService;
 
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
 
 @RestController
@@ -62,6 +64,36 @@ public class CardController {
     public ResponseEntity<String> updateTitle(@RequestBody String title, @PathVariable("id") long id) {
         try {
             var saved = cardService.updateTitle(id, title);
+            return ResponseEntity.ok(saved);
+        } catch (IllegalArgumentException e) {
+            log.warning(e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
+    }
+    @PutMapping(path = "/updateDescription/{id}")
+    public ResponseEntity<String> updateDescription(@RequestBody String description, @PathVariable("id") long id) {
+        try {
+            var saved = cardService.updateDescription(id, description);
+            return ResponseEntity.ok(saved);
+        } catch (IllegalArgumentException e) {
+            log.warning(e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
+    }
+    @PutMapping(path = "/updateSubtasks/{id}")
+    public ResponseEntity<List<Task>> updateSubtasks(@RequestBody List<Task> tasks, @PathVariable("id") long id) {
+        try {
+            var saved = cardService.updateSubtasks(id, tasks);
+            return ResponseEntity.ok(saved);
+        } catch (IllegalArgumentException e) {
+            log.warning(e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
+    }
+    @PutMapping(path = "/updateTags/{id}")
+    public ResponseEntity<Set<Tag>> updateTags(@RequestBody Set<Tag> tags, @PathVariable("id") long id) {
+        try {
+            var saved = cardService.updateTags(id, tags);
             return ResponseEntity.ok(saved);
         } catch (IllegalArgumentException e) {
             log.warning(e.getMessage());

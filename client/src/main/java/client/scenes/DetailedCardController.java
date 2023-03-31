@@ -7,7 +7,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 public class DetailedCardController {
-    //TODO make detailed card model
 
     @FXML
     private TextArea cardDescription;
@@ -34,12 +33,10 @@ public class DetailedCardController {
     void addSubtask(ActionEvent event) {
         //FXMLLoader loader = new FXMLLoader(getClass().getResource("Subtask.fxml"));
 
-        // TODO creates new subtask, displays it
     }
 
     @FXML
     void addTag(ActionEvent event) {
-        // TODO creates new tag, displays it OR adds existing tag
     }
 
 }

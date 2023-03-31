@@ -1,6 +1,8 @@
 package client.scenes;
 
 import client.utils.ServerUtils;
+import commons.Tag;
+import commons.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -43,11 +45,8 @@ public class CardController implements Initializable {
 
     @FXML
     private TextArea cardDescription;
-
-
     @FXML
     private VBox detailedCardBox;
-
     @FXML
     private VBox subtaskArea;
 
@@ -94,33 +93,50 @@ public class CardController implements Initializable {
 
     @FXML
     void addSubtask(ActionEvent event) throws IOException {
-//        Task subtask = new Task("New Subtask");
-//        FXMLLoader loader = new FXMLLoader(getClass().getResource("Subtask.fxml"));
-//        var controller = new SubtaskController(card, server);
-//        loader.setController(controller);
-//
-//        HBox newSubtask = loader.load();
-//        card.getCard().getSubTasks().add(1,newSubtask);
+        Task subtask = new Task("New Subtask");
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("Subtask.fxml"));
+
+        var controller = new SubtaskController(card, server);
+        loader.setController(controller);
+
+        HBox newSubtask = loader.load();
+        subtaskArea.getChildren().add(0,newSubtask);
         //TODO properly add subtasks
     }
 
     @FXML
-    void addTag(ActionEvent event) {
-        System.out.println("add tag called");
+    void addTag(ActionEvent event) throws IOException {
+        Tag tag = new Tag("New tag");
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("Tag.fxml"));
+
+        var controller = new TagController(card,server);
+        loader.setController(controller);
+
+        AnchorPane newTag = loader.load();
+        tagArea.getChildren().add(0,newTag);
         // TODO creates new tag, displays it OR adds existing tag
     }
 
     @FXML
     void cancelButtonAction(ActionEvent event) {
+        boolean isUpdate = false;
         Stage secondStage = (Stage) detailedCardBox.getScene().getWindow();
         secondStage.close();
     }
 
     @FXML
     void saveButtonAction(ActionEvent event) {
+        boolean isUpdate = true;
         Stage secondStage = (Stage) detailedCardBox.getScene().getWindow();
         secondStage.close();
-        //TODO actually save changes
+
+        String newTitle = cardTitle.getText();
+        String newDescription = cardDescription.getText();
+        //List<Task> newSubtasks = subtaskArea.getChildren();
+        //Set<Tag> newTags = tagArea.getChildren();
+
+        //TODO pass list and set instead of null
+        card.updateCardDetails(isUpdate,newTitle, newDescription, null,null);
     }
 
     @FXML
@@ -199,8 +215,8 @@ public class CardController implements Initializable {
         card.updateTitle(cardTitle.getText());
     }
 
-    public void updateDescription() {
-        //TODO  update the description of the card when it is changed through card edit menu
+    public void updateDescription(String newDescription) {
+        cardDescription.setText(newDescription);
     }
 
     public void highlightBottom() {
@@ -232,5 +248,16 @@ public class CardController implements Initializable {
                 updateTitleModel();
             }
         });
+    }
+    public TextArea getCardDescription() {
+        return cardDescription;
+    }
+
+    public VBox getSubtaskArea() {
+        return subtaskArea;
+    }
+
+    public HBox getTagArea() {
+        return tagArea;
     }
 }
