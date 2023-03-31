@@ -273,6 +273,7 @@ public class ServerUtils {
         }
     }
 
+    //TODO MAYBE DELETE
     public Optional<String> updateCardListTitleById(long id, String title) {
         try {
             return Optional.of(put("api/list/overwriteTitleNode/" + id, title, new GenericType<>() {

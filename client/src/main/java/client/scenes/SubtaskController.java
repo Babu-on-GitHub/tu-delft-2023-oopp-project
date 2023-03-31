@@ -26,6 +26,7 @@ public class SubtaskController {
     }
     @FXML
     void deteleSubtask(ActionEvent event) {
+        parent.getController().getSubtaskArea().getChildren().remove(this);
         //TODO delete specific subtask
     }
 
