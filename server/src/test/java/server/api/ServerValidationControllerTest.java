@@ -1,10 +1,9 @@
-package server.api.api;
+package server.api;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import server.api.ServerValidationController;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

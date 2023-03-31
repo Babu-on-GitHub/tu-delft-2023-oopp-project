@@ -49,7 +49,7 @@ public class BoardService {
         }
 
         try {
-            var boardOptional = this.getBoardById(boardId);
+            getBoardById(boardId);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Trying to add list into non-existent board");
         }

@@ -37,7 +37,6 @@ public class CardListControllerTest {
         List<CardList> response = cardListController.getAll();
         assertEquals(lists, response);
     }
-
     @Test
     public void testGetById() {
         long listId = 1;
@@ -70,7 +69,6 @@ public class CardListControllerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(addedCard, response.getBody());
     }
-
     @Test
     public void testAddWithInvalidListId() {
         long invalidId = 100;

@@ -8,7 +8,6 @@ import commons.Card;
 
 import java.util.Arrays;
 import java.util.List;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -19,7 +18,6 @@ public class CardControllerTest {
 
     private CardService cardService;
     private CardController cardController;
-
     @BeforeEach
     public void setUp() {
         cardService = mock(CardService.class);
@@ -39,7 +37,7 @@ public class CardControllerTest {
 
     @Test
     public void testGetById() {
-        Card card = new Card(1, "Test Card", "Description", null, null);
+        Card card = new Card(1, "Test Card","Description",null,null);
         when(cardService.getCardById(card.getId())).thenReturn(card);
 
         ResponseEntity<Card> response = cardController.getById(card.getId());
@@ -58,17 +56,16 @@ public class CardControllerTest {
 
     @Test
     public void testUpdate() {
-        Card card = new Card(1, "Test Card", "Description", null, null);
+        Card card = new Card(1, "Test Card","Description",null,null);
         when(cardService.update(card, card.getId())).thenReturn(card);
 
         ResponseEntity<Card> response = cardController.update(card, card.getId());
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(card, response.getBody());
     }
-
     @Test
     public void testUpdateWithInvalidId() {
-        Card card = new Card(1, "Test Card", "Description", null, null);
+        Card card = new Card(1, "Test Card","Description",null,null);
         long invalidId = 100;
         when(cardService.update(card, invalidId)).thenThrow(new IllegalArgumentException());
 

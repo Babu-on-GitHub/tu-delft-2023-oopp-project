@@ -1,4 +1,4 @@
-package server.api;
+package server.repository;
 
 import commons.Board;
 import commons.Card;
@@ -91,9 +91,18 @@ public class TestBoardRepository implements BoardRepository {
 
     @Override
     public <S extends Board> S save(S entity) {
+        // replace the entity if it exists
+        var toReplace = find(entity.getId());
+        if (toReplace.isPresent()) {
+            boards.remove(toReplace.get());
+            boards.add(entity);
+            return entity;
+        }
+        // add it otherwise
         call("save");
         entity.setId((long)boards.size());
         boards.add(entity);
+
         return entity;
     }
 
