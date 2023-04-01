@@ -28,6 +28,10 @@ public class UserUtilsTest {
             throw new RuntimeException("Failed to delete file");
     }
 
+    /**
+     * Following tests don't work properly so they are commented  out
+     * They are not deleted because the right solution is probably similar to this
+     */
 //    @Test
 //    void getUserBoardsIdsTest() {
 //        var ids = userUtils.getUserBoardsIds();
