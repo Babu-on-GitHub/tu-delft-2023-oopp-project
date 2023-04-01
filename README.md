@@ -10,7 +10,7 @@ Add your own name (do not add the names for others!) to the section below.
 
 | Profile Picture                                                                                         | Name               | Email                             |
 |---------------------------------------------------------------------------------------------------------|--------------------|-----------------------------------|
-| ![](https://eu.ui-avatars.com/api/?name=OOPP&length=4&size=50&color=DDD&background=777&font-size=0.325) | Daniel Popovici    | d.i.popovici-1@student.tudelft.nl |
+| <img src="https://gitlab.ewi.tudelft.nl/uploads/-/system/user/avatar/5842/avatar.png?width=50" width = "50" height = "50"/>                | Daniel Popovici    | d.i.popovici-1@student.tudelft.nl |
 | ![](https://eu.ui-avatars.com/api/?name=OOPP&length=4&size=50&color=DDD&background=777&font-size=0.325) | Halil Betmezoglu   | h.betmezoglu-1@student.tudelft.nl |
 | ![](misc/rknyazhitskiy-icon.png)                                                                        | Roman Knyazhitskiy | r.knyazhitskiy@student.tudelft.nl |
 | ![](https://secure.gravatar.com/avatar/1d11e62d8b683a281515ec43e84b4e8e?s=800&d=identicon&size=50)      | Adrian-Robert Buse | A.R.Buse@student.tudelft.nl       |
@@ -22,7 +22,7 @@ Add your own name (do not add the names for others!) to the section below.
 <!-- - (please make sure the photos have the same size) --> 
 
 ## How to run it
-
+    Always run the application through gradle.
 ## How to contribute to it
 
 ## Copyright / License (opt.)
