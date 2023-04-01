@@ -1,6 +1,7 @@
 package server.services;
 
 import commons.Board;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,8 @@ public class SynchronizationService {
     public SynchronizationService() {
     }
 
+
+
     public void addBoardToUpdate(Long id) {
         boardsToUpdate.add(id);
     }
@@ -25,6 +28,7 @@ public class SynchronizationService {
         return boardService;
     }
 
+    @Autowired
     public SynchronizationService(@Lazy BoardService boardService) {
         this.boardService = boardService;
     }
