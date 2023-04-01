@@ -1,6 +1,5 @@
 package client.utils;
 
-import client.scenes.MainPageCtrl;
 import com.google.inject.Inject;
 import commons.User;
 
