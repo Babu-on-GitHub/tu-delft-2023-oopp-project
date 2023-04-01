@@ -29,6 +29,7 @@ public class Board implements Serializable {
 
     @SuppressWarnings("unused")
     public Board() {
+        lists = new ArrayList<>();
     }
 
     /**
