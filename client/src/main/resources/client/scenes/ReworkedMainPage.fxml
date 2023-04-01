@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane id="scene" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.MainPageCtrl">
+<BorderPane id="scene" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" styleClass="border-pane" stylesheets="@/client/css/mainPage.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.MainPageCtrl">
    <top>
       <AnchorPane prefHeight="68.0" prefWidth="1001.0" style="-fx-border-color: #bababa; -fx-border-width: 2px;" BorderPane.alignment="CENTER">
          <children>
@@ -23,15 +23,15 @@
                   <Font name="System Bold" size="18.0" />
                </font>
             </TextField>
-            <Button contentDisplay="TOP" graphicTextGap="0.0" layoutX="858.0" layoutY="5.0" mnemonicParsing="false" onAction="#addListButton" prefHeight="58.0" prefWidth="141.0" style="-fx-background-color: inherit;" text="Add list" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="5.0">
+            <Button contentDisplay="TOP" graphicTextGap="0.0" layoutX="858.0" layoutY="5.0" mnemonicParsing="false" onAction="#addListButton" prefHeight="58.0" prefWidth="141.0" text="Add list" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="5.0">
                <graphic>
                   <ImageView id="addListImage" fx:id="addListImage" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../icons/PNG/add_notes_FILL0_wght400_GRAD0_opsz48.png" />
+                        <Image url="@/client/icons/PNG/add_notes_FILL0_wght400_GRAD0_opsz48.png" />
                      </image>
                   </ImageView>
                </graphic></Button>
-            <MenuButton graphicTextGap="0.0" layoutX="40.0" layoutY="11.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="68.0" style="-fx-background-color: inherit;" AnchorPane.bottomAnchor="11.0" AnchorPane.leftAnchor="40.0" AnchorPane.topAnchor="11.0">
+            <MenuButton graphicTextGap="0.0" layoutX="40.0" layoutY="11.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="68.0" styleClass="button" AnchorPane.bottomAnchor="11.0" AnchorPane.leftAnchor="40.0" AnchorPane.topAnchor="11.0">
               <items>
                 <MenuItem mnemonicParsing="false">
                      <graphic>
@@ -39,7 +39,7 @@
                            <graphic>
                               <ImageView id="deleteBoardImage" fx:id="deleteBoardImage" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@../icons/PNG/delete_FILL0_wght400_GRAD0_opsz48.png" />
+                                    <Image url="@/client/icons/PNG/delete_FILL0_wght400_GRAD0_opsz48.png" />
                                  </image>
                               </ImageView>
                            </graphic>
@@ -52,7 +52,7 @@
                            <graphic>
                               <ImageView id="leaveBoardImage" fx:id="leaveBoardImage" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@../icons/PNG/exit_to_app_FILL0_wght400_GRAD0_opsz48.png" />
+                                    <Image url="@/client/icons/PNG/exit_to_app_FILL0_wght400_GRAD0_opsz48.png" />
                                  </image>
                               </ImageView>
                            </graphic>
@@ -61,9 +61,9 @@
                   </MenuItem>
               </items>
                <graphic>
-                  <ImageView id="menuPicture" fx:id="menuPicture" fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView id="menuPicture" fx:id="menuPicture" fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true" styleClass="menuPicture">
                      <image>
-                        <Image url="@../icons/PNG/menu_FILL0_wght400_GRAD0_opsz48.png" />
+                        <Image url="@/client/icons/PNG/menu_FILL0_wght400_GRAD0_opsz48.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -76,26 +76,26 @@
          <children>
             <SplitPane fx:id="splitPane" centerShape="false" dividerPositions="0.2715430861723447" prefHeight="654.0" prefWidth="1000.0" scaleShape="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <items>
-                  <AnchorPane prefHeight="652.0" prefWidth="216.0">
+                  <AnchorPane prefHeight="652.0" prefWidth="216.0" styleClass="left-split-pane">
                      <children>
-                        <ScrollPane fx:id="boardListScrollPane" layoutY="63.0" prefHeight="592.0" prefWidth="268.0" style="-fx-border-color: #bababa; -fx-border-width: 1px;" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <ScrollPane fx:id="boardListScrollPane" layoutY="63.0" prefHeight="592.0" prefWidth="268.0" style="-fx-border-color: #bababa; -fx-border-width: 1px;" styleClass="boards-view" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <content>
                               <VBox fx:id="boardsListContainer" />
                            </content>
                         </ScrollPane>
-                        <Button graphicTextGap="0.0" layoutX="8.0" layoutY="600.0" mnemonicParsing="false" onAction="#addBoardButton" prefHeight="38.0" prefWidth="243.0" style="-fx-background-color: inherit;" text="Add Board" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="8.0">
+                        <Button graphicTextGap="0.0" layoutX="8.0" layoutY="600.0" mnemonicParsing="false" onAction="#addBoardButton" prefHeight="38.0" prefWidth="243.0" text="Add Board" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="8.0">
                            <graphic>
                               <ImageView id="addBoardImage" fx:id="addBoardImage" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@../icons/PNG/new_window_FILL0_wght400_GRAD0_opsz48.png" />
+                                    <Image url="@/client/icons/PNG/new_window_FILL0_wght400_GRAD0_opsz48.png" />
                                  </image>
                               </ImageView>
                            </graphic></Button>
                      </children>
                   </AnchorPane>
-                  <ScrollPane fx:id="boardScrollPane" prefHeight="652.0" prefWidth="216.0" style="-fx-padding: 10px;">
+                  <ScrollPane fx:id="boardScrollPane" prefHeight="652.0" prefWidth="216.0" styleClass="list-view">
                      <content>
-                        <HBox id="list_container" fx:id="cardListsContainer" stylesheets="@main_styles.css" />
+                        <HBox fx:id="cardListsContainer" styleClass="list-container" stylesheets="@main_styles.css" />
                      </content>
                   </ScrollPane>
                </items>
@@ -106,7 +106,7 @@
    <bottom>
       <AnchorPane prefHeight="78.0" prefWidth="1000.0" style="-fx-border-color: #bababa; -fx-border-width: 2px;" BorderPane.alignment="CENTER">
          <children>
-            <MenuButton contentDisplay="CENTER" graphicTextGap="0.0" layoutX="41.0" layoutY="11.0" mnemonicParsing="false" popupSide="TOP" prefHeight="60.0" prefWidth="68.0" style="-fx-background-color: inherit;" AnchorPane.bottomAnchor="11.0" AnchorPane.leftAnchor="41.0" AnchorPane.topAnchor="11.0">
+            <MenuButton contentDisplay="CENTER" graphicTextGap="0.0" layoutX="41.0" layoutY="11.0" mnemonicParsing="false" popupSide="TOP" prefHeight="60.0" prefWidth="68.0" styleClass="button" AnchorPane.bottomAnchor="11.0" AnchorPane.leftAnchor="41.0" AnchorPane.topAnchor="11.0">
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#optionsShowServerChoice">
                      <graphic>
@@ -114,7 +114,7 @@
                            <graphic>
                               <ImageView id="changeServerImage" fx:id="changeServerImage" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@../icons/PNG/dns_FILL0_wght0_GRAD0_opszNaN.png" />
+                                    <Image url="@/client/icons/PNG/dns_FILL0_wght0_GRAD0_opszNaN.png" />
                                  </image>
                               </ImageView>
                            </graphic>
@@ -124,16 +124,16 @@
                <graphic>
                   <ImageView id="settingsImage" fx:id="settingsImage" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../icons/PNG/settings_FILL0_wght400_GRAD0_opsz48.png" />
+                        <Image url="@/client/icons/PNG/settings_FILL0_wght400_GRAD0_opsz48.png" />
                      </image>
                   </ImageView>
                </graphic>
             </MenuButton>
-            <Button contentDisplay="TOP" graphicTextGap="0.0" layoutX="162.0" layoutY="11.0" mnemonicParsing="false" onAction="#shareButton" prefHeight="60.0" prefWidth="90.0" style="-fx-background-color: inherit;" text="Share board" AnchorPane.bottomAnchor="11.0" AnchorPane.leftAnchor="162.0" AnchorPane.topAnchor="11.0">
+            <Button contentDisplay="TOP" graphicTextGap="0.0" layoutX="162.0" layoutY="11.0" mnemonicParsing="false" onAction="#shareButton" prefHeight="60.0" prefWidth="90.0" text="Share board" AnchorPane.bottomAnchor="11.0" AnchorPane.leftAnchor="162.0" AnchorPane.topAnchor="11.0">
                <graphic>
                   <ImageView id="shareImage" fx:id="shareImage" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../icons/PNG/share_FILL0_wght400_GRAD0_opsz48.png" />
+                        <Image url="@/client/icons/PNG/share_FILL0_wght400_GRAD0_opsz48.png" />
                      </image>
                   </ImageView>
                </graphic></Button>

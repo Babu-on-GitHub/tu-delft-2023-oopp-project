@@ -216,8 +216,6 @@ public class ListController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        cardListContainer.setSpacing(10);
-        scrollPane.setFitToWidth(true);
 
         listTitle.setText(listModel.getCardList().getTitle());
 

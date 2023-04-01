@@ -74,22 +74,6 @@ public class MainPageCtrl implements Initializable {
     @FXML
     private VBox boardsListContainer;
 
-    @FXML
-    private ImageView deleteBoardImage;
-    @FXML
-    private ImageView addListImage;
-    @FXML
-    private ImageView addBoardImage;
-    @FXML
-    private ImageView settingsImage;
-    @FXML
-    private ImageView shareImage;
-    @FXML
-    private ImageView menuPicture;
-    @FXML
-    private ImageView leaveBoardImage;
-    @FXML
-    private ImageView changeServerImage;
 
     @Inject
     public MainPageCtrl(ServerUtils server, MainCtrl mainCtrl, UserUtils userUtils) {
@@ -108,23 +92,8 @@ public class MainPageCtrl implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         boardName.setText("Default board");
-
-        setImage(deleteBoardImage,"src/main/resources/client/icons/PNG/delete_FILL0_wght400_GRAD0_opsz48.png");
-        setImage(shareImage,"src/main/resources/client/icons/PNG/share_FILL0_wght400_GRAD0_opsz48.png");
-        setImage(settingsImage,"src/main/resources/client/icons/PNG/settings_FILL0_wght400_GRAD0_opsz48.png");
-        setImage(addListImage,"src/main/resources/client/icons/PNG/add_notes_FILL0_wght400_GRAD0_opsz48.png");
-        setImage(addBoardImage,"src/main/resources/client/icons/PNG/new_window_FILL0_wght400_GRAD0_opsz48.png");
-        setImage(menuPicture, "src/main/resources/client/icons/PNG/menu_FILL0_wght400_GRAD0_opsz48.png");
-        setImage(leaveBoardImage,"src/main/resources/client/PNG/icons/exit_to_app_FILL0_wght400_GRAD0_opsz48.png");
-        setImage(changeServerImage,"src/main/resources/client/PNG/icons/dns_FILL0_wght0_GRAD0_opszNaN.png");
-
-        //This makes the lists to fill the entire height of their parent
-        boardScrollPane.setFitToHeight(true);
-        cardListsContainer.setSpacing(20);
         //makes board overview resize correctly
         SplitPane.setResizableWithParent(boardListScrollPane.getParent(), false);
-        //makes the boards fill width of the board list
-        boardListScrollPane.setFitToWidth(true);
 
 
         try {

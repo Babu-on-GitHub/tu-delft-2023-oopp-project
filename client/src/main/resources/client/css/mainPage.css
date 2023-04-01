@@ -1,0 +1,23 @@
+/* This makes the lists to fill the entire height of their parent */
+.list-view {
+    -fx-fit-to-height: true;
+    -fx-fit-to-width: true;
+}
+
+.list-container{
+    -fx-padding: 15px;
+    -fx-spacing: 15px;
+}
+
+/* Makes the boards fill width of the board list */
+.boards-view {
+    -fx-fit-to-width: true;
+}
+
+.button{
+    -fx-background-color: inherit;
+}
+
+.button:hover{
+    -fx-opacity: 0.6;
+}
