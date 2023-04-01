@@ -12,10 +12,8 @@ import java.util.List;
 public class SynchronizationService {
     protected final HashSet<Long> boardsToUpdate = new HashSet<>();
 
+    @Lazy
     protected BoardService boardService;
-
-    public SynchronizationService() {
-    }
 
     public void addBoardToUpdate(Long id) {
         boardsToUpdate.add(id);

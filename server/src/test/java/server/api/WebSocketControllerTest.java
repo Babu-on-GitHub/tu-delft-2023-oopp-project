@@ -5,7 +5,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.messaging.MessageDeliveryException;
 import server.fake.TestSimpMessagingTemplate;
+import server.repository.TestBoardRepository;
 import server.services.SynchronizationService;
+import server.services.TestBoardService;
 import server.services.TestSynchronizationService;
 
 import static org.junit.jupiter.api.Assertions.*;
