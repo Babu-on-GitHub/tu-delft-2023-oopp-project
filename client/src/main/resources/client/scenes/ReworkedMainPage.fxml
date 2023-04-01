@@ -25,9 +25,9 @@
             </TextField>
             <Button contentDisplay="TOP" graphicTextGap="0.0" layoutX="858.0" layoutY="5.0" mnemonicParsing="false" onAction="#addListButton" prefHeight="58.0" prefWidth="141.0" style="-fx-background-color: inherit;" text="Add list" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="5.0">
                <graphic>
-                  <ImageView fx:id="addListImage" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView id="addListImage" fx:id="addListImage" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../icons/add_notes_FILL0_wght400_GRAD0_opsz48.png" />
+                        <Image url="@../icons/PNG/add_notes_FILL0_wght400_GRAD0_opsz48.png" />
                      </image>
                   </ImageView>
                </graphic></Button>
@@ -37,9 +37,9 @@
                      <graphic>
                         <Button mnemonicParsing="false" onAction="#deleteBoardButton" prefHeight="58.0" prefWidth="132.0" style="-fx-background-color: inherit;" text="Delete board">
                            <graphic>
-                              <ImageView fx:id="deleteBoardImage" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView id="deleteBoardImage" fx:id="deleteBoardImage" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@../icons/delete_FILL0_wght400_GRAD0_opsz48.png" />
+                                    <Image url="@../icons/PNG/delete_FILL0_wght400_GRAD0_opsz48.png" />
                                  </image>
                               </ImageView>
                            </graphic>
@@ -50,9 +50,9 @@
                      <graphic>
                         <Button mnemonicParsing="false" onAction="#leaveBoardButton" prefHeight="58.0" prefWidth="132.0" style="-fx-background-color: inherit;" text="Leave Board">
                            <graphic>
-                              <ImageView fx:id="leaveBoardImage" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView id="leaveBoardImage" fx:id="leaveBoardImage" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@../icons/exit_to_app_FILL0_wght400_GRAD0_opsz48.png" />
+                                    <Image url="@../icons/PNG/exit_to_app_FILL0_wght400_GRAD0_opsz48.png" />
                                  </image>
                               </ImageView>
                            </graphic>
@@ -61,9 +61,9 @@
                   </MenuItem>
               </items>
                <graphic>
-                  <ImageView fx:id="menuPicture" fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView id="menuPicture" fx:id="menuPicture" fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../icons/menu_FILL0_wght400_GRAD0_opsz48.png" />
+                        <Image url="@../icons/PNG/menu_FILL0_wght400_GRAD0_opsz48.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -85,9 +85,9 @@
                         </ScrollPane>
                         <Button graphicTextGap="0.0" layoutX="8.0" layoutY="600.0" mnemonicParsing="false" onAction="#addBoardButton" prefHeight="38.0" prefWidth="243.0" style="-fx-background-color: inherit;" text="Add Board" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="8.0">
                            <graphic>
-                              <ImageView fx:id="addBoardImage" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView id="addBoardImage" fx:id="addBoardImage" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@../icons/new_window_FILL0_wght400_GRAD0_opsz48.png" />
+                                    <Image url="@../icons/PNG/new_window_FILL0_wght400_GRAD0_opsz48.png" />
                                  </image>
                               </ImageView>
                            </graphic></Button>
@@ -112,9 +112,9 @@
                      <graphic>
                         <Button mnemonicParsing="false" onAction="#optionsShowServerChoice" prefHeight="50.0" prefWidth="132.0" style="-fx-background-color: inherit;" text="Change Server">
                            <graphic>
-                              <ImageView fx:id="changeServerImage" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView id="changeServerImage" fx:id="changeServerImage" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@../icons/dns_FILL0_wght0_GRAD0_opszNaN.png" />
+                                    <Image url="@../icons/PNG/dns_FILL0_wght0_GRAD0_opszNaN.png" />
                                  </image>
                               </ImageView>
                            </graphic>
@@ -122,18 +122,18 @@
                      </graphic></MenuItem>
               </items>
                <graphic>
-                  <ImageView fx:id="settingsImage" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView id="settingsImage" fx:id="settingsImage" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../icons/settings_FILL0_wght400_GRAD0_opsz48.png" />
+                        <Image url="@../icons/PNG/settings_FILL0_wght400_GRAD0_opsz48.png" />
                      </image>
                   </ImageView>
                </graphic>
             </MenuButton>
             <Button contentDisplay="TOP" graphicTextGap="0.0" layoutX="162.0" layoutY="11.0" mnemonicParsing="false" onAction="#shareButton" prefHeight="60.0" prefWidth="90.0" style="-fx-background-color: inherit;" text="Share board" AnchorPane.bottomAnchor="11.0" AnchorPane.leftAnchor="162.0" AnchorPane.topAnchor="11.0">
                <graphic>
-                  <ImageView fx:id="shareImage" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView id="shareImage" fx:id="shareImage" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../icons/share_FILL0_wght400_GRAD0_opsz48.png" />
+                        <Image url="@../icons/PNG/share_FILL0_wght400_GRAD0_opsz48.png" />
                      </image>
                   </ImageView>
                </graphic></Button>

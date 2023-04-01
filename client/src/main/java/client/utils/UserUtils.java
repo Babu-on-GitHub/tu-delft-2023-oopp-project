@@ -35,7 +35,7 @@ public class UserUtils {
 
     private void retrieveSavedUser() {
         try{
-            FileInputStream fin = new FileInputStream("client/src/main/resources/client/user.data");
+            FileInputStream fin = new FileInputStream("src/main/resources/client/user.data");
             ObjectInputStream oin = new ObjectInputStream(fin);
             user = User.load(oin);
         }catch (IOException | ClassNotFoundException e1){
@@ -50,7 +50,7 @@ public class UserUtils {
             return;
         }
         try {
-            FileOutputStream fout = new FileOutputStream("client/src/main/resources/client/user.data");
+            FileOutputStream fout = new FileOutputStream("src/main/resources/client/user.data");
             ObjectOutputStream oout = new ObjectOutputStream(fout);
             user.save(oout);
         } catch (IOException e) {

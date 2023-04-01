@@ -278,17 +278,17 @@ public class ServerUtils {
 
     public Optional<String> updateBoardTitleById(long id, String title) {
         try {
-            return Optional.of(put("api/board/overwriteTitleNode/" + id, title, new GenericType<>() {
+            return Optional.of(put("api/board/updateTitle/" + id, title, new GenericType<>() {
             }));
         } catch (Exception e) {
             return Optional.empty();
         }
     }
 
-    //TODO MAYBE DELETE
+    ////TODO MAYBE DELETE
     public Optional<String> updateCardListTitleById(long id, String title) {
         try {
-            return Optional.of(put("api/list/overwriteTitleNode/" + id, title, new GenericType<>() {
+            return Optional.of(put("api/list/updateTitle/" + id, title, new GenericType<>() {
             }));
         } catch (Exception e) {
             return Optional.empty();
@@ -297,7 +297,7 @@ public class ServerUtils {
 
     public Optional<String> updateCardTitleById(long id, String title) {
         try {
-            return Optional.of(put("api/card/overwriteTitleNode/" + id, title, new GenericType<>() {
+            return Optional.of(put("api/card/updateTitle/" + id, title, new GenericType<>() {
             }));
         } catch (Exception e) {
             return Optional.empty();

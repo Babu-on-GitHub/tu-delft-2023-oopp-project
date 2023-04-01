@@ -109,14 +109,14 @@ public class MainPageCtrl implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         boardName.setText("Default board");
 
-        setImage(deleteBoardImage,"client/src/main/resources/client/icons/delete_FILL0_wght400_GRAD0_opsz48.png");
-        setImage(shareImage,"client/src/main/resources/client/icons/share_FILL0_wght400_GRAD0_opsz48.png");
-        setImage(settingsImage,"client/src/main/resources/client/icons/settings_FILL0_wght400_GRAD0_opsz48.png");
-        setImage(addListImage,"client/src/main/resources/client/icons/add_notes_FILL0_wght400_GRAD0_opsz48.png");
-        setImage(addBoardImage,"client/src/main/resources/client/icons/new_window_FILL0_wght400_GRAD0_opsz48.png");
-        setImage(menuPicture, "client/src/main/resources/client/icons/menu_FILL0_wght400_GRAD0_opsz48.png");
-        setImage(leaveBoardImage,"client/src/main/resources/client/icons/exit_to_app_FILL0_wght400_GRAD0_opsz48.png");
-        setImage(changeServerImage,"client/src/main/resources/client/icons/dns_FILL0_wght0_GRAD0_opszNaN.png");
+        setImage(deleteBoardImage,"src/main/resources/client/icons/PNG/delete_FILL0_wght400_GRAD0_opsz48.png");
+        setImage(shareImage,"src/main/resources/client/icons/PNG/share_FILL0_wght400_GRAD0_opsz48.png");
+        setImage(settingsImage,"src/main/resources/client/icons/PNG/settings_FILL0_wght400_GRAD0_opsz48.png");
+        setImage(addListImage,"src/main/resources/client/icons/PNG/add_notes_FILL0_wght400_GRAD0_opsz48.png");
+        setImage(addBoardImage,"src/main/resources/client/icons/PNG/new_window_FILL0_wght400_GRAD0_opsz48.png");
+        setImage(menuPicture, "src/main/resources/client/icons/PNG/menu_FILL0_wght400_GRAD0_opsz48.png");
+        setImage(leaveBoardImage,"src/main/resources/client/PNG/icons/exit_to_app_FILL0_wght400_GRAD0_opsz48.png");
+        setImage(changeServerImage,"src/main/resources/client/PNG/icons/dns_FILL0_wght0_GRAD0_opszNaN.png");
 
         //This makes the lists to fill the entire height of their parent
         boardScrollPane.setFitToHeight(true);
@@ -140,8 +140,6 @@ public class MainPageCtrl implements Initializable {
         } catch (Exception e) {
             log.warning("Something wrong in main page init");
         }
-
-        boardName.setText(board.getBoard().getTitle());
 
         boardName.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
@@ -172,6 +170,9 @@ public class MainPageCtrl implements Initializable {
             showBoardsList();
         } catch (IOException e) {
             log.warning("Couldn't show boards on refresh");
+        }
+        if(board==null){
+            initializeBoard();
         }
         board.update();
         board.updateChildren();
@@ -250,6 +251,7 @@ public class MainPageCtrl implements Initializable {
             cardListsContainer.getChildren().clear();
         }
         if (board == null) return;
+        boardName.setText(board.getBoard().getTitle());
         this.board.setController(this);
         this.board.update();
         this.board.updateChildren();
