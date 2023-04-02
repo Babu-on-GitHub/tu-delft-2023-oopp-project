@@ -34,6 +34,7 @@ public class SynchronizationServiceTest {
         var board = new Board("banana");
         var list = new CardList("xxx");
         var card = new Card("lolz");
+        board.setId(1L);
         list.add(card);
         board.add(list);
 
@@ -53,6 +54,7 @@ public class SynchronizationServiceTest {
     @Test
     void addCardListTest() {
         var board = new Board("banana");
+        board.setId(1L);
         var list = new CardList("xxx");
         board.add(list);
 

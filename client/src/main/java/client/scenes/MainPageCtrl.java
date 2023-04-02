@@ -11,12 +11,10 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
@@ -74,6 +72,12 @@ public class MainPageCtrl implements Initializable {
     @FXML
     private VBox boardsListContainer;
 
+    @FXML
+    private AnchorPane boardIdPanel;
+
+    @FXML
+    private TextField boardIdLabel;
+
 
     @Inject
     public MainPageCtrl(ServerUtils server, MainCtrl mainCtrl, UserUtils userUtils) {
@@ -95,6 +99,8 @@ public class MainPageCtrl implements Initializable {
         //makes board overview resize correctly
         SplitPane.setResizableWithParent(boardListScrollPane.getParent(), false);
 
+        boardIdPanel.setVisible(false);
+        boardIdLabel.setEditable(false);
 
         try {
             initializeBoard();
@@ -221,6 +227,7 @@ public class MainPageCtrl implements Initializable {
         }
         if (board == null) return;
         boardName.setText(board.getBoard().getTitle());
+        boardIdPanel.setVisible(false);
         this.board.setController(this);
         this.board.update();
         this.board.updateChildren();
@@ -381,37 +388,17 @@ public class MainPageCtrl implements Initializable {
 
     @FXML
     public void shareButton(ActionEvent event){
-        //TODO change the way this is implemented to reflect the design of the team
-        Dialog<String> dialog = new Dialog<>();
-        dialog.setTitle("Copy Board Id");
-
-        dialog.getDialogPane().setPrefSize(400, 80);
-
-        ButtonType copyButtonType = new ButtonType("Copy", ButtonBar.ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().addAll(copyButtonType, ButtonType.CANCEL);
-
-        String boardId = Long.toString(board.getBoard().getId());
-
-        Label keyLabel = new Label("Board Id: " + boardId);
-        keyLabel.setStyle("-fx-font-size: 15;");
-        keyLabel.setAlignment(Pos.CENTER);
-
-        dialog.getDialogPane().setContent(keyLabel);
-
-        dialog.setResultConverter(dialogButton -> {
-            if (dialogButton == copyButtonType) {
-                return boardId;
-            }
-            return null;
-        });
-        Optional<String> result = dialog.showAndWait();
-
-        result.ifPresent(key -> {
-            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-            StringSelection selection = new StringSelection(key);
-            clipboard.setContents(selection, selection);
-        });
+        boolean visibility = boardIdPanel.isVisible();
+        boardIdPanel.setVisible(!visibility);
+        boardIdLabel.setText(Long.toString(board.getBoard().getId()));
     }
+
+    public void copyIdButton(ActionEvent event){
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        StringSelection selection = new StringSelection(boardIdLabel.getText());
+        clipboard.setContents(selection, selection);
+    }
+
 
     public ServerUtils getServer() {
         return server;
