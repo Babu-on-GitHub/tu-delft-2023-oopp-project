@@ -27,7 +27,7 @@ public class BoardService {
     }
 
     public Board getBoardById(long id) {
-        if (id <= 0 || boardRepository.findById(id).isEmpty()) {
+        if (id < 0 || boardRepository.findById(id).isEmpty()) {
             throw new IllegalArgumentException("Invalid board id:" + id);
         }
         var board = boardRepository.findById(id).get();

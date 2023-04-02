@@ -1,7 +1,6 @@
 package client.scenes;
 
 import client.utils.ServerUtils;
-import commons.Tag;
 import commons.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -76,67 +75,26 @@ public class CardController implements Initializable {
         this.server = server;
     }
 
+    public CardModel getModel() {
+        return card;
+    }
+
     @FXML
     void checkDoubleClick(MouseEvent event) throws IOException {
-        //TODO change to double click for backlog purposes
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("DetailedCard.fxml"));
-        var controller = new CardController(card, this.getParent(), server);
-        card.setController(controller);
-        loader.setController(controller);
+        if (event.getClickCount() == 2) {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("DetailedCard.fxml"));
+            var detailedCardController = new DetailedCardController(this, server);
+            card.setDetailedController(detailedCardController);
+            loader.setController(detailedCardController);
 
-        Parent root = loader.load();
-        secondStage = new Stage();
-        secondStage.setScene(new Scene(root));
-        secondStage.initOwner(cardContainer.getScene().getWindow());
-        secondStage.show();
-    }
+            Parent root = loader.load();
+            secondStage = new Stage();
+            secondStage.setScene(new Scene(root));
+            secondStage.initOwner(cardContainer.getScene().getWindow());
+            secondStage.show();
 
-    @FXML
-    void addSubtask(ActionEvent event) throws IOException {
-        Task subtask = new Task("New Subtask");
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("Subtask.fxml"));
-
-        var controller = new SubtaskController(card, server);
-        loader.setController(controller);
-
-        HBox newSubtask = loader.load();
-        subtaskArea.getChildren().add(0,newSubtask);
-        //TODO properly add subtasks
-    }
-
-    @FXML
-    void addTag(ActionEvent event) throws IOException {
-        Tag tag = new Tag("New tag");
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("Tag.fxml"));
-
-        var controller = new TagController(card,server);
-        loader.setController(controller);
-
-        AnchorPane newTag = loader.load();
-        tagArea.getChildren().add(0,newTag);
-        // TODO creates new tag, displays it OR adds existing tag
-    }
-
-    @FXML
-    void cancelButtonAction(ActionEvent event) {
-        boolean isUpdate = false;
-        Stage secondStage = (Stage) detailedCardBox.getScene().getWindow();
-        secondStage.close();
-    }
-
-    @FXML
-    void saveButtonAction(ActionEvent event) {
-        boolean isUpdate = true;
-        Stage secondStage = (Stage) detailedCardBox.getScene().getWindow();
-        secondStage.close();
-
-        String newTitle = cardTitle.getText();
-        String newDescription = cardDescription.getText();
-        //List<Task> newSubtasks = subtaskArea.getChildren();
-        //Set<Tag> newTags = tagArea.getChildren();
-
-        //TODO pass list and set instead of null
-        card.updateCardDetails(isUpdate,newTitle, newDescription, null,null);
+            detailedCardController.showDetails();
+        }
     }
 
     @FXML
@@ -216,7 +174,10 @@ public class CardController implements Initializable {
     }
 
     public void updateDescription(String newDescription) {
-        cardDescription.setText(newDescription);
+        if (newDescription == null) {
+            //TODO remove indicator
+        }
+        //TODO add indicator that a card has description if not null
     }
 
     public void highlightBottom() {
@@ -249,15 +210,11 @@ public class CardController implements Initializable {
             }
         });
     }
-    public TextArea getCardDescription() {
-        return cardDescription;
-    }
 
-    public VBox getSubtaskArea() {
-        return subtaskArea;
-    }
-
-    public HBox getTagArea() {
-        return tagArea;
+    protected String getTasksProgress() {
+        // number of subtasks completed + "/" + number of subtasks
+        return card.getCard().getSubTasks().stream()
+                .filter(Task::isChecked)
+                .count() + "/" + card.getCard().getSubTasks().size();
     }
 }
