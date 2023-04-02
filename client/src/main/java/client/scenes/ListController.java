@@ -53,6 +53,7 @@ public class ListController implements Initializable {
         this.listModel = cardList;
         listModel.setController(this);
         this.parent = parent;
+        server = parent.getServer();
     }
 
     public void recreateChildren(ArrayList<CardModel> temp) throws IOException {
@@ -129,6 +130,27 @@ public class ListController implements Initializable {
         if (event.getGestureSource() != cardListContainer && event.getDragboard().hasContent(CARD_ID)) {
             event.acceptTransferModes(TransferMode.MOVE);
         }
+
+        int index = whichIndexToDropIn(event.getSceneY());
+        try {
+            parent.getModel().forEveryCard(
+                    x -> x.getController().highlightReset()
+            );
+
+            var children = listModel.getChildren();
+            if (index == 0)
+                children.get(0).getController().highlightTop();
+            else if (index == listModel.getChildren().size())
+                children.get(index - 1).getController().highlightBottom();
+            else {
+                children.get(index - 1).getController().highlightBottom();
+                children.get(index).getController().highlightTop();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            // but overall we don't really care about problems here
+        }
+
         event.consume();
     }
 
@@ -144,8 +166,6 @@ public class ListController implements Initializable {
                 dragboard.setContent(null);
                 var oldIndex = listModel.getCardList().getCards().
                         indexOf(cardOpt.get());
-                if (oldIndex == index)
-                    return;
                 if (oldIndex < index)
                     index--;
             }
@@ -155,6 +175,10 @@ public class ListController implements Initializable {
             content.put(TARGET_INDEX, index);
             content.put(TARGET_LIST, listModel.getCardList().getId());
             dragboard.setContent(content);
+
+            parent.getModel().forEveryCard(
+                    x -> x.getController().highlightReset()
+            );
         }
 
         event.consume();
@@ -174,10 +198,6 @@ public class ListController implements Initializable {
         parent.getListsContainer().getChildren().remove(listContainer);
     }
 
-    public void updateTitle() {
-        // not implemented
-    }
-
     public VBox getCardsContainer() {
         return cardListContainer;
     }
@@ -186,14 +206,22 @@ public class ListController implements Initializable {
         return parent;
     }
 
+    public void updateTitleModel() {
+        listModel.updateTitle(listTitle.getText());
+    }
+
+    public void overwriteTitleNode(String title) {
+        listTitle.setText(title);
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        cardListContainer.setSpacing(10);
-        scrollPane.setFitToWidth(true);
+
+        listTitle.setText(listModel.getCardList().getTitle());
 
         listTitle.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
-                updateTitle();
+                updateTitleModel();
             }
         });
     }

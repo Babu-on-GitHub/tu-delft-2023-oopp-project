@@ -1,6 +1,5 @@
 package server.api;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -16,15 +15,18 @@ import java.util.logging.Logger;
 public class WebSocketController {
     private static final Logger log = Logger.getLogger(WebSocketController.class.getName());
 
-    @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
-
-    @Autowired
     private SynchronizationService synchronizationService;
+
+    public WebSocketController(SimpMessagingTemplate simpMessagingTemplate,
+                               SynchronizationService synchronizationService) {
+        this.simpMessagingTemplate = simpMessagingTemplate;
+        this.synchronizationService = synchronizationService;
+    }
 
     // this message mapping needed "just in case" if we want to force an update of a board
     @MessageMapping("/update")
-    public void f(@Payload Long id) throws Exception {
+    public void handler(@Payload Long id) {
         log.info("Received update request for board: " + id);
         synchronizationService.addBoardToUpdate((long) id);
     }

@@ -8,6 +8,7 @@ import commons.CardList;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.logging.Logger;
 
 public class BoardModel {
@@ -123,6 +124,8 @@ public class BoardModel {
         if (serverTimestamp.after(localTimestamp)) {
             log.info("Server-side board is newer, overwriting local");
             board = serverBoard;
+            controller.overwriteTitleNode(board.getTitle());
+
             updateChildren();
 
             return true;
@@ -155,6 +158,8 @@ public class BoardModel {
     }
 
     public void updateChildren() {
+        controller.overwriteTitleNode(board.getTitle());
+
         if (board.getLists() == null) return;
 
         if (tryToUpdateChildrenNaively()) return;
@@ -236,5 +241,32 @@ public class BoardModel {
 
         update();
         quietTest();
+    }
+
+    public void forEveryCard(Consumer<CardModel> consumer) {
+        for (ListModel list : children) {
+            for (CardModel card : list.getChildren()) {
+                consumer.accept(card);
+            }
+        }
+    }
+
+    public void updateTitle(String text) {
+        board.setTitle(text);
+        var res = utils.updateBoardTitleById(board.getId(), board.getTitle());
+        if (res.isEmpty()) {
+            log.warning("Updating board title failed");
+        }
+        else {
+            if (res.get().equals(board.getTitle())) {
+                log.info("Board title is up to date");
+            }
+            else {
+                log.severe("Board title is not up to date");
+
+                board.setTitle(res.get());
+                controller.overwriteTitleNode(board.getTitle());
+            }
+        }
     }
 }

@@ -11,14 +11,24 @@ import java.util.List;
 
 @Service
 public class SynchronizationService {
-    private final HashSet<Long> boardsToUpdate = new HashSet<>();
+    protected final HashSet<Long> boardsToUpdate = new HashSet<>();
 
-    @Autowired
     @Lazy
-    private BoardService boardService;
+    protected BoardService boardService;
 
+    public SynchronizationService() {
+    }
     public void addBoardToUpdate(Long id) {
         boardsToUpdate.add(id);
+    }
+
+    public BoardService getBoardService() {
+        return boardService;
+    }
+
+    @Autowired
+    public SynchronizationService(@Lazy BoardService boardService) {
+        this.boardService = boardService;
     }
 
     public void addListToUpdate(Long id) {

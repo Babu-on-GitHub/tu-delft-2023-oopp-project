@@ -19,7 +19,21 @@ public class SocketUtils {
     private StompSession.Subscription subscription;
 
     public void setServer(String server) {
-        baseUrl = server;
+        baseUrl = wrapWithWebsocket(server);
+    }
+
+    public String wrapWithWebsocket(String server) {
+        if (server.startsWith("ws://") && server.endsWith("/websocket"))
+            return server;
+        if (server.startsWith("http://"))
+            return "ws://" + server.substring(7) + "/websocket";
+        if (server.startsWith("https://"))
+            return "wss://" + server.substring(8) + "/websocket";
+        return "ws://" + server + "/websocket";
+    }
+
+    public boolean isConnected(){
+        return session != null;
     }
 
     public void connect() {

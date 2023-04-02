@@ -2,12 +2,12 @@ package server.services;
 
 import commons.Board;
 import commons.CardList;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import server.api.BoardController;
 import server.database.BoardRepository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 @Service
@@ -15,12 +15,11 @@ public class BoardService {
     private static final Logger log = Logger.getLogger(BoardController.class.getName());
 
     private BoardRepository boardRepository;
+    private SynchronizationService synchronizationService;
 
-    @Autowired
-    SynchronizationService synchronizationService;
-
-    public BoardService(BoardRepository boardRepository) {
+    public BoardService(BoardRepository boardRepository, SynchronizationService synchronizationService) {
         this.boardRepository = boardRepository;
+        this.synchronizationService = synchronizationService;
     }
 
     public List<Board> findAllBoards() {
@@ -40,8 +39,9 @@ public class BoardService {
             throw new IllegalArgumentException("Board cannot be null");
         }
 
-        synchronizationService.addBoardToUpdate(board.getId());
-        return boardRepository.save(board);
+        var b = boardRepository.save(board);
+        synchronizationService.addBoardToUpdate(b.getId());
+        return b;
     }
 
     public CardList saveCardList(CardList list, long boardId) {
@@ -50,7 +50,7 @@ public class BoardService {
         }
 
         try {
-            var boardOptional = this.getBoardById(boardId);
+            getBoardById(boardId);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Trying to add list into non-existent board");
         }
@@ -169,5 +169,24 @@ public class BoardService {
 
         board.sync();
         return this.saveBoard(board);
+    }
+
+    public String updateTitle(String title, long id) {
+        if (title == null) {
+            throw new IllegalArgumentException("Title is null");
+        }
+        log.info("Updating board title: " + title);
+        Optional<Board> boardOptional;
+        try {
+            boardOptional = Optional.ofNullable(this.getBoardById(id));
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Trying to update non existing board");
+        }
+
+        var board = boardOptional.get();
+        board.setTitle(title);
+        board.sync();
+        this.saveBoard(board);
+        return title;
     }
 }

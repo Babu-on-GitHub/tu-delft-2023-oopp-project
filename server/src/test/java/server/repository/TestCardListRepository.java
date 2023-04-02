@@ -1,4 +1,4 @@
-package server.api;
+package server.repository;
 
 import commons.CardList;
 import org.springframework.data.domain.Example;
@@ -91,6 +91,15 @@ public class TestCardListRepository implements CardListRepository {
 
     @Override
     public <S extends CardList> S save(S entity) {
+        // replace if exists with same id
+        var toDelete = find(entity.getId());
+        if (toDelete.isPresent()) {
+            lists.remove(toDelete.get());
+            lists.add(entity);
+            return entity;
+        }
+
+        // otherwise add
         call("save");
         entity.setId((long)lists.size());
         lists.add(entity);

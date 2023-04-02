@@ -1,9 +1,9 @@
 package client.model;
 
 import client.scenes.CardController;
+import client.scenes.DetailedCardController;
 import client.utils.ServerUtils;
 import commons.Card;
-
 import java.util.logging.Logger;
 
 public class CardModel {
@@ -23,15 +23,16 @@ public class CardModel {
         this.controller = controller;
     }
 
+    public void setDetailedController(DetailedCardController detailedController) {
+        this.controller = controller;
+    }
+
     public CardModel(Card card, ListModel parent, ServerUtils utils) {
         this.card = card;
         this.parent = parent;
         this.utils = utils;
     }
 
-    public Card getCard() {
-        return card;
-    }
 
     public void setCard(Card newCard) {
         this.card = newCard;
@@ -75,6 +76,9 @@ public class CardModel {
     }
 
     public void updateChildren() {
+        //controller.updateTitleModel();
+        controller.overwriteTitleNode(card.getTitle());
+
     }
 
     public void disown() {
@@ -87,5 +91,61 @@ public class CardModel {
         this.parent = parent;
         this.parent.getChildren().add(index, this);
         this.parent.getCardList().getCards().add(index, this.card);
+    }
+
+    public Card getCard() {
+        return card;
+    }
+
+    public static Logger getLog() {
+        return log;
+    }
+
+    public ListModel getParent() {
+        return parent;
+    }
+
+    public ServerUtils getUtils() {
+        return utils;
+    }
+
+
+    public void updateTitle(String newTitle) {
+        if (newTitle == null || newTitle.equals("")) {
+            log.info("Card doesn't have title anymore");
+            return;
+        }
+        card.setTitle(newTitle);
+        controller.overwriteTitleNode(newTitle);
+
+        var res = utils.updateCardTitleById(card.getId(), newTitle);
+        if (res.isEmpty())
+            log.severe("Failed to update card title");
+        else {
+            if (res.get().equals(card.getTitle()))
+                log.info("Successfully updated card title!!!");
+            else {
+                log.severe("Failed to update card title, overwriting new name");
+                card.setTitle(res.get());
+                controller.overwriteTitleNode(card.getTitle());
+            }
+        }
+    }
+
+    public void overwriteWith(Card newCard) {
+        if (newCard.getId() != card.getId()) {
+            log.warning("Overwriting card with different id");
+            newCard.setId(card.getId());
+        }
+
+        var res = utils.updateCardById(newCard.getId(), newCard);
+        if (res.isEmpty()) {
+            log.severe("Failed to update card");
+            return;
+        }
+        card = res.get();
+        controller.overwriteTitleNode(card.getTitle());
+
+        update();
     }
 }

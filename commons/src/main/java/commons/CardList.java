@@ -21,7 +21,7 @@ public class CardList implements Serializable {
     private long id;
 
     private Timestamp timestamp;
-    private String title;
+    private String title = "Untitled list";
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @OrderColumn
     private List<Card> cards;
