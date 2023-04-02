@@ -1,0 +1,24 @@
+.border-pane{
+    -fx-border-image-width: 4px;
+    -fx-border-color: #bababa;
+    -fx-border-radius: 10px;
+}
+
+.scroll-pane{
+    -fx-fit-to-width: true;
+}
+
+.card-container{
+    -fx-padding: 10px;
+    -fx-spacing: 10px;
+}
+
+.list-title-pane{
+    -fx-border-color: #bababa;
+    -fx-border-width: 0 0 2 0; /* top right bottom left */
+}
+
+.list-control-pane{
+    -fx-border-color: #bababa;
+    -fx-border-width: 2 0 0 0; /* top right bottom left */
+}

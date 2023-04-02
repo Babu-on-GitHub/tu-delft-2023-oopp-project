@@ -18,7 +18,7 @@
          <graphic>
             <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../icons/delete_FILL0_wght400_GRAD0_opsz48.png" />
+                  <Image url="@../icons/PNG/delete_FILL0_wght400_GRAD0_opsz48.png" />
                </image>
             </ImageView>
          </graphic></Button>
@@ -26,7 +26,7 @@
          <graphic>
             <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../icons/edit_note_FILL0_wght400_GRAD0_opsz48.png" />
+                  <Image url="@../icons/PNG/edit_note_FILL0_wght400_GRAD0_opsz48.png" />
                </image>
             </ImageView>
          </graphic>

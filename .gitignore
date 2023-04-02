@@ -29,6 +29,7 @@ bin/
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
+### LATEX ###
 *.aux
 *.fdb_latexmk
 *.fls
@@ -50,4 +51,4 @@ out/
 .vscode/
 
 ####Resources#####
-*.data
+**/*.data

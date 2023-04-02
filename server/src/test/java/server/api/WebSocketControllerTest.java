@@ -45,7 +45,7 @@ public class WebSocketControllerTest {
         var boardId = board.getId();
         synchronizationService.addBoardToUpdate(boardId);
 
-        assertThrows(MessageDeliveryException.class, () -> webSocketController.sendMessage());
+        assertThrows(MessageDeliveryException.class, () -> webSocketController. sendMessage());
     }
 
 }
