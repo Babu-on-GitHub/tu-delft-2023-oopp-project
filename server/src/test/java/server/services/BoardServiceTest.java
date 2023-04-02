@@ -50,6 +50,19 @@ public class BoardServiceTest {
         assertEquals(1, boards.size());
     }
 
+    @Test
+    void saveCardList() {
+        var board = new Board();
+        board.setId(1L);
+        boardService.saveBoard(board);
+        var boardId = board.getId();
+        var list = new CardList();
+        list.setId(1L);
+        boardService.saveCardList(list, boardId);
+        var boards = boardService.findAllBoards();
+        assertEquals(1, boards.size());
+        assertEquals(1, boards.get(0).getLists().size());
+    }
 
     @Test
     void saveCardList_invalidBoard() {
@@ -95,6 +108,20 @@ public class BoardServiceTest {
         }
     }
 
+    @Test
+    void deleteCardList() {
+        var board = new Board();
+        board.setId(1L);
+        boardService.saveBoard(board);
+        var boardId = board.getId();
+        var list = new CardList();
+        list.setId(1L);
+        boardService.saveCardList(list, boardId);
+        boardService.deleteCardListById(1L, boardId);
+        var boards = boardService.findAllBoards();
+        assertEquals(1, boards.size());
+        assertEquals(0, boards.get(0).getLists().size());
+    }
 
     @Test
     void deleteCardList_invalidBoard() {
@@ -105,6 +132,26 @@ public class BoardServiceTest {
         }
     }
 
+    @Test
+    void updateTest() {
+        var board = new Board();
+        board.setId(1L);
+        boardService.saveBoard(board);
+        var boardId = board.getId();
+
+        var list = new CardList();
+        list.setId(1L);
+        boardService.saveCardList(list, boardId);
+        var listId = list.getId();
+
+        var boards = boardService.findAllBoards();
+        assertEquals(1, boards.size());
+        assertEquals(1, boards.get(0).getLists().size());
+
+        boardService.update(new Board("test"), boardId);
+        boards = boardService.findAllBoards();
+        assertEquals("test", boards.get(0).getTitle());
+    }
 
     @Test
     void testEverythingForNull() {
@@ -113,4 +160,39 @@ public class BoardServiceTest {
         assertThrows(IllegalArgumentException.class, () -> boardService.update(null, 1L));
     }
 
+    @Test
+    void moveCardTest() {
+        var board = new Board();
+        board.setId(1L);
+        boardService.saveBoard(board);
+        var boardId = board.getId();
+        var list = new CardList();
+        list.setId(1L);
+        boardService.saveCardList(list, boardId);
+        var listId = list.getId();
+
+        var list2 = new CardList();
+        list2.setId(2L);
+        var card = new Card("test");
+        list2.add(card);
+        boardService.saveCardList(list2, boardId);
+        var listId2 = list2.getId();
+        var cardId = card.getId();
+
+        var boards = boardService.findAllBoards();
+        var lists = boards.get(0).getLists();
+        assertEquals(1, boards.size());
+        assertEquals(2, lists.size());
+        assertEquals(0, lists.get(0).getCards().size());
+        assertEquals(1, lists.get(1).getCards().size());
+
+        boardService.moveCard(cardId, listId, 0, boardId);
+
+        boards = boardService.findAllBoards();
+        lists = boards.get(0).getLists();
+        assertEquals(1, boards.size());
+        assertEquals(2, lists.size());
+        assertEquals(1, lists.get(0).getCards().size());
+        assertEquals(0, lists.get(1).getCards().size());
+    }
 }
