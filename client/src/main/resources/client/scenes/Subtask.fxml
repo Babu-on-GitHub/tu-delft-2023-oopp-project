@@ -4,6 +4,8 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
@@ -28,15 +30,36 @@
             <Font size="18.0" />
          </font>
       </TextField>
-      <Button fx:id="downButton" mnemonicParsing="false" onAction="#moveDown" text="Down" />
-      <Button fx:id="upButton" mnemonicParsing="false" onAction="#moveUp" text="Up">
+      <Button fx:id="downButton" mnemonicParsing="false" onAction="#moveDown">
+         <graphic>
+            <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../icons/PNG/expand_more_FILL0_wght400_GRAD0_opsz48.png" />
+               </image>
+            </ImageView>
+         </graphic></Button>
+      <Button fx:id="upButton" mnemonicParsing="false" onAction="#moveUp">
          <HBox.margin>
             <Insets left="8.0" right="8.0" />
          </HBox.margin>
+         <graphic>
+            <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../icons/PNG/expand_less_FILL0_wght400_GRAD0_opsz48.png" />
+               </image>
+            </ImageView>
+         </graphic>
       </Button>
-      <Button fx:id="deleteButton" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#deleteSubtask" text="Delete">
+      <Button fx:id="deleteButton" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#deleteSubtask">
          <HBox.margin>
             <Insets right="25.0" />
-         </HBox.margin></Button>
+         </HBox.margin>
+         <graphic>
+            <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../icons/PNG/delete_FILL0_wght400_GRAD0_opsz48.png" />
+               </image>
+            </ImageView>
+         </graphic></Button>
    </children>
 </HBox>

@@ -64,9 +64,9 @@ public class BoardsListItemCtrl implements Initializable {
         }
         boardItemButton.setText(boardName);
         if(boardId == 1){
-            setImage(icon,"client/src/main/resources/client/icons/home_FILL0_wght400_GRAD0_opsz48.png");
+            setImage(icon,"src/main/resources/client/icons/PNG/home_FILL0_wght400_GRAD0_opsz48.png");
         }else{
-            setImage(icon,"client/src/main/resources/client/icons/layers_FILL0_wght400_GRAD0_opsz48.png");
+            setImage(icon,"src/main/resources/client/icons/PNG/tab_FILL0_wght400_GRAD0_opsz48.png");
         }
     }
 }
