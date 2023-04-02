@@ -2,6 +2,7 @@ package client.scenes;
 
 import client.model.CardModel;
 import client.utils.ServerUtils;
+import commons.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -12,6 +13,7 @@ public class SubtaskController {
 
     private ServerUtils server;
     private CardModel parent;
+    private Task task;
     @FXML
     private Button deleteSubtaskButton;
 
@@ -20,14 +22,13 @@ public class SubtaskController {
 
     @FXML
     private HBox subtaskID;
-    public SubtaskController(CardModel parent, ServerUtils server) {
+    public SubtaskController(Task task, CardModel parent, ServerUtils server) {
         this.parent = parent;
         this.server = server;
     }
     @FXML
     void deteleSubtask(ActionEvent event) {
-        parent.getController().getSubtaskArea().getChildren().remove(this);
-        //TODO delete specific subtask
+        parent.getCard().getSubTasks().remove(task.getId());
     }
 
     @FXML

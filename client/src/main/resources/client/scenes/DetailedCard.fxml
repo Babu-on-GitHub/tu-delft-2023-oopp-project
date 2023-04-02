@@ -10,7 +10,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox fx:id="detailedCardBox" prefHeight="550.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fx:id="detailedCardBox" prefHeight="650.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <TextField fx:id="cardTitle" alignment="CENTER" prefHeight="30.0" prefWidth="600.0" promptText="Card Title" />
       <TextArea fx:id="cardDescription" prefHeight="150.0" prefWidth="600.0" promptText="Add Card Description" />
@@ -24,7 +24,7 @@
       </Text>
       <ScrollPane prefWidth="300.0">
          <content>
-            <VBox fx:id="subtaskArea" prefHeight="150.0" prefWidth="580.0" />
+            <VBox fx:id="subtaskArea" prefHeight="170.0" prefWidth="580.0" />
          </content>
       </ScrollPane>
       <Button fx:id="subtaskButton" mnemonicParsing="false" onAction="#addSubtask" prefHeight="25.0" prefWidth="200.0" text="Add Subtask">
@@ -54,7 +54,7 @@
             </Button>
          </children>
       </HBox>
-      <HBox prefHeight="90.0" prefWidth="600.0">
+      <HBox prefHeight="80.0" prefWidth="600.0">
          <children>
             <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#cancelButtonAction" prefHeight="50.0" prefWidth="100.0" text="CANCEL">
                <HBox.margin>
