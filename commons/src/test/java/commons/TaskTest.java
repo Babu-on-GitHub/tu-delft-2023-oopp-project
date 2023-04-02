@@ -22,7 +22,7 @@ public class TaskTest {
     @Test
     public void defaultConstructorTest() {
         var t = new Task();
-        assertNull(t.getTitle());
+        assertEquals(t.getTitle(),"Untitled task");
         assertEquals(t.getId(), 0);
     }
 

@@ -17,7 +17,7 @@ public class Task implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private String title;
+    private String title = "Untitled task";
 
     private boolean checked;
 

@@ -6,7 +6,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.sql.Timestamp;
 import java.util.List;
@@ -20,7 +19,7 @@ public class Card implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String title = "NEW CARD";
+    private String title = "Unititled card";
     private Timestamp timestamp;
 
     private String description;
@@ -129,7 +128,7 @@ public class Card implements Serializable {
      *
      * @param subTasks Value for subTasks
      */
-    public void setSubTasks(ArrayList<Task> subTasks) {
+    public void setSubTasks(List<Task> subTasks) {
         this.subTasks = subTasks;
     }
 

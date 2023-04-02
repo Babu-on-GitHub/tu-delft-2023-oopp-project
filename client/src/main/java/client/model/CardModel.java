@@ -1,15 +1,9 @@
 package client.model;
 
 import client.scenes.CardController;
+import client.scenes.DetailedCardController;
 import client.utils.ServerUtils;
 import commons.Card;
-import commons.Tag;
-import commons.Task;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 import java.util.logging.Logger;
 
 public class CardModel {
@@ -26,6 +20,10 @@ public class CardModel {
     }
 
     public void setController(CardController controller) {
+        this.controller = controller;
+    }
+
+    public void setDetailedController(DetailedCardController detailedController) {
         this.controller = controller;
     }
 
@@ -78,8 +76,9 @@ public class CardModel {
     }
 
     public void updateChildren() {
+        //controller.updateTitleModel();
         controller.overwriteTitleNode(card.getTitle());
-        //controller.updateDescription(card.getDescription());
+
     }
 
     public void disown() {
@@ -110,18 +109,12 @@ public class CardModel {
         return utils;
     }
 
-    public void updateCardDetails(boolean isUpdate, String newTitle, String newDescription,
-                                  List<Task> newSubtasks, Set<Tag> newTags) {
-        if (!isUpdate) {
-            return;
-        }
-        updateTitle(newTitle);
-        updateDescription(newDescription);
-        updateSubtasks(newSubtasks);
-        updateTags(newTags);
-    }
 
     public void updateTitle(String newTitle) {
+        if (newTitle == null || newTitle.equals("")) {
+            log.info("Card doesn't have title anymore");
+            return;
+        }
         card.setTitle(newTitle);
         controller.overwriteTitleNode(newTitle);
 
@@ -139,54 +132,20 @@ public class CardModel {
         }
     }
 
-    private void updateDescription(String newDescription) {
-        card.setDescription(newDescription);
-        controller.updateDescription(newDescription);
-        var res = utils.updateCardDescriptionById(card.getId(), newDescription);
-        if (res.isEmpty())
-            log.severe("Failed to update card description");
-        else {
-            if (res.get().equals(card.getDescription()))
-                log.info("Successfully updated card description");
-            else {
-                log.severe("Failed to update card description, overwriting new description");
-                card.setDescription(res.get());
-                controller.updateDescription(card.getDescription());
-            }
+    public void overwriteWith(Card newCard) {
+        if (newCard.getId() != card.getId()) {
+            log.warning("Overwriting card with different id");
+            newCard.setId(card.getId());
         }
-    }
 
-    private void updateSubtasks(List<Task> newSubtasks) {
-        card.setSubTasks((ArrayList<Task>) newSubtasks);
-
-        var res = utils.updateCardSubtasksById(card.getId(), newSubtasks);
-        if (res.isEmpty())
-            log.severe("Failed to update card subtasks");
-        else {
-            if (res.get().equals(card.getSubTasks()))
-                log.info("Successfully updated card subtasks");
-            else {
-                log.severe("Failed to update card subtasks, overwriting new");
-                card.setSubTasks((ArrayList<Task>) res.get());
-                //controller.overwriteTitleNode(card.getSubTasks());
-            }
+        var res = utils.updateCardById(newCard.getId(), newCard);
+        if (res.isEmpty()) {
+            log.severe("Failed to update card");
+            return;
         }
-    }
+        card = res.get();
+        controller.overwriteTitleNode(card.getTitle());
 
-    private void updateTags(Set<Tag> newTags) {
-        card.setTags((HashSet<Tag>) newTags);
-
-        var res = utils.updateCardTagsById(card.getId(), newTags);
-        if (res.isEmpty())
-            log.severe("Failed to update card tags");
-        else {
-            if (res.get().equals(card.getTags()))
-                log.info("Successfully updated card tags");
-            else {
-                log.severe("Failed to update card tags, overwriting new tags");
-                card.setTitle(res.get());
-                //controller.overwriteTitleNode(card.getTags());
-            }
-        }
+        update();
     }
 }
