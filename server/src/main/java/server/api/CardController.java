@@ -2,13 +2,11 @@ package server.api;
 
 import commons.Card;
 import commons.Tag;
-import commons.Task;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import server.services.CardService;
 
 import java.util.List;
-import java.util.Set;
 import java.util.logging.Logger;
 
 @RestController
