@@ -1,39 +1,95 @@
 package client.scenes;
 
-import client.model.CardModel;
-import client.utils.ServerUtils;
 import commons.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
+import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 
-public class SubtaskController {
+import java.net.URL;
+import java.util.Objects;
+import java.util.ResourceBundle;
 
-    private ServerUtils server;
-    private CardModel parent;
+public class SubtaskController implements Initializable {
+    private DetailedCardController parent;
     private Task task;
-    @FXML
-    private Button deleteSubtaskButton;
 
     @FXML
-    private CheckBox subtaskContent;
+    private CheckBox status;
 
     @FXML
-    private HBox subtaskID;
-    public SubtaskController(Task task, CardModel parent, ServerUtils server) {
-        this.parent = parent;
-        this.server = server;
+    private TextField title;
+
+    @FXML
+    private HBox subtaskRoot;
+
+    public HBox getRoot() {
+        return subtaskRoot;
     }
+
+    public Task getTask() {
+        return task;
+    }
+
+    public SubtaskController(Task task, DetailedCardController parent) {
+        this.parent = parent;
+        this.task = task;
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        updateSelected();
+
+        title.setText(task.getTitle());
+
+        title.textProperty().addListener((observable, oldValue, newValue) -> {
+            task.setTitle(newValue);
+        });
+        title.setFocusTraversable(true);
+
+        if (Objects.equals(title.getText(), (new Task()).getTitle())) {
+            title.requestFocus();
+        }
+    }
+
     @FXML
-    void deteleSubtask(ActionEvent event) {
-        parent.getCard().getSubTasks().remove(task.getId());
+    void deleteSubtask(ActionEvent event) {
+        parent.removeSubtaskWithController(this);
+    }
+
+    @FXML
+    void moveUp(ActionEvent event) {
+        subtaskRoot.requestFocus();
+        parent.moveUp(this);
+    }
+
+    @FXML
+    void moveDown(ActionEvent event) {
+        subtaskRoot.requestFocus();
+        parent.moveDown(this);
     }
 
     @FXML
     void toggleStatus(ActionEvent event) {
-        //TODO toggle check status of the tag
+        task.setChecked(status.isSelected());
+        updateSelected();
     }
 
+    @FXML
+    void updateTitle(ActionEvent event) {
+        task.setTitle(title.getText());
+    }
+
+    private void updateSelected() {
+        status.setSelected(task.isChecked());
+        if (status.isSelected()) {
+            title.setDisable(true);
+            title.setEditable(false);
+        } else {
+            title.setDisable(false);
+            title.setEditable(true);
+        }
+    }
 }

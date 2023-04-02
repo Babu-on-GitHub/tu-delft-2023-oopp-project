@@ -1,13 +1,11 @@
 package client.scenes;
 
-import client.model.CardModel;
 import client.utils.ServerUtils;
-import commons.Tag;
+import commons.Card;
 import commons.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
@@ -15,22 +13,24 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+import java.util.logging.Logger;
 
 public class DetailedCardController {
+    private static Logger log = Logger.getLogger(DetailedCardController.class.getName());
 
-    private CardController cardController;
-    private Stage secondStage;
-    private CardModel card;
-    private ListController parent;
-
+    private CardController parent;
+    private Card localCard;
     private ServerUtils server;
-    @FXML
-    private TextArea cardDescription;
+
+    private List<SubtaskController> subtaskControllers;
 
     @FXML
-    private TextField cardTitle;
+    private TextArea description;
+
+    @FXML
+    private TextField title;
 
     @FXML
     private VBox detailedCardBox;
@@ -39,97 +39,127 @@ public class DetailedCardController {
     private VBox subtaskArea;
 
     @FXML
-    private Button subtaskButton;
-
-    @FXML
     private HBox tagArea;
 
-    @FXML
-    private Button tagButton;
-
-    public DetailedCardController(CardController cardController, CardModel card, ServerUtils server) {
-        this.cardController = cardController;
-        this.card = card;
+    public DetailedCardController(CardController cardController, ServerUtils server) {
+        this.parent = cardController;
+        this.localCard = cardController.getModel().getCard();
         this.server = server;
+
+        subtaskControllers = new ArrayList<>();
     }
 
-    public CardController getController() {
-        return cardController;
-    }
-
+    /**
+     * Adds a new subtask to the card. This is called by the FXML event listener, for this controller.
+     * @param event the event that triggered this method
+     * @throws IOException if the FXML file cannot be loaded
+     */
     @FXML
-    void addSubtask(ActionEvent event) throws IOException {
-        Task subtask = new Task("New Subtask");
+    void addTask(ActionEvent event) throws IOException {
+        Task subtask = new Task();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("Subtask.fxml"));
 
-        var controller = new SubtaskController(subtask, card, server);
+        var controller = new SubtaskController(subtask, this);
         loader.setController(controller);
         HBox newSubtask = loader.load();
 
+        subtaskControllers.add(controller);
+
         subtaskArea.getChildren().add(newSubtask);
-        card.getCard().getSubTasks().add(subtask);
-        //TODO properly add subtasks
+    }
+
+    /**
+     * Removes a subtask from the card. This is called by the subtask controller when the user clicks the delete button.
+     * @param controller the controller containing task to remove
+     */
+    @FXML
+    void removeSubtaskWithController(SubtaskController controller) {
+        subtaskControllers.remove(controller);
+        subtaskArea.getChildren().remove(controller.getRoot());
     }
 
     @FXML
     void addTag(ActionEvent event) throws IOException {
-//        Tag tag = new Tag("New tag");
-//        FXMLLoader loader = new FXMLLoader(getClass().getResource("Tag.fxml"));
-//
-//        var controller = new TagController(card,server);
-//        loader.setController(controller);
-//
-//        AnchorPane newTag = loader.load();
-//        tagArea.getChildren().add(0,newTag);
-
-        // TODO open a tag editin menu to create or add new cards
     }
 
+    /**
+     * Closes the detailed card view. Since all the changes are stored locally, we don't need to do anything else.
+     * @param event the event that triggered this action
+     */
     @FXML
-    void cancelButtonAction(ActionEvent event) {
-        card.setController(cardController);
-        boolean isUpdate = false;
+    void cancel(ActionEvent event) {
         Stage secondStage = (Stage) detailedCardBox.getScene().getWindow();
         secondStage.close();
     }
 
+    /**
+     * Saves the changes made to the card. This includes just overwriting
+     *          the state of the card in the parent controller with the local copy.
+     * @param event the event that triggered this action
+     */
     @FXML
-    void saveButtonAction(ActionEvent event) {
-        boolean isUpdate = true;
-        Stage secondStage = (Stage) detailedCardBox.getScene().getWindow();
-        secondStage.close();
+    void save(ActionEvent event) {
+        log.info("Save button pressed, closing..");
+        cancel(event);
 
-        String newTitle = cardTitle.getText();
-        String newDescription = cardDescription.getText();
-        List<Task> subtasks = card.getCard().getSubTasks();
-        Set<Tag> tags = card.getCard().getTags();
+        localCard.setTitle(title.getText());
+        localCard.setDescription(description.getText());
 
-        card.setController(this.getController());
+        List<Task> subtasks = new ArrayList<>();
+        for (SubtaskController controller : subtaskControllers)
+            subtasks.add(controller.getTask());
+        localCard.setSubTasks(subtasks);
 
-        card.updateCardDetails(isUpdate,newTitle, newDescription, subtasks,tags);
+        parent.getModel().overwriteWith(localCard);
     }
 
-    public void showDetails() {
-        cardTitle.setText(card.getCard().getTitle());
-        cardDescription.setText(card.getCard().getDescription());
-        loadSubtasks();
-        loadTags();
+    public void showDetails() throws IOException {
+        log.info("Showing details");
+
+        title.setText(localCard.getTitle());
+        description.setText(localCard.getDescription());
+        showSubtasks();
+        showTags();
     }
 
-    private void loadSubtasks() {
-        for (Task subtask:
-             card.getCard().getSubTasks()) {
+    private void showSubtasks() throws IOException {
+        for (Task subtask : localCard.getSubTasks()) {
+
             FXMLLoader loader = new FXMLLoader(getClass().getResource("Subtask.fxml"));
-            var controller = new SubtaskController(subtask, card, server);
+            var controller = new SubtaskController(subtask, this);
             loader.setController(controller);
-            try {
-                HBox existingSubtask = loader.load();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            loader.load();
+
+            subtaskArea.getChildren().add(loader.getRoot());
+            subtaskControllers.add(controller);
         }
     }
-    private void loadTags() {
+
+    public void moveUp(SubtaskController controller) {
+        int index = subtaskControllers.indexOf(controller);
+        if (index == 0) return;
+
+        subtaskControllers.remove(index);
+        subtaskControllers.add(index - 1, controller);
+
+        subtaskArea.getChildren().clear();
+        for (SubtaskController subtaskController : subtaskControllers)
+            subtaskArea.getChildren().add(subtaskController.getRoot());
+    }
+
+    public void moveDown(SubtaskController controller) {
+        int index = subtaskControllers.indexOf(controller);
+        if (index == subtaskControllers.size() - 1) return;
+
+        subtaskControllers.remove(index);
+        subtaskControllers.add(index + 1, controller);
+
+        subtaskArea.getChildren().clear();
+        for (SubtaskController subtaskController : subtaskControllers)
+            subtaskArea.getChildren().add(subtaskController.getRoot());
+    }
+
+    private void showTags() {
         //TODO load tags properly
     }
 }

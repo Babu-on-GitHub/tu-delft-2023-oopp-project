@@ -70,36 +70,6 @@ public class CardController {
             return ResponseEntity.badRequest().build();
         }
     }
-    @PutMapping(path = "/updateDescription/{id}")
-    public ResponseEntity<String> updateDescription(@RequestBody String description, @PathVariable("id") long id) {
-        try {
-            var saved = cardService.updateDescription(id, description);
-            return ResponseEntity.ok(saved);
-        } catch (IllegalArgumentException e) {
-            log.warning(e.getMessage());
-            return ResponseEntity.badRequest().build();
-        }
-    }
-    @PutMapping(path = "/updateSubtasks/{id}")
-    public ResponseEntity<List<Task>> updateSubtasks(@RequestBody List<Task> tasks, @PathVariable("id") long id) {
-        try {
-            var saved = cardService.updateSubtasks(id, tasks);
-            return ResponseEntity.ok(saved);
-        } catch (IllegalArgumentException e) {
-            log.warning(e.getMessage());
-            return ResponseEntity.badRequest().build();
-        }
-    }
-    @PutMapping(path = "/updateTags/{id}")
-    public ResponseEntity<Set<Tag>> updateTags(@RequestBody Set<Tag> tags, @PathVariable("id") long id) {
-        try {
-            var saved = cardService.updateTags(id, tags);
-            return ResponseEntity.ok(saved);
-        } catch (IllegalArgumentException e) {
-            log.warning(e.getMessage());
-            return ResponseEntity.badRequest().build();
-        }
-    }
 
     @PostMapping(path = "/add/{id}")
     public ResponseEntity<Tag> addTag(@RequestBody Tag tag, @PathVariable("id") long cardId) {

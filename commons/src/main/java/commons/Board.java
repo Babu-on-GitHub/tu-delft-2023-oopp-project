@@ -21,7 +21,7 @@ public class Board implements Serializable {
 
     private Timestamp timestamp;
 
-    private String title = "BOARD";
+    private String title = "Untitled board";
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @OrderColumn

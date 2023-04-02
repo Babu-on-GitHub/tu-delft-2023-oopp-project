@@ -1,6 +1,7 @@
 package client.scenes;
 
 import client.utils.ServerUtils;
+import commons.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -74,11 +75,15 @@ public class CardController implements Initializable {
         this.server = server;
     }
 
+    public CardModel getModel() {
+        return card;
+    }
+
     @FXML
     void checkDoubleClick(MouseEvent event) throws IOException {
         if (event.getClickCount() == 2) {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("DetailedCard.fxml"));
-            var detailedCardController = new DetailedCardController(this,card, server);
+            var detailedCardController = new DetailedCardController(this, server);
             card.setDetailedController(detailedCardController);
             loader.setController(detailedCardController);
 
@@ -204,5 +209,12 @@ public class CardController implements Initializable {
                 updateTitleModel();
             }
         });
+    }
+
+    protected String getTasksProgress() {
+        // number of subtasks completed + "/" + number of subtasks
+        return card.getCard().getSubTasks().stream()
+                .filter(Task::isChecked)
+                .count() + "/" + card.getCard().getSubTasks().size();
     }
 }
