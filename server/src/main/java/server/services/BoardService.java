@@ -39,8 +39,9 @@ public class BoardService {
             throw new IllegalArgumentException("Board cannot be null");
         }
 
-        synchronizationService.addBoardToUpdate(board.getId());
-        return boardRepository.save(board);
+        var b = boardRepository.save(board);
+        synchronizationService.addBoardToUpdate(b.getId());
+        return b;
     }
 
     public CardList saveCardList(CardList list, long boardId) {

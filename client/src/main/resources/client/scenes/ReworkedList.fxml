@@ -10,11 +10,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="listContainer" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="300.0" style="-fx-border-image-width: 4px; -fx-border-color: #bababa; -fx-border-radius: 10px;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane fx:id="listContainer" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="360.0" prefWidth="320.0" styleClass="border-pane" stylesheets="@../css/list.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <top>
-      <AnchorPane prefHeight="79.0" prefWidth="298.0" style="-fx-border-color: #bababa; -fx-border-width: 1px;" BorderPane.alignment="CENTER">
+      <AnchorPane prefHeight="79.0" prefWidth="298.0" styleClass="list-title-pane" BorderPane.alignment="CENTER">
          <children>
-            <TextField fx:id="listTitle" alignment="CENTER" prefHeight="63.0" prefWidth="274.0" text="LIST" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <TextField fx:id="listTitle" alignment="CENTER" prefHeight="63.0" prefWidth="274.0" style="-fx-background-color: inherit;" text="LIST" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="0.0">
                <font>
                   <Font size="18.0" />
                </font>
@@ -23,13 +23,13 @@
       </AnchorPane>
    </top>
    <bottom>
-      <AnchorPane prefHeight="100.0" prefWidth="298.0" style="-fx-border-color: #bababa; -fx-border-width: 1px;" BorderPane.alignment="CENTER">
+      <AnchorPane prefHeight="100.0" prefWidth="298.0" styleClass="list-control-pane" BorderPane.alignment="CENTER">
          <children>
             <Button contentDisplay="TOP" graphicTextGap="0.0" layoutX="199.0" layoutY="16.0" mnemonicParsing="false" onAction="#addCardButton" prefHeight="70.0" prefWidth="87.0" style="-fx-background-color: inherit;" text="Add Card" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="20.0">
                <graphic>
                   <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../icons/note_add_FILL0_wght400_GRAD0_opsz48.png" />
+                        <Image url="@../icons/PNG/note_add_FILL0_wght400_GRAD0_opsz48.png" />
                      </image>
                   </ImageView>
                </graphic></Button>
@@ -37,7 +37,7 @@
                <graphic>
                   <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../icons/delete_FILL0_wght400_GRAD0_opsz48.png" />
+                        <Image url="@../icons/PNG/delete_FILL0_wght400_GRAD0_opsz48.png" />
                      </image>
                   </ImageView>
                </graphic></Button>
@@ -47,7 +47,7 @@
    <center>
       <ScrollPane fx:id="scrollPane" prefHeight="484.0" prefWidth="300.0" BorderPane.alignment="CENTER">
          <content>
-            <VBox fx:id="cardListContainer" onDragDone="#dragDone" onDragDropped="#drop" onDragOver="#dragOver" prefHeight="484.0" />
+            <VBox fx:id="cardListContainer" onDragDone="#dragDone" onDragDropped="#drop" onDragOver="#dragOver" prefHeight="484.0" styleClass="card-container" />
          </content>
       </ScrollPane>
    </center>

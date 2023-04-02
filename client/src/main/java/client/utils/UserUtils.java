@@ -11,7 +11,7 @@ public class UserUtils {
 
     static Logger log = Logger.getLogger(UserUtils.class.getName());
     private ServerUtils utils;
-    private String USER_FILE = "client/src/main/resources/client/user.data";
+    private String USER_FILE = "src/main/resources/client/user.data";
     private User user;
 
     @Inject

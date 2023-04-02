@@ -11,13 +11,10 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -75,21 +72,11 @@ public class MainPageCtrl implements Initializable {
     private VBox boardsListContainer;
 
     @FXML
-    private ImageView deleteBoardImage;
+    private AnchorPane boardIdPanel;
+
     @FXML
-    private ImageView addListImage;
-    @FXML
-    private ImageView addBoardImage;
-    @FXML
-    private ImageView settingsImage;
-    @FXML
-    private ImageView shareImage;
-    @FXML
-    private ImageView menuPicture;
-    @FXML
-    private ImageView leaveBoardImage;
-    @FXML
-    private ImageView changeServerImage;
+    private TextField boardIdLabel;
+
 
     @Inject
     public MainPageCtrl(ServerUtils server, MainCtrl mainCtrl, UserUtils userUtils) {
@@ -108,24 +95,11 @@ public class MainPageCtrl implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         boardName.setText("Default board");
-
-        setImage(deleteBoardImage,"client/src/main/resources/client/icons/delete_FILL0_wght400_GRAD0_opsz48.png");
-        setImage(shareImage,"client/src/main/resources/client/icons/share_FILL0_wght400_GRAD0_opsz48.png");
-        setImage(settingsImage,"client/src/main/resources/client/icons/settings_FILL0_wght400_GRAD0_opsz48.png");
-        setImage(addListImage,"client/src/main/resources/client/icons/add_notes_FILL0_wght400_GRAD0_opsz48.png");
-        setImage(addBoardImage,"client/src/main/resources/client/icons/new_window_FILL0_wght400_GRAD0_opsz48.png");
-        setImage(menuPicture, "client/src/main/resources/client/icons/menu_FILL0_wght400_GRAD0_opsz48.png");
-        setImage(leaveBoardImage,"client/src/main/resources/client/icons/exit_to_app_FILL0_wght400_GRAD0_opsz48.png");
-        setImage(changeServerImage,"client/src/main/resources/client/icons/dns_FILL0_wght0_GRAD0_opszNaN.png");
-
-        //This makes the lists to fill the entire height of their parent
-        boardScrollPane.setFitToHeight(true);
-        cardListsContainer.setSpacing(20);
         //makes board overview resize correctly
         SplitPane.setResizableWithParent(boardListScrollPane.getParent(), false);
-        //makes the boards fill width of the board list
-        boardListScrollPane.setFitToWidth(true);
 
+        boardIdPanel.setVisible(false);
+        boardIdLabel.setEditable(false);
 
         try {
             initializeBoard();
@@ -140,8 +114,6 @@ public class MainPageCtrl implements Initializable {
         } catch (Exception e) {
             log.warning("Something wrong in main page init");
         }
-
-        boardName.setText(board.getBoard().getTitle());
 
         boardName.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
@@ -172,6 +144,9 @@ public class MainPageCtrl implements Initializable {
             showBoardsList();
         } catch (IOException e) {
             log.warning("Couldn't show boards on refresh");
+        }
+        if(board==null){
+            initializeBoard();
         }
         board.update();
         board.updateChildren();
@@ -250,6 +225,8 @@ public class MainPageCtrl implements Initializable {
             cardListsContainer.getChildren().clear();
         }
         if (board == null) return;
+        boardName.setText(board.getBoard().getTitle());
+        boardIdPanel.setVisible(false);
         this.board.setController(this);
         this.board.update();
         this.board.updateChildren();
@@ -410,37 +387,17 @@ public class MainPageCtrl implements Initializable {
 
     @FXML
     public void shareButton(ActionEvent event){
-        //TODO change the way this is implemented to reflect the design of the team
-        Dialog<String> dialog = new Dialog<>();
-        dialog.setTitle("Copy Board Id");
-
-        dialog.getDialogPane().setPrefSize(400, 80);
-
-        ButtonType copyButtonType = new ButtonType("Copy", ButtonBar.ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().addAll(copyButtonType, ButtonType.CANCEL);
-
-        String boardId = Long.toString(board.getBoard().getId());
-
-        Label keyLabel = new Label("Board Id: " + boardId);
-        keyLabel.setStyle("-fx-font-size: 15;");
-        keyLabel.setAlignment(Pos.CENTER);
-
-        dialog.getDialogPane().setContent(keyLabel);
-
-        dialog.setResultConverter(dialogButton -> {
-            if (dialogButton == copyButtonType) {
-                return boardId;
-            }
-            return null;
-        });
-        Optional<String> result = dialog.showAndWait();
-
-        result.ifPresent(key -> {
-            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-            StringSelection selection = new StringSelection(key);
-            clipboard.setContents(selection, selection);
-        });
+        boolean visibility = boardIdPanel.isVisible();
+        boardIdPanel.setVisible(!visibility);
+        boardIdLabel.setText(Long.toString(board.getBoard().getId()));
     }
+
+    public void copyIdButton(ActionEvent event){
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        StringSelection selection = new StringSelection(boardIdLabel.getText());
+        clipboard.setContents(selection, selection);
+    }
+
 
     public ServerUtils getServer() {
         return server;
