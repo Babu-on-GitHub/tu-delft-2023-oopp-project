@@ -6,6 +6,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.sql.Timestamp;
 import java.util.List;
@@ -40,6 +41,8 @@ public class Card implements Serializable {
 
     @SuppressWarnings("unused")
     public Card() {
+        tags = new HashSet<>();
+        subTasks = new ArrayList<>();
     }
 
     /**
@@ -48,6 +51,8 @@ public class Card implements Serializable {
      * @param title
      */
     public Card(String title) {
+        this();
+
         this.title = title;
     }
 
@@ -144,7 +149,7 @@ public class Card implements Serializable {
      *
      * @param tags Value for tags
      */
-    public void setTags(HashSet<Tag> tags) {
+    public void setTags(Set<Tag> tags) {
         this.tags = tags;
     }
 

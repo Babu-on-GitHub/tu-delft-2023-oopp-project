@@ -97,10 +97,6 @@ public class CardModel {
         return card;
     }
 
-    public static Logger getLog() {
-        return log;
-    }
-
     public ListModel getParent() {
         return parent;
     }

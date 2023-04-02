@@ -2,11 +2,13 @@ package server.api;
 
 import commons.Board;
 import commons.CardList;
+import commons.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import server.services.BoardService;
 
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
 
 @RestController
@@ -124,6 +126,39 @@ public class BoardController {
         try {
             var saved = boardService.updateTitle(title, id);
             return ResponseEntity.ok(saved);
+        } catch (IllegalArgumentException e) {
+            log.warning(e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PostMapping(path = "/addTag/{boardId}")
+    public ResponseEntity<Tag> addTag(@RequestBody Tag tag, @PathVariable("boardId") long boardId) {
+        try {
+            var saved = boardService.addTag(tag, boardId);
+            return ResponseEntity.ok(saved);
+        } catch (IllegalArgumentException e) {
+            log.warning(e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @DeleteMapping(path = "/deleteTag/{tagId}/from/{boardId}")
+    public ResponseEntity<Boolean> deleteTag(@PathVariable("boardId") long boardId, @RequestBody long tagId) {
+        try {
+            boardService.deleteTag(tagId, boardId);
+            return ResponseEntity.ok(true);
+        } catch (IllegalArgumentException e) {
+            log.warning(e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @GetMapping(path = "/getTags/{boardId}")
+    public ResponseEntity<Set<Tag>> getTags(@PathVariable("boardId") long id) {
+        try {
+            var tags = boardService.getTags(id);
+            return ResponseEntity.ok(tags);
         } catch (IllegalArgumentException e) {
             log.warning(e.getMessage());
             return ResponseEntity.badRequest().build();

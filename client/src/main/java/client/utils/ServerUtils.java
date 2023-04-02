@@ -301,4 +301,42 @@ public class ServerUtils {
             return Optional.empty();
         }
     }
+
+    public Optional<Tag> addTagToBoard(long boardId, Tag tag) {
+        try {
+            return Optional.of(post("api/board/addTag/" + boardId, tag, new GenericType<>() {
+            }));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+
+    public Optional<Boolean> deleteTagFromBoard(long boardId, long tagId) {
+        try {
+            return Optional.of(delete("api/board/deleteTag/" + tagId + "/from/" + boardId, new GenericType<>() {
+            }));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+
+    // important: this tag must exist in the board
+    public Optional<Tag> addTagToCard(long cardId, Tag tag) {
+        try {
+            return Optional.of(post("api/card/addTag/" + cardId, tag, new GenericType<>() {
+            }));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+
+    public Optional<Boolean> deleteTagFromCard(long cardId, long tagId) {
+        try {
+            return Optional.of(delete("api/card/deleteTag/" + tagId + "/from/" + cardId, new GenericType<>() {
+            }));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+
 }

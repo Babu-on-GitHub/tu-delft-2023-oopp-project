@@ -69,13 +69,25 @@ public class CardController {
         }
     }
 
-    @PostMapping(path = "/add/{id}")
+    @PostMapping(path = "/assignTag/{id}")
     public ResponseEntity<Tag> addTag(@RequestBody Tag tag, @PathVariable("id") long cardId) {
-        throw new UnsupportedOperationException();
+        try {
+            var saved = cardService.addTag(cardId, tag);
+            return ResponseEntity.ok(saved);
+        } catch (IllegalArgumentException e) {
+            log.warning(e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
     }
 
-    @DeleteMapping(path = "/delete/{tagId}/from/{cardId}")
+    @DeleteMapping(path = "/deleteTag/{tagId}/from/{cardId}")
     public ResponseEntity<Boolean> removeTag(@PathVariable("tagId") long tagId, @PathVariable("cardId") long cardId) {
-        throw new UnsupportedOperationException();
+        try {
+            cardService.removeTag(cardId, tagId);
+            return ResponseEntity.ok(true);
+        } catch (IllegalArgumentException e) {
+            log.warning(e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
     }
 }

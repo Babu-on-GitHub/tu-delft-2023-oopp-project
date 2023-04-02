@@ -2,12 +2,14 @@ package server.services;
 
 import commons.Board;
 import commons.CardList;
+import commons.Tag;
 import org.springframework.stereotype.Service;
 import server.api.BoardController;
 import server.database.BoardRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.logging.Logger;
 
 @Service
@@ -187,5 +189,53 @@ public class BoardService {
         board.sync();
         this.saveBoard(board);
         return title;
+    }
+
+    public Tag addTag(Tag tag, long boardId) {
+        if (tag == null) {
+            throw new IllegalArgumentException("Trying to add null tag");
+        }
+
+        try {
+            getBoardById(boardId);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Trying to add tag into non-existent board");
+        }
+
+        var board = this.getBoardById(boardId);
+        board.getTags().add(tag);
+
+        board.sync();
+        this.saveBoard(board);
+
+        return tag;
+    }
+
+    public void deleteTag(long tagId, long boardId) {
+        try {
+            getBoardById(boardId);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Trying to delete tag from non-existent board");
+        }
+
+        var board = this.getBoardById(boardId);
+
+        var tags = board.getTags();
+        tags.removeIf(tag -> tag.getId() == tagId);
+        board.setTags(tags);
+
+        board.sync();
+        this.saveBoard(board);
+    }
+
+    public Set<Tag> getTags(long boardId) {
+        try {
+            getBoardById(boardId);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Trying to get tags from non-existent board");
+        }
+
+        var board = this.getBoardById(boardId);
+        return board.getTags();
     }
 }

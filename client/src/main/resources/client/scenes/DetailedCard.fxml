@@ -5,7 +5,6 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
@@ -38,7 +37,7 @@
             </Text>
          </children>
       </StackPane>
-      <ScrollPane hbarPolicy="NEVER" prefWidth="300.0" VBox.vgrow="ALWAYS">
+      <ScrollPane hbarPolicy="NEVER" VBox.vgrow="ALWAYS">
          <content>
             <VBox fx:id="subtaskArea" prefHeight="170.0" />
          </content>
@@ -62,7 +61,7 @@
       </StackPane>
       <ScrollPane>
          <content>
-            <HBox fx:id="tagArea" alignment="CENTER_LEFT" minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0" prefWidth="590.0" />
+            <VBox prefHeight="170.0" />
          </content>
       </ScrollPane>
       <StackPane maxHeight="50.0" VBox.vgrow="ALWAYS">
