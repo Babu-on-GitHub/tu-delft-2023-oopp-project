@@ -38,11 +38,15 @@ public class TagController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         title.setText(tag.getTitle());
+
         status.setSelected(initiallyChecked);
+        statusHint(initiallyChecked);
     }
 
     @FXML
     void toggleStatus(ActionEvent event) throws IOException {
+        statusHint(status.isSelected());
+
         if (status.isSelected()) {
             parent.checkTag(tag);
         } else {
@@ -68,6 +72,14 @@ public class TagController implements Initializable {
 
     public DetailedCardController getParent() {
         return parent;
+    }
+
+    private void statusHint(boolean checked) {
+        if (checked) {
+            tagRoot.getStyleClass().remove("checked");
+        } else {
+            tagRoot.getStyleClass().add("checked");
+        }
     }
 }
 

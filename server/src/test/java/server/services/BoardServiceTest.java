@@ -246,4 +246,25 @@ public class BoardServiceTest {
         res = boardService.getTags(boardId);
         assertEquals(0, res.size());
     }
+
+    @Test
+    void updateTitleTest() {
+        var board = new Board();
+        board.setId(1L);
+        boardService.saveBoard(board);
+        var boardId = board.getId();
+
+        var list = new CardList();
+        list.setId(1L);
+        boardService.saveCardList(list, boardId);
+        var listId = list.getId();
+
+        var boards = boardService.findAllBoards();
+        assertEquals(1, boards.size());
+        assertEquals(1, boards.get(0).getLists().size());
+
+        boardService.updateTitle("test", boardId);
+        boards = boardService.findAllBoards();
+        assertEquals("test", boards.get(0).getTitle());
+    }
 }
