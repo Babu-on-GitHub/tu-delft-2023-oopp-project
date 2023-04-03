@@ -8,7 +8,6 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 
-import java.awt.event.ActionEvent;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -39,10 +38,20 @@ public class ServerChoiceCtrl implements Initializable {
 
     public void handleConnectButton() {
         String userInput = serverTextField.getText();
-        if (utils.chooseServer(userInput))
-            ctrl.showMainPage();
-        else
-            serverTextField.setStyle("-fx-border-color: red;");
+        String password = adminPassword.getText();
+        if(!admin){
+            if (utils.chooseServer(userInput))
+                ctrl.showMainPage();
+            else
+                serverTextField.setStyle("-fx-border-color: red;");
+        }else{
+            if (utils.chooseServer(userInput) && utils.connectAdmin(password))
+                ctrl.showMainPage();
+            else
+                serverTextField.setStyle("-fx-border-color: red;");
+                adminPassword.setStyle("-fx-border-color: red;");
+        }
+
     }
 
     public ServerUtils getUtils() {
