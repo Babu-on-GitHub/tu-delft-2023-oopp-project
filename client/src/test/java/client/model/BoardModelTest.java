@@ -2,9 +2,11 @@ package client.model;
 
 import client.scenes.MainPageCtrl;
 import client.utils.ServerUtils;
+import client.utils.TestServerUtils;
 import commons.Board;
 import commons.Card;
 import commons.CardList;
+import commons.Tag;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -116,5 +118,48 @@ public class BoardModelTest {
         assertEquals(0, children.get(0).getChildren().size());
         assertEquals(1, children.get(1).getChildren().size());
         assertEquals(cardModel1, children.get(1).getChildren().get(0));
+    }
+
+    @Test
+    void someTagTest() {
+        assertEquals(boardModel.getBoard().getTags().size(), 0);
+        boardModel.addTag(new Tag("testTag"));
+        // since no response
+        assertEquals(boardModel.getBoard().getTags().size(), 0);
+    }
+
+    @Test
+    void deleteTagTest() {
+        boardModel.addTag(new Tag("testTag"));
+        //since no response from server utils
+        assertEquals(boardModel.getBoard().getTags().size(), 0);
+        boardModel.deleteTag(new Tag("testTag"));
+        assertEquals(boardModel.getBoard().getTags().size(), 0);
+    }
+
+    @Test
+    void updateTitleTest() {
+        boardModel.updateTitle("testTitle");
+        assertEquals(boardModel.getBoard().getTitle(), "testTitle");
+    }
+
+    @Test
+    void forEveryCard() {
+        // does not crash -> test passed :)
+        boardModel.forEveryCard(cardModel -> {
+            cardModel.getCard().setTitle("testTitle");
+        });
+    }
+
+    @Test
+    void tryToUpdateChildrenNaivelyTest() {
+        // does not crash -> test passed :)
+        boardModel.tryToUpdateChildrenNaively();
+    }
+
+    @Test
+    void updateChildrenTest() {
+        // does not crash -> test passed :)
+        boardModel.updateChildren();
     }
 }

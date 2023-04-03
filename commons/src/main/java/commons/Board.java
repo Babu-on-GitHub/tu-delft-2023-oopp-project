@@ -49,6 +49,7 @@ public class Board implements Serializable {
         this.id = id;
         this.title = title;
         this.lists = lists;
+        tags = new HashSet<>();
     }
 
     /**
@@ -60,6 +61,7 @@ public class Board implements Serializable {
     public Board(String title, List<CardList> lists) {
         this.title = title;
         this.lists = lists;
+        tags = new HashSet<>();
     }
 
     /**
@@ -70,7 +72,7 @@ public class Board implements Serializable {
     public Board(String title) {
         this.title = title;
         lists = new ArrayList<>();
-
+        tags = new HashSet<>();
     }
 
     public Timestamp getTimestamp() {
