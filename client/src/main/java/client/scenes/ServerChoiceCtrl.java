@@ -47,9 +47,10 @@ public class ServerChoiceCtrl implements Initializable {
         }else{
             if (utils.chooseServer(userInput) && utils.connectAdmin(password))
                 ctrl.showAdminMainPage();
-            else
+            else{
                 serverTextField.setStyle("-fx-border-color: red;");
                 adminPassword.setStyle("-fx-border-color: red;");
+            }
         }
 
     }

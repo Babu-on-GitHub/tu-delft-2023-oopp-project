@@ -1,7 +1,6 @@
 package server.services;
 
 import org.springframework.stereotype.Service;
-import server.api.BoardController;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -16,7 +15,7 @@ public class PasswordValidationService {
     private String serverPassword;
     private String filePath = "src/main/resources/password.txt";
 
-    public PasswordValidationService(){
+    public PasswordValidationService() {
         File file = new File(filePath);
         Scanner scanner = null;
         try {
@@ -31,12 +30,12 @@ public class PasswordValidationService {
         this.serverPassword = serverPassword;
     }
 
-    public boolean validatePassword(String password){
-            if(serverPassword == null){
-                log.warning("Tried to validate password but saved password is null");
-                return false;
-            }
-            return serverPassword.equals(password);
+    public boolean validatePassword(String password) {
+        if (serverPassword == null) {
+            log.warning("Tried to validate password but saved password is null");
+            return false;
+        }
+        return serverPassword.equals(password);
     }
 
 }
