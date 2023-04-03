@@ -58,6 +58,7 @@ public class BoardsListItemCtrl implements Initializable {
         var board = utils.getBoardById(boardId);
         if(board.isEmpty()){
             boardName = "???";
+            boardItemButton.setStyle("-fx-text-fill: red;");
         }
         else{
             boardName = board.get().getTitle();
