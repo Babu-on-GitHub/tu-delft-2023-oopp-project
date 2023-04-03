@@ -1,7 +1,6 @@
 package client.scenes;
 
 import client.utils.ServerUtils;
-import client.utils.SocketUtils;
 import commons.Card;
 import commons.Tag;
 import commons.Task;

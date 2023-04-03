@@ -2,12 +2,9 @@ package server.services;
 
 import commons.Card;
 import commons.Tag;
-import commons.Task;
 import org.springframework.stereotype.Service;
 import server.database.CardRepository;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 

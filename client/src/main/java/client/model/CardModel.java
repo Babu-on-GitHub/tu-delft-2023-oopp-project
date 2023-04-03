@@ -6,7 +6,6 @@ import client.utils.ServerUtils;
 import commons.Card;
 import commons.Tag;
 
-import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 

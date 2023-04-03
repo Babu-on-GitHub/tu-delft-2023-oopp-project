@@ -207,7 +207,7 @@ public class BoardServiceTest {
 
         var board = new Board();
         board.setId(1L);
-        List<Tag> set = new ArrayList<>();
+        Set<Tag> set = new HashSet<>();
         set.add(tag);
         board.setTags(set);
 
@@ -217,7 +217,7 @@ public class BoardServiceTest {
         var res = boardService.getTags(boardId);
         assertEquals(1, res.size());
 
-        var tag2 = new Tag("test2");
+        var tag2 = new Tag(2, "test2");
         boardService.addTag(tag2, boardId);
         res = boardService.getTags(boardId);
         assertEquals(2, res.size());
@@ -232,7 +232,7 @@ public class BoardServiceTest {
 
         var board = new Board();
         board.setId(1L);
-        List<Tag> set = new ArrayList<>();
+        Set<Tag> set = new HashSet<>();
         set.add(tag);
         board.setTags(set);
 

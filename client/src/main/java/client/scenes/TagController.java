@@ -1,15 +1,12 @@
 package client.scenes;
 
-import client.model.CardModel;
-import client.utils.ServerUtils;
-import commons.Tag;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import commons.Tag;
 
 import java.awt.*;
 import java.io.IOException;

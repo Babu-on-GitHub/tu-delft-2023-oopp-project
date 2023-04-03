@@ -19,7 +19,6 @@ import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import commons.*;
 import org.glassfish.jersey.client.ClientConfig;

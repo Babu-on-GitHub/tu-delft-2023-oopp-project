@@ -76,7 +76,7 @@
             </Button>
          </children>
       </StackPane>
-      <ScrollPane>
+      <ScrollPane hbarPolicy="NEVER" prefWidth="300.0" style="-fx-fit-to-width: true;" styleClass="scroll" VBox.vgrow="ALWAYS">
          <content>
             <VBox prefHeight="170.0" fx:id="tagArea" />
          </content>

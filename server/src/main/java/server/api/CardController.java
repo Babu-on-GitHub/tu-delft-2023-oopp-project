@@ -50,7 +50,7 @@ public class CardController {
 
     @PutMapping(path = "/update/{id}")
     public ResponseEntity<Card> update(@RequestBody Card card, @PathVariable("id") long id) {
-        log.info("update(" + card + ", " + id + ")");
+        log.info("update(" + id + ")");
         try {
             var saved = cardService.update(card, id);
             return ResponseEntity.ok(saved);

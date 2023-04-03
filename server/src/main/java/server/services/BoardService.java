@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 import server.api.BoardController;
 import server.database.BoardRepository;
 
+import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -178,14 +178,14 @@ public class BoardService {
             throw new IllegalArgumentException("Title is null");
         }
         log.info("Updating board title: " + title);
-        Optional<Board> boardOptional;
+
+        Board board;
         try {
-            boardOptional = Optional.ofNullable(this.getBoardById(id));
+            board = this.getBoardById(id);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Trying to update non existing board");
         }
 
-        var board = boardOptional.get();
         board.setTitle(title);
         board.sync();
         this.saveBoard(board);
@@ -204,14 +204,20 @@ public class BoardService {
         }
 
         var board = this.getBoardById(boardId);
+
+        // if the tag with this ID already exists, throw an exception
+        if (board.getTags().stream().anyMatch(t -> t.getId() == tag.getId())) {
+            throw new IllegalArgumentException("Trying to add tag with duplicate ID");
+        }
+
         // save the tags
         var oldTags = Set.copyOf(board.getTags());
 
         board.getTags().add(tag);
-
         board.sync();
+
         var boardCopy = this.saveBoard(board);
-        var newTags = boardCopy.getTags();
+        var newTags = new HashSet<>(Set.copyOf(boardCopy.getTags()));
 
         // subtract old tags from new tags
         newTags.removeAll(oldTags);
