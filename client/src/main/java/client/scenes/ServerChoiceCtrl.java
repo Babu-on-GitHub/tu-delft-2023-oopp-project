@@ -43,16 +43,21 @@ public class ServerChoiceCtrl implements Initializable {
             if (utils.chooseServer(userInput))
                 ctrl.showMainPage();
             else
-                serverTextField.setStyle("-fx-border-color: red;");
+                serverTextField.getStyleClass().add("text-field-bad");
         }else{
             if (utils.chooseServer(userInput) && utils.connectAdmin(password))
                 ctrl.showAdminMainPage();
             else{
-                serverTextField.setStyle("-fx-border-color: red;");
-                adminPassword.setStyle("-fx-border-color: red;");
+                serverTextField.getStyleClass().add("text-field-bad");
+                adminPassword.getStyleClass().add("text-field-bad");
             }
         }
 
+    }
+
+    public void resetFieldsStyle(){
+        serverTextField.getStyleClass().remove("text-field-bad");
+        adminPassword.getStyleClass().remove("text-field-bad");
     }
 
     public ServerUtils getUtils() {
