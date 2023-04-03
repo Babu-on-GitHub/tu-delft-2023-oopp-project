@@ -2,11 +2,13 @@ package server.api;
 
 import commons.Board;
 import commons.CardList;
+import commons.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import server.services.BoardService;
 
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
 
 @RestController
@@ -110,6 +112,7 @@ public class BoardController {
 
     @PutMapping(path = "/update/{id}")
     public ResponseEntity<Board> update(@RequestBody Board board, @PathVariable("id") long id) {
+        log.info("Updating board: " + id);
         try {
             var saved = boardService.update(board, id);
             return ResponseEntity.ok(saved);
@@ -121,9 +124,46 @@ public class BoardController {
 
     @PutMapping(path = "/updateTitle/{id}")
     public ResponseEntity<String> updateTitle(@RequestBody String title, @PathVariable("id") long id) {
+        log.info("Updating title of board: " + id);
         try {
             var saved = boardService.updateTitle(title, id);
             return ResponseEntity.ok(saved);
+        } catch (IllegalArgumentException e) {
+            log.warning(e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PostMapping(path = "/addTag/{boardId}")
+    public ResponseEntity<Tag> addTag(@RequestBody Tag tag, @PathVariable("boardId") long boardId) {
+        log.info("Adding tag: " + tag.getId() + " to board: " + boardId);
+        try {
+            var saved = boardService.addTag(tag, boardId);
+            return ResponseEntity.ok(saved);
+        } catch (IllegalArgumentException e) {
+            log.warning(e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @DeleteMapping(path = "/deleteTag/{tagId}/from/{boardId}")
+    public ResponseEntity<Boolean> deleteTag(@PathVariable("boardId") long boardId, @PathVariable("tagId") long tagId) {
+        log.info("Deleting tag: " + tagId + " from board: " + boardId);
+        try {
+            boardService.deleteTag(tagId, boardId);
+            return ResponseEntity.ok(true);
+        } catch (IllegalArgumentException e) {
+            log.warning(e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @GetMapping(path = "/getTags/{boardId}")
+    public ResponseEntity<Set<Tag>> getTags(@PathVariable("boardId") long id) {
+        log.info("Getting tags from board: " + id);
+        try {
+            var tags = boardService.getTags(id);
+            return ResponseEntity.ok(tags);
         } catch (IllegalArgumentException e) {
             log.warning(e.getMessage());
             return ResponseEntity.badRequest().build();

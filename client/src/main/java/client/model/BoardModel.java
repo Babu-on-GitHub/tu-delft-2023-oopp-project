@@ -4,6 +4,7 @@ import client.scenes.MainPageCtrl;
 import client.utils.ServerUtils;
 import commons.Board;
 import commons.CardList;
+import commons.Tag;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -268,5 +269,28 @@ public class BoardModel {
                 controller.overwriteTitleNode(board.getTitle());
             }
         }
+    }
+
+    public Tag addTag(Tag tag) {
+        var res = utils.addTagToBoard(board.getId(), tag);
+        if (res.isEmpty()) {
+            log.warning("Adding tag to board failed");
+            return null;
+        }
+
+        board.getTags().add(res.get());
+
+        return res.get();
+    }
+
+    public void deleteTag(Tag tag) {
+        var res = utils.deleteTagFromBoard(board.getId(), tag.getId());
+        if (res.isEmpty()) {
+            log.warning("Deleting tag from board failed");
+            return;
+        }
+        board.getTags().remove(tag);
+
+        update();
     }
 }

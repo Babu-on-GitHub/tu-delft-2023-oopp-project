@@ -1,6 +1,7 @@
 package server.services;
 
 import commons.Card;
+import commons.Tag;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import server.repository.TestCardRepository;
@@ -85,5 +86,42 @@ public class CardServiceTest {
     void testEverythingWithNull() {
         assertThrows(IllegalArgumentException.class, () -> cardService.saveCard(null));
         assertThrows(IllegalArgumentException.class, () -> cardService.update(null, 5L));
+    }
+
+    @Test
+    void addTagTest() {
+        var card = new Card();
+        card.setId(1L);
+        cardService.saveCard(card);
+        var cardId = card.getId();
+        cardService.addTag(cardId, new Tag("tag"));
+        var foundCard = cardService.getCardById(cardId);
+        assertEquals(1, foundCard.getTags().size());
+    }
+
+    @Test
+    void removeTagTest() {
+        var card = new Card();
+        card.setId(1L);
+        cardService.saveCard(card);
+        var cardId = card.getId();
+        var tag = new Tag("test");
+        tag = cardService.addTag(cardId, tag);
+        var foundCard = cardService.getCardById(cardId);
+        assertEquals(1, foundCard.getTags().size());
+        cardService.removeTag(cardId, tag.getId());
+        foundCard = cardService.getCardById(cardId);
+        assertEquals(0, foundCard.getTags().size());
+    }
+
+    @Test
+    void updateTitleTest() {
+        var card = new Card();
+        card.setId(1L);
+        cardService.saveCard(card);
+        var cardId = card.getId();
+        cardService.updateTitle(cardId, "title");
+        var foundCard = cardService.getCardById(cardId);
+        assertEquals("title", foundCard.getTitle());
     }
 }

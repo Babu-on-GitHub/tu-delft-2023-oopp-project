@@ -19,7 +19,6 @@ import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import commons.*;
 import org.glassfish.jersey.client.ClientConfig;
@@ -318,25 +317,38 @@ public class ServerUtils {
             return Optional.empty();
         }
     }
-    public Optional<String> updateCardDescriptionById(long id, String description) {
+
+    public Optional<Tag> addTagToBoard(long boardId, Tag tag) {
         try {
-            return Optional.of(put("api/card/updateDescription/" + id, description, new GenericType<>() {
+            return Optional.of(post("api/board/addTag/" + boardId, tag, new GenericType<>() {
             }));
         } catch (Exception e) {
             return Optional.empty();
         }
     }
-    public Optional<List<Task>> updateCardSubtasksById(long id, List<Task> subtasks) {
+
+    public Optional<Boolean> deleteTagFromBoard(long boardId, long tagId) {
         try {
-            return Optional.of(put("api/card/updateSubtasks/" + id, subtasks, new GenericType<>() {
+            return Optional.of(delete("api/board/deleteTag/" + tagId + "/from/" + boardId, new GenericType<>() {
             }));
         } catch (Exception e) {
             return Optional.empty();
         }
     }
-    public Optional<String> updateCardTagsById(long id, Set<Tag> tags) {
+
+    // important: this tag must exist in the board
+    public Optional<Tag> addTagToCard(long cardId, Tag tag) {
         try {
-            return Optional.of(put("api/card/updateTags/" + id, tags, new GenericType<>() {
+            return Optional.of(post("api/card/addTag/" + cardId, tag, new GenericType<>() {
+            }));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+
+    public Optional<Boolean> deleteTagFromCard(long cardId, long tagId) {
+        try {
+            return Optional.of(delete("api/card/deleteTag/" + tagId + "/from/" + cardId, new GenericType<>() {
             }));
         } catch (Exception e) {
             return Optional.empty();

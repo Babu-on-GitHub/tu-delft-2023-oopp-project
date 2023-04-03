@@ -162,4 +162,16 @@ public class ListServiceTest {
         assertThrows(IllegalArgumentException.class, () -> listService.addCard(null, 0));
         assertThrows(IllegalArgumentException.class, () -> listService.update(null, 0));
     }
+
+    @Test
+    void updateTitleTest() {
+        var list = new CardList();
+        list.setId(1L);
+        listService.saveCardList(list);
+        var listId = list.getId();
+
+        listService.updateTitle(listId, "new title");
+        var lists = listService.getAllCardLists();
+        assertEquals("new title", lists.get(0).getTitle());
+    }
 }
