@@ -9,9 +9,9 @@
 <?import javafx.scene.text.Text?>
 
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <TextField alignment="CENTER" text="New Tag">
+      <TextField alignment="CENTER" text="New Tag" fx:id="title">
          <font>
             <Font size="22.0" />
          </font>
@@ -19,12 +19,12 @@
       <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Here will be color customization and maybe something else if we have enough time" textAlignment="CENTER" wrappingWidth="596.990234375" />
       <StackPane>
          <children>
-            <Button mnemonicParsing="false" text="Cancel" StackPane.alignment="BOTTOM_LEFT">
+            <Button mnemonicParsing="false" text="Cancel" onAction="#cancel" StackPane.alignment="BOTTOM_LEFT">
                <StackPane.margin>
                   <Insets bottom="5.0" left="5.0" />
                </StackPane.margin>
             </Button>
-            <Button mnemonicParsing="false" text="Save" StackPane.alignment="BOTTOM_RIGHT">
+            <Button mnemonicParsing="false" text="Save" onAction="#save" StackPane.alignment="BOTTOM_RIGHT">
                <StackPane.margin>
                   <Insets bottom="5.0" right="5.0" />
                </StackPane.margin>

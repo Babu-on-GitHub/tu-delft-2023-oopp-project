@@ -204,12 +204,26 @@ public class BoardService {
         }
 
         var board = this.getBoardById(boardId);
+        // save the tags
+        var oldTags = Set.copyOf(board.getTags());
+
         board.getTags().add(tag);
 
         board.sync();
-        this.saveBoard(board);
+        var boardCopy = this.saveBoard(board);
+        var newTags = boardCopy.getTags();
 
-        return tag;
+        System.out.println(newTags);
+        System.out.println(oldTags);
+        // subtract old tags from new tags
+        newTags.removeAll(oldTags);
+
+        // the remaining tag is the one we just added
+        if (newTags.size() != 1)
+            throw new IllegalArgumentException("Something went wrong while adding tag, most likely duplicate," +
+                    " there are " + newTags.size() + " tags in the list");
+
+        return newTags.iterator().next();
     }
 
     public void deleteTag(long tagId, long boardId) {
@@ -224,6 +238,11 @@ public class BoardService {
         var tags = board.getTags();
         tags.removeIf(tag -> tag.getId() == tagId);
         board.setTags(tags);
+
+        // also remove tag from all the cards, just in case JPA has issues
+        // functional programming is fun of course
+        board.getLists().forEach(list -> list.getCards().
+                forEach(card -> card.getTags().removeIf(tag -> tag.getId() == tagId)));
 
         board.sync();
         this.saveBoard(board);

@@ -41,6 +41,13 @@ public class WebSocketController {
         for (var board : synchronizationService.getBoardsToUpdate()) {
             var index = board.getId();
             log.info("Sending board: " + index + " to all subscribers");
+            log.info("There are " + board.getTags().size() + " tags");
+
+            // print all the tags
+            for (var tag : board.getTags()) {
+                log.info(tag.toString());
+            }
+
             simpMessagingTemplate.convertAndSend("/topic/board/" + index,
                     board);
         }

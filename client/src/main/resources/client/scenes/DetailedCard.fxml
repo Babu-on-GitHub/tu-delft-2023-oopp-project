@@ -62,7 +62,7 @@
                   <Insets left="10.0" />
                </StackPane.margin>
             </Text>
-            <Button mnemonicParsing="false" onAction="#addTag" prefHeight="28.0" prefWidth="108.0" text="Add tag" StackPane.alignment="CENTER_RIGHT">
+            <Button mnemonicParsing="false" onAction="#createTag" prefHeight="28.0" prefWidth="108.0" text="Add tag" StackPane.alignment="CENTER_RIGHT">
                <StackPane.margin>
                   <Insets right="10.0" />
                </StackPane.margin>
@@ -78,7 +78,7 @@
       </StackPane>
       <ScrollPane>
          <content>
-            <VBox prefHeight="170.0" />
+            <VBox prefHeight="170.0" fx:id="tagArea" />
          </content>
       </ScrollPane>
       <StackPane maxHeight="63.0" prefHeight="63.0" prefWidth="600.0" VBox.vgrow="ALWAYS">

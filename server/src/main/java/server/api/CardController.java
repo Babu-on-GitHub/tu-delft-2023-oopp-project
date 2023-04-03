@@ -28,6 +28,7 @@ public class CardController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Card> getById(@PathVariable("id") long id) {
+        log.info("getById(" + id + ")");
         try {
             var card = cardService.getCardById(id);
             return ResponseEntity.ok(card);
@@ -49,6 +50,7 @@ public class CardController {
 
     @PutMapping(path = "/update/{id}")
     public ResponseEntity<Card> update(@RequestBody Card card, @PathVariable("id") long id) {
+        log.info("update(" + card + ", " + id + ")");
         try {
             var saved = cardService.update(card, id);
             return ResponseEntity.ok(saved);
@@ -60,6 +62,7 @@ public class CardController {
 
     @PutMapping(path = "/updateTitle/{id}")
     public ResponseEntity<String> updateTitle(@RequestBody String title, @PathVariable("id") long id) {
+        log.info("updateTitle(" + title + ", " + id + ")");
         try {
             var saved = cardService.updateTitle(id, title);
             return ResponseEntity.ok(saved);
@@ -71,6 +74,7 @@ public class CardController {
 
     @PostMapping(path = "/assignTag/{id}")
     public ResponseEntity<Tag> addTag(@RequestBody Tag tag, @PathVariable("id") long cardId) {
+        log.info("addTag(" + tag + ", " + cardId + ")");
         try {
             var saved = cardService.addTag(cardId, tag);
             return ResponseEntity.ok(saved);
@@ -82,6 +86,7 @@ public class CardController {
 
     @DeleteMapping(path = "/deleteTag/{tagId}/from/{cardId}")
     public ResponseEntity<Boolean> removeTag(@PathVariable("tagId") long tagId, @PathVariable("cardId") long cardId) {
+        log.info("removeTag(" + tagId + ", " + cardId + ")");
         try {
             cardService.removeTag(cardId, tagId);
             return ResponseEntity.ok(true);

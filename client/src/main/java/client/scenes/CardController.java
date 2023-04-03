@@ -93,6 +93,7 @@ public class CardController implements Initializable {
             secondStage.initOwner(cardContainer.getScene().getWindow());
             secondStage.show();
 
+            getModel().getParent().getParent().update();
             detailedCardController.showDetails();
         }
     }

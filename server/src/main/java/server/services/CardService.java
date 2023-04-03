@@ -50,13 +50,25 @@ public class CardService {
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());
         }
-
         if (card.getId() != id) {
             throw new IllegalArgumentException("Ids are inconsistent in card update");
         }
 
+        System.out.println(card.getTags().size());
         card.sync();
-        return this.saveCard(card);
+        var ret = saveCard(card);
+        System.out.println(ret.getTags().size());
+
+        // print all the tags out there, in all the cards
+        for (Card c : cardRepository.findAll()) {
+            System.out.println("Card: " + c.getId());
+            for (Tag t : c.getTags()) {
+                System.out.println(t);
+            }
+        }
+        System.out.println("----");
+
+        return saveCard(ret);
     }
 
     public void removeCardById(long id) {
@@ -74,9 +86,7 @@ public class CardService {
 
     public Tag addTag(long id, Tag tag) {
         Card card = this.getCardById(id);
-        Set<Tag> tags = card.getTags();
-        tags.add(tag);
-        card.setTags(tags);
+        card.getTags().add(tag);
 
         card.sync();
         this.saveCard(card);

@@ -27,7 +27,8 @@ public class Card implements Serializable {
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @OrderColumn
     private List<Task> subTasks;
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+
+    @ManyToMany(cascade = {}, fetch = FetchType.EAGER)
     private Set<Tag> tags;
 
 

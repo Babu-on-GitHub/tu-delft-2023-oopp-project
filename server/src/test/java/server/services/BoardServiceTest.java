@@ -8,7 +8,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import server.repository.TestBoardRepository;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -205,7 +207,7 @@ public class BoardServiceTest {
 
         var board = new Board();
         board.setId(1L);
-        Set<Tag> set = new HashSet<>();
+        List<Tag> set = new ArrayList<>();
         set.add(tag);
         board.setTags(set);
 
@@ -230,7 +232,7 @@ public class BoardServiceTest {
 
         var board = new Board();
         board.setId(1L);
-        Set<Tag> set = new HashSet<>();
+        List<Tag> set = new ArrayList<>();
         set.add(tag);
         board.setTags(set);
 

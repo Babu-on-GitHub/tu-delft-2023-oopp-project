@@ -240,6 +240,7 @@ public class MainPageCtrl implements Initializable {
                     Platform.runLater(new Runnable() {
                         @Override
                         public void run() {
+                            System.out.println("RECEIVED: " + board.getTags().size());
                             refreshWithBoard(board);
                         }
                     });

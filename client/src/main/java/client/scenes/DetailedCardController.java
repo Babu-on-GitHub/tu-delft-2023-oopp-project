@@ -1,11 +1,14 @@
 package client.scenes;
 
 import client.utils.ServerUtils;
+import client.utils.SocketUtils;
 import commons.Card;
+import commons.Tag;
 import commons.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
@@ -24,7 +27,8 @@ public class DetailedCardController {
     private Card localCard;
     private ServerUtils server;
 
-    private List<SubtaskController> subtaskControllers;
+    private List<SubtaskController> subtaskControllers = new ArrayList<>();
+    private List<TagController> tagControllers = new ArrayList<>();
 
     @FXML
     private TextArea description;
@@ -39,11 +43,16 @@ public class DetailedCardController {
     private VBox subtaskArea;
 
     @FXML
-    private HBox tagArea;
+    private VBox tagArea;
 
     public DetailedCardController(CardController cardController, ServerUtils server) {
         this.parent = cardController;
         this.localCard = cardController.getModel().getCard();
+        System.out.println("size" + localCard.getTags().size());
+        var res = cardController.getModel().getUtils().getCardById(localCard.getId());
+        if (!res.isEmpty())
+            System.out.println("size(true)" + res.get().getTags().size());
+        System.out.println("size(pp)" + cardController.getModel().getCard().getTags());
         this.server = server;
 
         subtaskControllers = new ArrayList<>();
@@ -68,6 +77,17 @@ public class DetailedCardController {
         subtaskArea.getChildren().add(newSubtask);
     }
 
+    @FXML
+    void createTag(ActionEvent event) throws IOException {
+        // open new window, with layout of TagCreate.fxml
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("TagCreate.fxml"));
+        loader.setController(new TagCreateController(this));
+
+        Stage stage = new Stage();
+        stage.setScene(new Scene(loader.load()));
+        stage.show();
+    }
+
     /**
      * Removes a subtask from the card. This is called by the subtask controller when the user clicks the delete button.
      * @param controller the controller containing task to remove
@@ -76,10 +96,6 @@ public class DetailedCardController {
     void removeSubtaskWithController(SubtaskController controller) {
         subtaskControllers.remove(controller);
         subtaskArea.getChildren().remove(controller.getRoot());
-    }
-
-    @FXML
-    void addTag(ActionEvent event) throws IOException {
     }
 
     /**
@@ -110,7 +126,10 @@ public class DetailedCardController {
             subtasks.add(controller.getTask());
         localCard.setSubTasks(subtasks);
 
+
         parent.getModel().overwriteWith(localCard);
+
+        System.out.println(parent.getModel().getCard().getTags().size());
     }
 
     public void showDetails() throws IOException {
@@ -123,6 +142,7 @@ public class DetailedCardController {
     }
 
     private void showSubtasks() throws IOException {
+        subtaskArea.getChildren().clear();
         for (Task subtask : localCard.getSubTasks()) {
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("Subtask.fxml"));
@@ -133,6 +153,46 @@ public class DetailedCardController {
             subtaskArea.getChildren().add(loader.getRoot());
             subtaskControllers.add(controller);
         }
+    }
+
+    public void showTags() throws IOException {
+        System.out.println("--------------------");
+        tagArea.getChildren().clear();
+        tagControllers.clear();
+
+        System.out.println("size" + localCard.getTags().size());
+        System.out.println("size(pp)" + parent.getModel().getAllTags().size());
+
+        // we want to firstly show all the tags that are already on the card
+        for (Tag tag : localCard.getTags()) {
+            System.out.println("1 + " + tag);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Tag.fxml"));
+            var controller = new TagController(tag, this, true);
+            loader.setController(controller);
+            loader.load();
+
+            tagArea.getChildren().add(loader.getRoot());
+            tagControllers.add(controller);
+        }
+
+        // and then we want to show all the tags that are not on the card, but on the board
+        for (Tag tag : parent.getModel().getAllTags()) {
+            if (localCard.getTags().contains(tag)) continue;
+
+            System.out.println("2 + " + tag);
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Tag.fxml"));
+            var controller = new TagController(tag, this, false);
+            loader.setController(controller);
+            loader.load();
+
+            tagArea.getChildren().add(loader.getRoot());
+            tagControllers.add(controller);
+        }
+    }
+
+    public CardController getParent() {
+        return parent;
     }
 
     public void moveUp(SubtaskController controller) {
@@ -159,7 +219,30 @@ public class DetailedCardController {
             subtaskArea.getChildren().add(subtaskController.getRoot());
     }
 
-    private void showTags() {
-        //TODO load tags properly
+    public void checkTag(Tag tag) throws IOException {
+        if (localCard.getTags().contains(tag)) {
+            log.warning("Tag already checked");
+            return;
+        }
+
+        localCard.getTags().add(tag);
+        showTags();
+    }
+
+    public void uncheckTag(Tag tag) throws IOException {
+        if (!localCard.getTags().contains(tag)) {
+            log.warning("Tag already unchecked");
+        }
+
+        // remove tag with the same id as tag
+        localCard.getTags().removeIf(t -> t.getId() == tag.getId());
+
+        showTags();
+    }
+
+    public void deleteTagWithController(TagController controller) throws IOException {
+        tagControllers.remove(controller);
+        tagArea.getChildren().remove(controller.getRoot());
+        localCard.getTags().remove(controller.getTag());
     }
 }
