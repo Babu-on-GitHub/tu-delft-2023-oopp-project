@@ -49,12 +49,20 @@ public class MainCtrl {
     public void showMainPage() {
         primaryStage.setTitle("Board Overview");
         primaryStage.setScene(mainPage);
+        mainPageCtrl.setAdmin(false);
+        mainPageCtrl.refresh();
+    }
+
+    public void showAdminMainPage() {
+        primaryStage.setTitle("Board Overview");
+        primaryStage.setScene(mainPage);
+        mainPageCtrl.setAdmin(true);
         mainPageCtrl.refresh();
     }
 
     public void showServerChoice() {
         primaryStage.setTitle("Server choice");
         primaryStage.setScene(serverChoice);
-//        primaryStage.setScene(mainPage);
+        serverChoiceCtrl.resetFieldsStyle();
     }
 }

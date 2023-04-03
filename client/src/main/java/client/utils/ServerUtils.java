@@ -72,6 +72,22 @@ public class ServerUtils {
         }
     }
 
+    public boolean connectAdmin(String password) {
+        String response ;
+        try{
+            response = post("api/status/admin", password ,new GenericType<>() {});
+        }catch (Exception e){
+            return false;
+        }
+        if(response == null){
+            return false;
+        }
+        if (response.equals("Valid")) {
+            return true;
+        }
+        return false;
+    }
+
     public SocketUtils getSocketUtils() {
         return socketUtils;
     }

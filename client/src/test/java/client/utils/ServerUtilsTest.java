@@ -75,6 +75,12 @@ public class ServerUtilsTest {
     }
 
     @Test
+    void connectAdmin(){
+        serverUtils.connectAdmin("password");
+        assertTrue(serverUtils.wasMade("post","api/status/admin"));
+    }
+
+    @Test
     void insertCard() {
         CardList list = new CardList();
         list.setId(5);

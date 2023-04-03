@@ -49,7 +49,7 @@
                   </MenuItem>
                 <MenuItem mnemonicParsing="false">
                      <graphic>
-                        <Button mnemonicParsing="false" onAction="#leaveBoardButton" prefHeight="58.0" prefWidth="132.0" style="-fx-background-color: inherit;" text="Leave Board">
+                        <Button fx:id="leaveBoardButton" mnemonicParsing="false" onAction="#leaveBoardButton" prefHeight="58.0" prefWidth="132.0" style="-fx-background-color: inherit;" text="Leave Board">
                            <graphic>
                               <ImageView id="leaveBoardImage" fx:id="leaveBoardImage" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -84,7 +84,7 @@
                               <VBox fx:id="boardsListContainer" />
                            </content>
                         </ScrollPane>
-                        <Button graphicTextGap="0.0" layoutX="8.0" layoutY="600.0" mnemonicParsing="false" onAction="#addBoardButton" prefHeight="38.0" prefWidth="243.0" text="Add Board" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="8.0">
+                        <Button graphicTextGap="0.0" layoutX="14.0" layoutY="580.0" mnemonicParsing="false" onAction="#addBoardButton" prefHeight="38.0" prefWidth="193.0" text="Add Board" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0">
                            <graphic>
                               <ImageView id="addBoardImage" fx:id="addBoardImage" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -92,6 +92,15 @@
                                  </image>
                               </ImageView>
                            </graphic></Button>
+                        <Button fx:id="refreshBoardsListButton" layoutX="207.0" layoutY="579.0" mnemonicParsing="false" onAction="#showBoardsList" prefHeight="40.0" prefWidth="52.0" AnchorPane.bottomAnchor="13.0" AnchorPane.leftAnchor="207.0">
+                           <graphic>
+                              <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@/client/icons/PNG/refresh_FILL0_wght400_GRAD0_opsz48.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
                      </children>
                   </AnchorPane>
                   <ScrollPane fx:id="boardScrollPane" prefHeight="652.0" prefWidth="216.0" styleClass="list-view">
