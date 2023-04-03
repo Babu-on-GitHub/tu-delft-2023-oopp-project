@@ -213,8 +213,6 @@ public class BoardService {
         var boardCopy = this.saveBoard(board);
         var newTags = boardCopy.getTags();
 
-        System.out.println(newTags);
-        System.out.println(oldTags);
         // subtract old tags from new tags
         newTags.removeAll(oldTags);
 
@@ -239,7 +237,7 @@ public class BoardService {
         tags.removeIf(tag -> tag.getId() == tagId);
         board.setTags(tags);
 
-        // also remove tag from all the cards, just in case JPA has issues
+        // also remove tag from all the cards, just in case JPA has issues (btw, it does)
         // functional programming is fun of course
         board.getLists().forEach(list -> list.getCards().
                 forEach(card -> card.getTags().removeIf(tag -> tag.getId() == tagId)));

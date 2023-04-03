@@ -145,7 +145,7 @@ public class BoardModel {
 
     public void updateWithNewBoard(Board newBoard) {
         if (board.equals(newBoard)) {
-            log.info("Board is up to date in updateWithNewBoard" + board.getTags().size() + "/" + newBoard.getTags().size());
+            log.info("Board is up to date in updateWithNewBoard");
             return;
         }
 

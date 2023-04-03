@@ -78,7 +78,6 @@ public class CardModel {
 
         this.updateChildren();
         parent.updateChild(this.getCard());
-        System.out.println("After update" + card.getTags().size());
     }
 
     public void updateChildren() {
@@ -134,7 +133,6 @@ public class CardModel {
 
     public void overwriteWith(Card newCard) {
         card = newCard;
-        System.out.println("before:" + card.getTags().size());
 
         var res = utils.updateCardById(card.getId(), card);
         if (res.isEmpty()) {
@@ -143,11 +141,8 @@ public class CardModel {
         }
         card = res.get();
         controller.overwriteTitleNode(card.getTitle());
-        System.out.println("after:" + card.getTags().size());
 
         update();
-
-        System.out.println(card.getTags().size());
     }
 
     public Set<Tag> getAllTags() {

@@ -54,19 +54,8 @@ public class CardService {
             throw new IllegalArgumentException("Ids are inconsistent in card update");
         }
 
-        System.out.println(card.getTags().size());
         card.sync();
         var ret = saveCard(card);
-        System.out.println(ret.getTags().size());
-
-        // print all the tags out there, in all the cards
-        for (Card c : cardRepository.findAll()) {
-            System.out.println("Card: " + c.getId());
-            for (Tag t : c.getTags()) {
-                System.out.println(t);
-            }
-        }
-        System.out.println("----");
 
         return saveCard(ret);
     }

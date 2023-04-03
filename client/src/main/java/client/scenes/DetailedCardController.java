@@ -48,11 +48,6 @@ public class DetailedCardController {
     public DetailedCardController(CardController cardController, ServerUtils server) {
         this.parent = cardController;
         this.localCard = cardController.getModel().getCard();
-        System.out.println("size" + localCard.getTags().size());
-        var res = cardController.getModel().getUtils().getCardById(localCard.getId());
-        if (!res.isEmpty())
-            System.out.println("size(true)" + res.get().getTags().size());
-        System.out.println("size(pp)" + cardController.getModel().getCard().getTags());
         this.server = server;
 
         subtaskControllers = new ArrayList<>();
@@ -128,8 +123,6 @@ public class DetailedCardController {
 
 
         parent.getModel().overwriteWith(localCard);
-
-        System.out.println(parent.getModel().getCard().getTags().size());
     }
 
     public void showDetails() throws IOException {
@@ -156,16 +149,11 @@ public class DetailedCardController {
     }
 
     public void showTags() throws IOException {
-        System.out.println("--------------------");
         tagArea.getChildren().clear();
         tagControllers.clear();
 
-        System.out.println("size" + localCard.getTags().size());
-        System.out.println("size(pp)" + parent.getModel().getAllTags().size());
-
         // we want to firstly show all the tags that are already on the card
         for (Tag tag : localCard.getTags()) {
-            System.out.println("1 + " + tag);
             FXMLLoader loader = new FXMLLoader(getClass().getResource("Tag.fxml"));
             var controller = new TagController(tag, this, true);
             loader.setController(controller);
@@ -178,8 +166,6 @@ public class DetailedCardController {
         // and then we want to show all the tags that are not on the card, but on the board
         for (Tag tag : parent.getModel().getAllTags()) {
             if (localCard.getTags().contains(tag)) continue;
-
-            System.out.println("2 + " + tag);
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("Tag.fxml"));
             var controller = new TagController(tag, this, false);

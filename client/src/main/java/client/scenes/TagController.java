@@ -47,10 +47,8 @@ public class TagController implements Initializable {
     @FXML
     void toggleStatus(ActionEvent event) throws IOException {
         if (status.isSelected()) {
-            System.out.println("check");
             parent.checkTag(tag);
         } else {
-            System.out.println("uncheck");
             parent.uncheckTag(tag);
         }
     }
