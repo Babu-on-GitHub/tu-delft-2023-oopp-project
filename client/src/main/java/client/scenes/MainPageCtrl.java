@@ -15,6 +15,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -77,6 +78,14 @@ public class MainPageCtrl implements Initializable {
     @FXML
     private TextField boardIdLabel;
 
+    @FXML
+    private Button refreshBoardsListButton;
+
+    @FXML
+    private Button leaveBoardButton;
+
+    private boolean admin = false;
+
 
     @Inject
     public MainPageCtrl(ServerUtils server, MainCtrl mainCtrl, UserUtils userUtils) {
@@ -86,7 +95,7 @@ public class MainPageCtrl implements Initializable {
         boardList = new ArrayList<>();
     }
 
-    private void setImage(ImageView img, String path){
+    private void setImage(ImageView img, String path) {
         File file = new File(path);
         Image image = new Image(file.toURI().toString());
         img.setImage(image);
@@ -108,11 +117,15 @@ public class MainPageCtrl implements Initializable {
 
             showBoard();
 
-            boardList = userUtils.getUserBoardsIds();
+            if (admin) {
+                getAllBoardsIds();
+            } else {
+                boardList = userUtils.getUserBoardsIds();
+            }
 
             showBoardsList();
         } catch (Exception e) {
-            log.warning("Something wrong in main page init");
+            log.warning("Something wrong in main page init: " + e.getMessage());
         }
 
         boardName.focusedProperty().addListener((observable, oldValue, newValue) -> {
@@ -125,6 +138,22 @@ public class MainPageCtrl implements Initializable {
                 }
             }
         });
+
+        try {
+            server.getPollingUtils().longPoll("/status", (status) -> {
+                if (status.isEmpty() || !status.get().equals("OK")) {
+                    log.warning("Lost connection to the server");
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            mainCtrl.showServerChoice();
+                        }
+                    });
+                }
+            });
+        } catch (Exception e) {
+            log.warning("Polling failure");
+        }
     }
 
     public void updateTitleModel() {
@@ -136,7 +165,15 @@ public class MainPageCtrl implements Initializable {
     }
 
     public void refresh() {
-        if(!server.getSocketUtils().isConnected()){
+        if(admin){
+            refreshBoardsListButton.setVisible(true);
+            leaveBoardButton.setVisible(false);
+        }else{
+            refreshBoardsListButton.setVisible(false);
+            leaveBoardButton.setVisible(true);
+        }
+
+        if (!server.getSocketUtils().isConnected()) {
             server.getSocketUtils().connect();
         }
         boardList = userUtils.getUserBoardsIds();
@@ -145,7 +182,7 @@ public class MainPageCtrl implements Initializable {
         } catch (IOException e) {
             log.warning("Couldn't show boards on refresh");
         }
-        if(board==null){
+        if (board == null) {
             initializeBoard();
         }
         board.update();
@@ -167,7 +204,7 @@ public class MainPageCtrl implements Initializable {
 
     @FXML
     public void addListButton(ActionEvent event) throws IOException {
-        if(board.getBoard().getLists().isEmpty() && !cardListsContainer.getChildren().isEmpty()){
+        if (board.getBoard().getLists().isEmpty() && !cardListsContainer.getChildren().isEmpty()) {
             cardListsContainer.getChildren().clear();
         }
         ListModel model = new ListModel(new CardList("New List"), board, server);
@@ -208,7 +245,7 @@ public class MainPageCtrl implements Initializable {
         return board;
     }
 
-    public void showEmptyBoardPrompt(){
+    public void showEmptyBoardPrompt() {
         cardListsContainer.getChildren().clear();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("EmptyBoardPrompt.fxml"));
         Node prompt = null;
@@ -221,7 +258,7 @@ public class MainPageCtrl implements Initializable {
     }
 
     public void showBoard() {
-        if(board.getBoard().getLists().isEmpty() && !cardListsContainer.getChildren().isEmpty()){
+        if (board.getBoard().getLists().isEmpty() && !cardListsContainer.getChildren().isEmpty()) {
             cardListsContainer.getChildren().clear();
         }
         if (board == null) return;
@@ -230,20 +267,25 @@ public class MainPageCtrl implements Initializable {
         this.board.setController(this);
         this.board.update();
         this.board.updateChildren();
-        if(this.board.getChildren().isEmpty()){
+        if (this.board.getChildren().isEmpty()) {
             showEmptyBoardPrompt();
         }
-        server.getSocketUtils().registerForMessages(
-                "/topic/board/" + board.getBoard().getId(),
-                board.getBoard().getClass(),
-                (board) -> {
-                    Platform.runLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            refreshWithBoard(board);
-                        }
+        try {
+            server.getSocketUtils().registerForMessages(
+                    "/topic/board/" + board.getBoard().getId(),
+                    board.getBoard().getClass(),
+                    (board) -> {
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                refreshWithBoard(board);
+                            }
+                        });
                     });
-                });
+        } catch (Exception e) {
+            log.warning("Websockets failure");
+        }
+
     }
 
     public void setBoardOverview(long id) throws IOException {
@@ -287,7 +329,6 @@ public class MainPageCtrl implements Initializable {
     }
 
     public void getAllBoardsIds() {
-        //This will pe changed to fetch only the boards linked to the user
         var newBoardList = server.getBoards();
         if (newBoardList.isEmpty()) {
             log.warning("Something went wrong fetching the boards");
@@ -299,6 +340,9 @@ public class MainPageCtrl implements Initializable {
     //call getAllBoardsIds or userUtils.getUserBoardsIds() before this one
     public void showBoardsList() throws IOException {
         if (boardList == null) return;
+        if (admin) {
+            getAllBoardsIds();
+        }
         boardsListContainer.getChildren().clear();
         for (var newBoard : boardList) {
             addBoardListItemToList(newBoard);
@@ -318,16 +362,26 @@ public class MainPageCtrl implements Initializable {
 
     @FXML
     public void addBoardButton(ActionEvent event) throws IOException {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("NewBoardScene.fxml"));
-            fxmlLoader.setController(new AddBoardController(this));
-            Parent root = fxmlLoader.load();
-            Stage stage = new Stage();
-            stage.setScene(new Scene(root));
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.showAndWait();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (admin) {
+            var b = server.addBoard(new Board());
+            if(b.isEmpty()){
+                log.warning("Failed to add board");
+            }else{
+                setBoardOverview(b.get().getId());
+                showBoardsList();
+            }
+        } else {
+            try {
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("NewBoardScene.fxml"));
+                fxmlLoader.setController(new AddBoardController(this));
+                Parent root = fxmlLoader.load();
+                Stage stage = new Stage();
+                stage.setScene(new Scene(root));
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.showAndWait();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -357,8 +411,10 @@ public class MainPageCtrl implements Initializable {
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == buttonTypeOK) {
             server.deleteBoardById(board.getBoard().getId());
-            boardList.remove(board.getBoard().getId());
-            userUtils.updateUserBoards(boardList);
+            if(!admin){
+                boardList.remove(board.getBoard().getId());
+                userUtils.updateUserBoards(boardList);
+            }
             showBoardsList();
             initializeBoard();
             setBoardOverview(board.getBoard().getId());
@@ -386,13 +442,13 @@ public class MainPageCtrl implements Initializable {
     }
 
     @FXML
-    public void shareButton(ActionEvent event){
+    public void shareButton(ActionEvent event) {
         boolean visibility = boardIdPanel.isVisible();
         boardIdPanel.setVisible(!visibility);
         boardIdLabel.setText(Long.toString(board.getBoard().getId()));
     }
 
-    public void copyIdButton(ActionEvent event){
+    public void copyIdButton(ActionEvent event) {
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         StringSelection selection = new StringSelection(boardIdLabel.getText());
         clipboard.setContents(selection, selection);
@@ -401,5 +457,13 @@ public class MainPageCtrl implements Initializable {
 
     public ServerUtils getServer() {
         return server;
+    }
+
+    public void setAdmin(boolean b) {
+        admin = b;
+    }
+
+    public boolean getAdmin() {
+        return admin;
     }
 }

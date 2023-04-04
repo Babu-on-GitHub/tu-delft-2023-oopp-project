@@ -16,7 +16,7 @@ public class SocketUtilsTest {
 
     @Test
     void socketUtilsConnectDisconnectTest() {
-        socketUtils.setServer("localhost:8080");
+        socketUtils.setServer("localhost:8087");
         // connect should throw runtime exception
         assertThrows(RuntimeException.class, () -> socketUtils.connect());
 
@@ -26,7 +26,7 @@ public class SocketUtilsTest {
 
     @Test
     void socketUtilsRegisterTest() {
-        socketUtils.setServer("localhost:8080");
+        socketUtils.setServer("localhost:8087");
         // register should throw null pointer exception, since there is no session
         assertThrows(NullPointerException.class,
                 () -> socketUtils.registerForMessages("test", String.class, (s) -> {}));

@@ -1,7 +1,6 @@
 package client.model;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import client.scenes.CardController;
@@ -107,5 +106,17 @@ public class CardModelTest {
         cardModel.fosterBy(newParent, 0);
 
         assertEquals(newParent, cardModel.getParent());
+    }
+
+    @Test
+    public void testOverwriteWith() {
+        // stub
+    }
+
+    @Test
+    public void updateTitle() {
+        CardModel model = new CardModel(card, parent, serverUtils);
+        assertThrows(NullPointerException.class, () -> model.updateTitle("new title"));
+        verify(card, times(1)).setTitle("new title");
     }
 }

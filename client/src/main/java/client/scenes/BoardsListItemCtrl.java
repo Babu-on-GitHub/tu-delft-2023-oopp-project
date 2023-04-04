@@ -58,6 +58,9 @@ public class BoardsListItemCtrl implements Initializable {
         var board = utils.getBoardById(boardId);
         if(board.isEmpty()){
             boardName = "???";
+            //adding an entire style sheet here is redundant.
+            // If the style is applied the scene will be deleted on first interaction anyways
+            boardItemButton.setStyle("-fx-text-fill: red;");
         }
         else{
             boardName = board.get().getTitle();

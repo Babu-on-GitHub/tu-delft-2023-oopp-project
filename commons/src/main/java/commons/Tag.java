@@ -11,7 +11,7 @@ import java.io.Serializable;
 import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
 
 @Entity
-public class Tag implements Serializable {
+public class Tag implements Serializable, Cloneable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,6 +32,11 @@ public class Tag implements Serializable {
     public Tag(long id, String title) {
         this.id = id;
         this.title = title;
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 
     /**

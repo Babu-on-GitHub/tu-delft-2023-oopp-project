@@ -19,7 +19,6 @@ import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import commons.*;
 import org.glassfish.jersey.client.ClientConfig;
@@ -33,11 +32,16 @@ public class ServerUtils {
     private String SERVER;
 
     private SocketUtils socketUtils;
+    private LongPollingUtils longPollingUtils;
 
     public ServerUtils() {
         this.SERVER = "localhost:8080";
+
         this.socketUtils = new SocketUtils();
         socketUtils.setServer(SERVER);
+
+        this.longPollingUtils = new LongPollingUtils();
+        longPollingUtils.setServer(SERVER);
     }
 
     /**
@@ -53,7 +57,7 @@ public class ServerUtils {
 
         var oldServer = SERVER;
         SERVER = server;
-        socketUtils.setServer(SERVER);
+        updateServerForUtils();
 
         try {
             String response = get("api/status", new GenericType<>() {
@@ -62,14 +66,35 @@ public class ServerUtils {
                 return true;
             } else {
                 SERVER = oldServer;
-                socketUtils.setServer(oldServer);
+                updateServerForUtils();
                 return false;
             }
         } catch (Exception e) {
             SERVER = oldServer;
-            socketUtils.setServer(oldServer);
+            updateServerForUtils();
             return false;
         }
+    }
+
+    private void updateServerForUtils(){
+        socketUtils.setServer(SERVER);
+        longPollingUtils.setServer(SERVER);
+    }
+
+    public boolean connectAdmin(String password) {
+        String response ;
+        try{
+            response = post("api/status/admin", password ,new GenericType<>() {});
+        }catch (Exception e){
+            return false;
+        }
+        if(response == null){
+            return false;
+        }
+        if (response.equals("Valid")) {
+            return true;
+        }
+        return false;
     }
 
     public SocketUtils getSocketUtils() {
@@ -78,6 +103,14 @@ public class ServerUtils {
 
     public void setSocketUtils(SocketUtils socketUtils) {
         this.socketUtils = socketUtils;
+    }
+
+    public LongPollingUtils getPollingUtils() {
+        return longPollingUtils;
+    }
+
+    public void setPollingUtils(LongPollingUtils longPollingUtils) {
+        this.longPollingUtils = longPollingUtils;
     }
 
     protected  <T> T get(String endpoint, GenericType<T> type) {
@@ -302,25 +335,47 @@ public class ServerUtils {
             return Optional.empty();
         }
     }
-    public Optional<String> updateCardDescriptionById(long id, String description) {
+
+    public Optional<Tag> addTagToBoard(long boardId, Tag tag) {
         try {
-            return Optional.of(put("api/card/updateDescription/" + id, description, new GenericType<>() {
+            return Optional.of(post("api/board/addTag/" + boardId, tag, new GenericType<>() {
             }));
         } catch (Exception e) {
             return Optional.empty();
         }
     }
-    public Optional<List<Task>> updateCardSubtasksById(long id, List<Task> subtasks) {
+
+    public Optional<Tag> updateTag(long boardId, Tag tag) {
         try {
-            return Optional.of(put("api/card/updateSubtasks/" + id, subtasks, new GenericType<>() {
+            return Optional.of(put("api/board/updateTag/" + boardId, tag, new GenericType<>() {
             }));
         } catch (Exception e) {
             return Optional.empty();
         }
     }
-    public Optional<String> updateCardTagsById(long id, Set<Tag> tags) {
+
+    public Optional<Boolean> deleteTagFromBoard(long boardId, long tagId) {
         try {
-            return Optional.of(put("api/card/updateTags/" + id, tags, new GenericType<>() {
+            return Optional.of(delete("api/board/deleteTag/" + tagId + "/from/" + boardId, new GenericType<>() {
+            }));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+
+    // important: this tag must exist in the board
+    public Optional<Tag> addTagToCard(long cardId, Tag tag) {
+        try {
+            return Optional.of(post("api/card/addTag/" + cardId, tag, new GenericType<>() {
+            }));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+
+    public Optional<Boolean> deleteTagFromCard(long cardId, long tagId) {
+        try {
+            return Optional.of(delete("api/card/deleteTag/" + tagId + "/from/" + cardId, new GenericType<>() {
             }));
         } catch (Exception e) {
             return Optional.empty();

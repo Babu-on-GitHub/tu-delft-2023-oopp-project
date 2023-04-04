@@ -2,12 +2,9 @@ package server.services;
 
 import commons.Card;
 import commons.Tag;
-import commons.Task;
 import org.springframework.stereotype.Service;
 import server.database.CardRepository;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -50,13 +47,14 @@ public class CardService {
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());
         }
-
         if (card.getId() != id) {
             throw new IllegalArgumentException("Ids are inconsistent in card update");
         }
 
         card.sync();
-        return this.saveCard(card);
+        var ret = saveCard(card);
+
+        return saveCard(ret);
     }
 
     public void removeCardById(long id) {
@@ -71,28 +69,26 @@ public class CardService {
 
         return title;
     }
-    public String updateDescription(long id, String description) {
+
+    public Tag addTag(long id, Tag tag) {
         Card card = this.getCardById(id);
-        card.setDescription(description);
+        card.getTags().add(tag);
+
         card.sync();
         this.saveCard(card);
 
-        return description;
+        return tag;
     }
-    public List<Task> updateSubtasks(long id, List<Task> subtasks) {
+
+    public void removeTag(long id, long tagId) {
         Card card = this.getCardById(id);
-        card.setSubTasks((ArrayList<Task>) subtasks);
+
+        Set<Tag> tags = card.getTags();
+        tags.removeIf(tag -> tag.getId() == tagId);
+        card.setTags(tags);
+
         card.sync();
         this.saveCard(card);
-
-        return subtasks;
     }
-    public Set<Tag> updateTags(long id, Set<Tag> tags) {
-        Card card = this.getCardById(id);
-        card.setTags((HashSet<Tag>) tags);
-        card.sync();
-        this.saveCard(card);
 
-        return tags;
-    }
 }

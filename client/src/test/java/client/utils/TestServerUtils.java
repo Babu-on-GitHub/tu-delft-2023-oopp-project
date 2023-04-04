@@ -26,13 +26,13 @@ public class TestServerUtils extends ServerUtils {
     @Override
     protected  <T> T put(String endpoint, Object body, GenericType<T> type) {
         save("put", endpoint);
-        return null;
+        return (T)body;
     }
 
     @Override
-    protected  <T> T post(String endpoint, Object body, GenericType<T> type) {
+    protected <T> T post(String endpoint, Object body, GenericType<T> type) {
         save("post", endpoint);
-        return null;
+        return (T)body;
     }
 
     @Override

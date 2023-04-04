@@ -93,15 +93,7 @@ public class ListController implements Initializable {
 
     private int whichIndexToDropIn(double absolutePosition) {
         Bounds boundsInScene = cardListContainer.localToScene(cardListContainer.getBoundsInLocal());
-        var relativePosition = absolutePosition - boundsInScene.getMinY();
-
-        var scrollPosition = scrollPane.getVvalue() / (scrollPane.getVmax() - scrollPane.getVmin());
-        var scrollPaneHeight = scrollPane.getLayoutBounds().getMaxY() - scrollPane.getLayoutBounds().getMinY();
-        var scrollPaneContentHeight = cardListContainer.getLayoutBounds().getMaxY() -
-                cardListContainer.getLayoutBounds().getMinY();
-        var scrollHeight = scrollPosition * (scrollPaneContentHeight - scrollPaneHeight);
-
-        var position = relativePosition + scrollHeight;
+        var position = absolutePosition - boundsInScene.getMinY();
 
         double minDistance = Double.MAX_VALUE;
         int minIndex = 0;
