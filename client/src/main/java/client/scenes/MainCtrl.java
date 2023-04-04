@@ -50,6 +50,7 @@ public class MainCtrl {
         primaryStage.setTitle("Board Overview");
         primaryStage.setScene(mainPage);
         mainPageCtrl.setAdmin(false);
+        mainPageCtrl.initializeServerStuff();
         mainPageCtrl.refresh();
     }
 
