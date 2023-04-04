@@ -90,7 +90,15 @@ public class CardListControllerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(true, response.getBody());
     }
+    @Test
+    public void testRemoveListWithException() {
+        long invalidId = -10;
+        long invalidBoardId = -10;
+        when(cardListController.remove(invalidId,invalidBoardId)).thenThrow(new IllegalArgumentException());
 
+        ResponseEntity<Boolean> response = cardListController.remove(invalidId,invalidBoardId);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
 
     @Test
     public void testUpdate() {
@@ -112,5 +120,13 @@ public class CardListControllerTest {
         ResponseEntity<CardList> response = cardListController.update(cardList, id);
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
+    @Test
+    public void updateListTitleWithException() {
+        long invalidId = -10;
+        long invalidBoardId = -10;
+        when(cardListController.updateTitle("New",-1)).thenThrow(new IllegalArgumentException());
 
+        ResponseEntity<String> response = cardListController.updateTitle("New",-1);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
 }
