@@ -125,7 +125,7 @@ public class MainPageCtrl implements Initializable {
 
             showBoardsList();
         } catch (Exception e) {
-            log.warning("Something wrong in main page init");
+            log.warning("Something wrong in main page init: " + e.getMessage());
         }
 
         boardName.focusedProperty().addListener((observable, oldValue, newValue) -> {
@@ -138,6 +138,16 @@ public class MainPageCtrl implements Initializable {
                 }
             }
         });
+
+        try {
+            server.getPollingUtils().longPoll("/status", (status) -> {
+                if (status.isEmpty() || !status.get().equals("OK")) {
+                    log.warning("Lost connection to the server");
+                }
+            });
+        } catch (Exception e) {
+            log.warning("Polling failure");
+        }
     }
 
     public void updateTitleModel() {
@@ -254,17 +264,22 @@ public class MainPageCtrl implements Initializable {
         if (this.board.getChildren().isEmpty()) {
             showEmptyBoardPrompt();
         }
-        server.getSocketUtils().registerForMessages(
-                "/topic/board/" + board.getBoard().getId(),
-                board.getBoard().getClass(),
-                (board) -> {
-                    Platform.runLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            refreshWithBoard(board);
-                        }
+        try {
+            server.getSocketUtils().registerForMessages(
+                    "/topic/board/" + board.getBoard().getId(),
+                    board.getBoard().getClass(),
+                    (board) -> {
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                refreshWithBoard(board);
+                            }
+                        });
                     });
-                });
+        } catch (Exception e) {
+            log.warning("Websockets failure");
+        }
+
     }
 
     public void setBoardOverview(long id) throws IOException {
