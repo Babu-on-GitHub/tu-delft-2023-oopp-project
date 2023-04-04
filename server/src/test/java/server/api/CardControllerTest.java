@@ -107,33 +107,6 @@ public class CardControllerTest {
         assertTrue(actualMessage.contains(expectedMessage));
     }
 
-    @Test
-    public void testAddTagWithException() {
-        Card card = new Card(1, "Test Card","Description",null,null);
-        Tag tag = new Tag(1,"New Tag");
-        Exception exception = assertThrows(UnsupportedOperationException.class, () -> {
-            cardController.addTag(tag,1);
-        });
-
-        String expectedMessage = "The operation is not supported";
-        String actualMessage = exception.getMessage();
-
-        assertTrue(actualMessage.contains(expectedMessage));
-    }
-
-    @Test
-    public void testRemoveTagWithException() {
-        Card card = new Card(1, "Test Card","Description",null,null);
-        Tag tag = new Tag(1,"New Tag");
-        Exception exception = assertThrows(UnsupportedOperationException.class, () -> {
-            cardController.removeTag(tag.getId(),card.getId());
-        });
-
-        String expectedMessage = "The operation is not supported";
-        String actualMessage = exception.getMessage();
-
-        assertTrue(actualMessage.contains(expectedMessage));
-    }
 
     @Test
     public void testRemoveWithException() {

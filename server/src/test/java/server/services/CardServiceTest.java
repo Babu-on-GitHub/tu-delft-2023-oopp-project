@@ -1,6 +1,7 @@
 package server.services;
 
 import commons.Card;
+import commons.Tag;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import server.repository.TestCardRepository;
