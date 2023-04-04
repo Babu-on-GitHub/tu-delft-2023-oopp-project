@@ -116,6 +116,7 @@
    <bottom>
       <AnchorPane prefHeight="78.0" prefWidth="1000.0" style="-fx-border-color: #bababa; -fx-border-width: 2px;" BorderPane.alignment="CENTER">
          <children>
+            <MenuButton mnemonicParsing="false" onAction="#optionsShowCustomizationMenu" text="Customize" />
             <MenuButton contentDisplay="CENTER" graphicTextGap="0.0" layoutX="41.0" layoutY="11.0" mnemonicParsing="false" popupSide="TOP" prefHeight="60.0" prefWidth="68.0" styleClass="button" AnchorPane.bottomAnchor="11.0" AnchorPane.leftAnchor="41.0" AnchorPane.topAnchor="11.0">
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#optionsShowServerChoice">

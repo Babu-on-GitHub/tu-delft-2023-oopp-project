@@ -20,11 +20,9 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.*;
 
 import javafx.event.ActionEvent;
-import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -85,6 +83,12 @@ public class MainPageCtrl implements Initializable {
     private Button leaveBoardButton;
 
     private boolean admin = false;
+
+    @FXML
+    private AnchorPane boardTop;
+    @FXML
+    private AnchorPane boardBottom;
+
 
 
     @Inject
@@ -200,6 +204,48 @@ public class MainPageCtrl implements Initializable {
     @FXML
     public void optionsShowServerChoice(ActionEvent event) {
         mainCtrl.showServerChoice();
+    }
+
+    @FXML
+    public void optionsShowCustomizationMenu(ActionEvent event)  {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("CustomizationMenu.fxml"));
+            fxmlLoader.setController(new CustomizationMenuController(this));
+            Parent root = fxmlLoader.load();
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public HBox getCardsListContainer() {
+        return cardListsContainer;
+    }
+
+    public AnchorPane getBoardTop() {
+        return boardTop;
+    }
+
+    public AnchorPane getBoardBottom() {
+        return boardBottom;
+    }
+
+
+    public void setBoardColor(Color color) {
+        boardTop.setBackground(new Background(new BackgroundFill(convertColor(color), null, null)));
+        boardBottom.setBackground(new Background(new BackgroundFill(convertColor(color), null, null)));
+
+    }
+
+    public javafx.scene.paint.Color convertColor(Color color) {
+        return new javafx.scene.paint.Color(
+                color.getRed(),
+                color.getGreen(),
+                color.getBlue(),
+                color.getAlpha());
     }
 
     @FXML

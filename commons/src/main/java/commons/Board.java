@@ -12,6 +12,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+//import javafx.scene.paint.Color;
+
 import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
 
 @Entity
@@ -24,6 +26,9 @@ public class Board implements Serializable {
     private Timestamp timestamp;
 
     private String title = "Untitled board";
+
+    //private Color boardColor = Color.PINK;
+    //WE DON'T USE AWT COLOURS AT ALL!!!
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @OrderColumn
@@ -78,6 +83,17 @@ public class Board implements Serializable {
     public Timestamp getTimestamp() {
         return timestamp;
     }
+
+
+//    public void setBoardColor(Color boardColor) {
+//        this.boardColor = boardColor;
+//    }
+//
+//    public Color getBoardColor() {
+//        return boardColor;
+//    }
+
+    //store pair of colors for background and fonts
 
     public void sync() {
         this.timestamp = new Timestamp(System.currentTimeMillis());
@@ -164,6 +180,7 @@ public class Board implements Serializable {
                 .append(id, board.id)
                 .append(title, board.title)
                 .append(lists, board.lists)
+                //.append(boardColor, board.boardColor)
                 .isEquals();
     }
 
@@ -173,6 +190,7 @@ public class Board implements Serializable {
                 .append(id)
                 .append(title)
                 .append(lists)
+                //.append(boardColor)
                 .toHashCode();
     }
 

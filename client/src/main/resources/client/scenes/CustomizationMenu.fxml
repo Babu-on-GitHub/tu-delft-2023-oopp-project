@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ColorPicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="400.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <Label layoutX="155.0" layoutY="16.0" text="Customization">
+            <font>
+                <Font size="30.0" />
+            </font>
+        </Label>
+      <Pane layoutX="36.0" layoutY="74.0" prefHeight="200.0" prefWidth="200.0">
+         <children>
+            <Label layoutX="2.0" layoutY="11.0" prefHeight="27.0" prefWidth="118.0" text="Board Color">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Button fx:id="boardColorReset" layoutX="120.0" layoutY="12.0" mnemonicParsing="false" onAction="#resetBoardBackground" prefHeight="25.0" prefWidth="75.0" text="Reset" />
+            <Label layoutX="14.0" layoutY="61.0" prefHeight="27.0" prefWidth="110.0" text="Background">
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </Label>
+            <ColorPicker fx:id="boardBackground" layoutX="135.0" layoutY="62.0" onAction="#setBoardBackground" prefHeight="25.0" prefWidth="45.0" style="-fx-color-label-visible: false;" />
+            <Label layoutX="14.0" layoutY="110.0" prefHeight="27.0" prefWidth="110.0" text="Font">
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </Label>
+            <ColorPicker fx:id="boardFont" layoutX="135.0" layoutY="111.0" prefHeight="25.0" prefWidth="45.0" style="-fx-color-label-visible: false;" />
+            <Label layoutX="14.0" layoutY="158.0" prefHeight="27.0" prefWidth="110.0" text="Controls">
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </Label>
+            <ColorPicker fx:id="boardControls" layoutX="135.0" layoutY="159.0" prefHeight="25.0" prefWidth="45.0" style="-fx-color-label-visible: false;" />
+         </children>
+      </Pane>
+      <Pane layoutX="253.0" layoutY="74.0" prefHeight="200.0" prefWidth="200.0">
+         <children>
+            <Label layoutX="2.0" layoutY="11.0" prefHeight="27.0" prefWidth="118.0" text="List Color">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Button fx:id="listColorReset" layoutX="120.0" layoutY="12.0" mnemonicParsing="false" onAction="#resetListBackground" prefHeight="25.0" prefWidth="75.0" text="Reset" />
+            <Label layoutX="14.0" layoutY="61.0" prefHeight="27.0" prefWidth="110.0" text="Background">
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </Label>
+            <ColorPicker fx:id="listBackground" layoutX="135.0" layoutY="62.0" onAction="#setListBackground" prefHeight="25.0" prefWidth="45.0" style="-fx-color-label-visible: false;" />
+            <Label layoutX="14.0" layoutY="110.0" prefHeight="27.0" prefWidth="110.0" text="Font">
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </Label>
+            <ColorPicker fx:id="listFont" layoutX="135.0" layoutY="111.0" prefHeight="25.0" prefWidth="45.0" style="-fx-color-label-visible: false;" />
+            <Label layoutX="14.0" layoutY="158.0" prefHeight="27.0" prefWidth="110.0" text="Controls">
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </Label>
+            <ColorPicker fx:id="listControls" layoutX="135.0" layoutY="159.0" prefHeight="25.0" prefWidth="45.0" style="-fx-color-label-visible: false;" />
+         </children>
+      </Pane>
+      <Pane layoutX="36.0" layoutY="277.0" prefHeight="101.0" prefWidth="417.0">
+         <children>
+            <Label layoutY="1.0" prefHeight="27.0" prefWidth="110.0" text="Card Color">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Button fx:id="cardColorReset" layoutX="320.0" layoutY="2.0" mnemonicParsing="false" onAction="#resetCardBackground" prefHeight="0.0" prefWidth="83.0" text="Reset" />
+            <Label alignment="CENTER" layoutX="14.0" layoutY="39.0" prefHeight="27.0" prefWidth="110.0" text="Background">
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </Label>
+            <ColorPicker fx:id="cardBackground" layoutX="47.0" layoutY="65.0" onAction="#setCardBackground" prefHeight="25.0" prefWidth="45.0" style="-fx-color-label-visible: false;" />
+            <Label alignment="CENTER" layoutX="154.0" layoutY="39.0" prefHeight="27.0" prefWidth="110.0" text="Font">
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </Label>
+            <Label alignment="CENTER" layoutX="293.0" layoutY="38.0" prefHeight="27.0" prefWidth="110.0" text="Controls">
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </Label>
+            <ColorPicker fx:id="cardFont" layoutX="186.0" layoutY="65.0" prefHeight="25.0" prefWidth="45.0" style="-fx-color-label-visible: false;" />
+            <ColorPicker fx:id="cardControls" layoutX="326.0" layoutY="65.0" prefHeight="25.0" prefWidth="45.0" style="-fx-color-label-visible: false;" />
+         </children>
+      </Pane>
+    </children>
+</AnchorPane>

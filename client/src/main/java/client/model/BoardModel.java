@@ -6,6 +6,7 @@ import commons.Board;
 import commons.CardList;
 import commons.Tag;
 
+import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -126,6 +127,9 @@ public class BoardModel {
             log.info("Server-side board is newer, overwriting local");
             board = serverBoard;
             controller.overwriteTitleNode(board.getTitle());
+
+            //var color = board.getBoardColor();
+            //controller.setBoardColor(color);
 
             updateChildren();
 
