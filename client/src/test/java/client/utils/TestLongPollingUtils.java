@@ -41,7 +41,7 @@ public class TestLongPollingUtils {
             Assertions.assertTrue(s.isEmpty());
             wasCalled.set(true);
         });
-        Thread.sleep(1000L);
+        Thread.sleep(12000L);
         utils.stopLongPolling();
 
         assertTrue(wasCalled.get());

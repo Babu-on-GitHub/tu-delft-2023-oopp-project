@@ -119,7 +119,7 @@
    <bottom>
       <AnchorPane prefHeight="78.0" prefWidth="1000.0" style="-fx-border-color: #bababa; -fx-border-width: 2px;" BorderPane.alignment="CENTER">
          <children>
-            <MenuButton contentDisplay="CENTER" graphicTextGap="0.0" layoutX="41.0" layoutY="11.0" mnemonicParsing="false" popupSide="TOP" prefHeight="60.0" prefWidth="68.0" styleClass="button" AnchorPane.bottomAnchor="11.0" AnchorPane.leftAnchor="41.0" AnchorPane.topAnchor="11.0">
+            <MenuButton contentDisplay="CENTER" graphicTextGap="0.0" layoutX="45.0" layoutY="15.0" mnemonicParsing="false" popupSide="TOP" prefHeight="71.0" prefWidth="77.0" styleClass="button" AnchorPane.bottomAnchor="13.0" AnchorPane.leftAnchor="43.0" AnchorPane.topAnchor="13.0">
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#optionsShowServerChoice">
                      <graphic>
@@ -135,16 +135,16 @@
                      </graphic></MenuItem>
               </items>
                <graphic>
-                  <ImageView id="settingsImage" fx:id="settingsImage" fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView id="settingsImage" fx:id="settingsImage" fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@/client/icons/PNG/settings_FILL0_wght400_GRAD0_opsz48.png" />
                      </image>
                   </ImageView>
                </graphic>
             </MenuButton>
-            <Button contentDisplay="TOP" graphicTextGap="0.0" layoutX="162.0" layoutY="11.0" mnemonicParsing="false" onAction="#shareButton" prefHeight="60.0" prefWidth="90.0" text="Share" AnchorPane.bottomAnchor="11.0" AnchorPane.leftAnchor="162.0" AnchorPane.topAnchor="11.0">
+            <Button contentDisplay="TOP" graphicTextGap="0.0" layoutX="254.0" layoutY="13.0" mnemonicParsing="false" onAction="#shareButton" prefHeight="60.0" prefWidth="90.0" text="Share" AnchorPane.bottomAnchor="13.0" AnchorPane.leftAnchor="254.0" AnchorPane.topAnchor="13.0">
                <graphic>
-                  <ImageView id="shareImage" fx:id="shareImage" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView id="shareImage" fx:id="shareImage" fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@/client/icons/PNG/share_FILL0_wght400_GRAD0_opsz48.png" />
                      </image>
@@ -182,6 +182,15 @@
                   </TextField>
                </children>
             </AnchorPane>
+            <Button contentDisplay="TOP" graphicTextGap="0.0" layoutX="143.0" layoutY="15.0" mnemonicParsing="false" prefHeight="65.0" prefWidth="90.0" text="Tags" AnchorPane.bottomAnchor="13.0" AnchorPane.leftAnchor="143.0" AnchorPane.topAnchor="13.0">
+               <graphic>
+                  <ImageView id="shareImage" fx:id="shareImage1" fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@/client/icons/PNG/more_FILL0_wght400_GRAD0_opsz48.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
          </children>
       </AnchorPane>
    </bottom>
