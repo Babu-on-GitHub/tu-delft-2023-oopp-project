@@ -473,4 +473,9 @@ public class MainPageCtrl implements Initializable {
     public boolean getAdmin() {
         return admin;
     }
+
+    public void shutDown() {
+        server.getSocketUtils().disconnect();
+        server.getPollingUtils().stopLongPolling();
+    }
 }

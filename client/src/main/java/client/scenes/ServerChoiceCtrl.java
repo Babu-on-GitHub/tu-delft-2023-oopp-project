@@ -96,4 +96,7 @@ public class ServerChoiceCtrl implements Initializable {
         admin = false;
         adminPanel.setVisible(false);
     }
+
+    public void shutDown() {
+    }
 }

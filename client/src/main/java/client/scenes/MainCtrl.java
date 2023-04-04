@@ -66,4 +66,10 @@ public class MainCtrl {
         primaryStage.setScene(serverChoice);
         serverChoiceCtrl.resetFieldsStyle();
     }
+
+    public void shutDown(){
+        mainPageCtrl.shutDown();
+        serverChoiceCtrl.shutDown();
+    }
+
 }
