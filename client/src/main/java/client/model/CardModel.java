@@ -140,6 +140,8 @@ public class CardModel {
         }
         card = res.get();
         controller.overwriteTitleNode(card.getTitle());
+        controller.overwriteDescriptionNode(card.getDescription());
+        controller.updateSubTaskInfo();
 
         update();
     }
