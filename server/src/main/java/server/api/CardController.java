@@ -39,12 +39,12 @@ public class CardController {
 
     @PostMapping(path = "/add")
     public ResponseEntity<Card> add(@RequestBody Card card) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("The operation is not supported");
     }
 
     @DeleteMapping(path = "/delete/{id}")
     public ResponseEntity<Boolean> remove(@PathVariable("id") long id) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("The operation is not supported");
     }
 
     @PutMapping(path = "/update/{id}")
@@ -71,11 +71,11 @@ public class CardController {
 
     @PostMapping(path = "/add/{id}")
     public ResponseEntity<Tag> addTag(@RequestBody Tag tag, @PathVariable("id") long cardId) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("The operation is not supported");
     }
 
     @DeleteMapping(path = "/delete/{tagId}/from/{cardId}")
     public ResponseEntity<Boolean> removeTag(@PathVariable("tagId") long tagId, @PathVariable("cardId") long cardId) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("The operation is not supported");
     }
 }

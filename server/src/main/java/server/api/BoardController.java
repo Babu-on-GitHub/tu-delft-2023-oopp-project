@@ -59,8 +59,11 @@ public class BoardController {
         log.info("Adding list: " + list.getId() + " to board: " + boardId);
         try {
             var ret = boardService.saveCardList(list, boardId);
-            log.info("New list id: " + ret.getId());
-            return ResponseEntity.ok(ret);
+            if (ret!=null){
+                log.info("New list id: " + ret.getId());
+                return ResponseEntity.ok(ret);
+            }
+            return ResponseEntity.badRequest().build();
         } catch (IllegalArgumentException e) {
             log.warning(e.getMessage());
             return ResponseEntity.badRequest().build();
@@ -88,7 +91,7 @@ public class BoardController {
             return ResponseEntity.ok(true);
         } catch (IllegalArgumentException e) {
             log.warning(e.getMessage());
-            return ResponseEntity.ok(false);
+            return ResponseEntity.badRequest().build();
         }
     }
 
@@ -104,7 +107,7 @@ public class BoardController {
             return ResponseEntity.ok(true);
         } catch (IllegalArgumentException e) {
             log.warning(e.getMessage());
-            return ResponseEntity.ok(false);
+            return ResponseEntity.badRequest().build();
         }
     }
 

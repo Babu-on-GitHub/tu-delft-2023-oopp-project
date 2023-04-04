@@ -38,15 +38,14 @@ public class TagController {
 
     @PostMapping(path = "/add")
     public ResponseEntity<Tag> add(@RequestBody Tag tag) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("The operation is not supported");
     }
     @DeleteMapping(path = "/delete/{id}")
     public ResponseEntity<Boolean> remove(@PathVariable("id") long id) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("The operation is not supported");
     }
-
     @PutMapping(path = "/update/{id}")
     public ResponseEntity<Tag> update(@RequestBody Tag tag, @PathVariable("id") long id) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("The operation is not supported");
     }
 }
