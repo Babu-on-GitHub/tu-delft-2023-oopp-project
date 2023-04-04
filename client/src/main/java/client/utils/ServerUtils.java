@@ -32,11 +32,16 @@ public class ServerUtils {
     private String SERVER;
 
     private SocketUtils socketUtils;
+    private LongPollingUtils longPollingUtils;
 
     public ServerUtils() {
         this.SERVER = "localhost:8080";
+
         this.socketUtils = new SocketUtils();
         socketUtils.setServer(SERVER);
+
+        this.longPollingUtils = new LongPollingUtils();
+        longPollingUtils.setServer(SERVER);
     }
 
     /**
@@ -52,7 +57,7 @@ public class ServerUtils {
 
         var oldServer = SERVER;
         SERVER = server;
-        socketUtils.setServer(SERVER);
+        updateServerForUtils();
 
         try {
             String response = get("api/status", new GenericType<>() {
@@ -61,14 +66,19 @@ public class ServerUtils {
                 return true;
             } else {
                 SERVER = oldServer;
-                socketUtils.setServer(oldServer);
+                updateServerForUtils();
                 return false;
             }
         } catch (Exception e) {
             SERVER = oldServer;
-            socketUtils.setServer(oldServer);
+            updateServerForUtils();
             return false;
         }
+    }
+
+    private void updateServerForUtils(){
+        socketUtils.setServer(SERVER);
+        longPollingUtils.setServer(SERVER);
     }
 
     public boolean connectAdmin(String password) {
@@ -93,6 +103,14 @@ public class ServerUtils {
 
     public void setSocketUtils(SocketUtils socketUtils) {
         this.socketUtils = socketUtils;
+    }
+
+    public LongPollingUtils getPollingUtils() {
+        return longPollingUtils;
+    }
+
+    public void setPollingUtils(LongPollingUtils longPollingUtils) {
+        this.longPollingUtils = longPollingUtils;
     }
 
     protected  <T> T get(String endpoint, GenericType<T> type) {
