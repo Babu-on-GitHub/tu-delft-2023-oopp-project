@@ -143,6 +143,12 @@ public class MainPageCtrl implements Initializable {
             server.getPollingUtils().longPoll("/status", (status) -> {
                 if (status.isEmpty() || !status.get().equals("OK")) {
                     log.warning("Lost connection to the server");
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            mainCtrl.showServerChoice();
+                        }
+                    });
                 }
             });
         } catch (Exception e) {
