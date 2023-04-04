@@ -48,7 +48,11 @@ public class DetailedCardController {
         cardController.getModel().update(); // just in case
 
         this.parent = cardController;
-        this.localCard = cardController.getModel().getCard();
+        try {
+            this.localCard = (Card) cardController.getModel().getCard().clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
         this.server = server;
 
         subtaskControllers = new ArrayList<>();

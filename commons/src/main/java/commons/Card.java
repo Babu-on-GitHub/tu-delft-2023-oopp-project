@@ -6,16 +6,13 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.*;
 import java.sql.Timestamp;
-import java.util.List;
-import java.util.Set;
 
 import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
 
 @Entity
-public class Card implements Serializable {
+public class Card implements Serializable, Cloneable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,6 +41,19 @@ public class Card implements Serializable {
     public Card() {
         tags = new HashSet<>();
         subTasks = new ArrayList<>();
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        Card card = (Card) super.clone();
+        card.subTasks = new ArrayList<>();
+        card.tags = new HashSet<>();
+        for (Task task : subTasks)
+            card.subTasks.add((Task) task.clone());
+
+        for (Tag tag : tags)
+            card.tags.add((Tag) tag.clone());
+        return card;
     }
 
     /**

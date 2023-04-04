@@ -11,7 +11,7 @@ import java.io.Serializable;
 import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
 
 @Entity
-public class Task implements Serializable {
+public class Task implements Serializable, Cloneable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,6 +24,11 @@ public class Task implements Serializable {
     @SuppressWarnings("unused")
     public Task() {
 
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 
     /**
