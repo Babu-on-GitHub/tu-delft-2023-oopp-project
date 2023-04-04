@@ -2,11 +2,14 @@ package client.scenes;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import commons.Tag;
+import javafx.stage.Stage;
 
 import java.awt.*;
 import java.io.IOException;
@@ -60,6 +63,17 @@ public class TagController implements Initializable {
 
         // yes, I am so proud of myself for this traversal. (again)
         parent.getParent().getModel().getParent().getParent().deleteTag(tag);
+    }
+
+    @FXML
+    void editTag(ActionEvent event) throws IOException {
+        // open new window, with layout of TagCreate.fxml
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("TagCreate.fxml"));
+        loader.setController(new TagCreateController(parent, tag));
+
+        Stage stage = new Stage();
+        stage.setScene(new Scene(loader.load()));
+        stage.show();
     }
 
     public Tag getTag() {

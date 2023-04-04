@@ -280,6 +280,25 @@ public class BoardModel {
 
         board.getTags().add(res.get());
 
+        update();
+
+        return res.get();
+    }
+
+    public Tag updateTag(Tag tag) {
+        var res = utils.updateTag(board.getId(), tag);
+        if (res.isEmpty()) {
+            log.warning("Updating tag in board failed");
+            return null;
+        }
+
+        // remove the tag that has been updated
+        board.getTags().removeIf(t -> t.getId() == tag.getId());
+        // add the updated tag
+        board.getTags().add(res.get());
+
+        update();
+
         return res.get();
     }
 
