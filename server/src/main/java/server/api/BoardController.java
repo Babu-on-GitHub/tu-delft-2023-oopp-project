@@ -169,4 +169,16 @@ public class BoardController {
             return ResponseEntity.badRequest().build();
         }
     }
+
+    @PutMapping(path = "/updateTag/{boardId}")
+    public ResponseEntity<Tag> updateTag(@RequestBody Tag tag, @PathVariable("boardId") long boardId) {
+        log.info("Updating tag: " + tag.getId() + " from board: " + boardId);
+        try {
+            var saved = boardService.updateTag(boardId, tag);
+            return ResponseEntity.ok(saved);
+        } catch (IllegalArgumentException e) {
+            log.warning(e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
+    }
 }

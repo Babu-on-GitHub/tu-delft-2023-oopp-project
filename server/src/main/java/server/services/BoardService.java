@@ -262,4 +262,33 @@ public class BoardService {
         var board = this.getBoardById(boardId);
         return board.getTags();
     }
+
+    public Tag updateTag(long boardId, Tag tag) {
+        try {
+            getBoardById(boardId);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Trying to edit tag from non-existent board");
+        }
+
+        var board = this.getBoardById(boardId);
+
+        var tags = board.getTags();
+        // check if tag exists
+        if (tags.stream().noneMatch(t -> t.getId() == tag.getId())) {
+            throw new IllegalArgumentException("Trying to edit non-existent tag");
+        }
+
+        // set the new title for tag
+        var tagOpt = tags.stream().filter(t -> t.getId() == tag.getId()).findFirst();
+        if (tagOpt.isEmpty()) {
+            throw new IllegalArgumentException("Something went wrong while editing tag");
+        }
+
+        var tagToEdit = tagOpt.get();
+        tagToEdit.setTitle(tag.getTitle());
+
+        board.sync();
+        this.saveBoard(board);
+        return tag;
+    }
 }

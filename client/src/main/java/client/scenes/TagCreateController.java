@@ -2,14 +2,17 @@ package client.scenes;
 
 import commons.Tag;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
-public class TagCreateController {
+public class TagCreateController implements Initializable {
 
     private static Logger log = Logger.getLogger(TagCreateController.class.getName());
 
@@ -27,9 +30,14 @@ public class TagCreateController {
         return tag;
     }
 
-    public TagCreateController(DetailedCardController parent) {
+    public TagCreateController(DetailedCardController parent, Tag tag) {
         this.parent = parent;
-        this.tag = new Tag();
+        this.tag = tag;
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        title.setText(tag.getTitle());
     }
 
     @FXML
@@ -37,10 +45,17 @@ public class TagCreateController {
         tag.setTitle(title.getText());
 
         // yes, I am so proud of myself for this traversal. (again)
-        tag = parent.getParent().getModel().getParent().getParent().addTag(tag);
-        log.info("new tag id:" + tag.getId());
+        var root = parent.getParent().getModel().getParent().getParent();
+        if (tag.getId() == 0) {
+            tag = root.addTag(tag);
+            parent.checkTag(tag);
+        }
+        else {
+            tag = root.updateTag(tag);
+            parent.reloadTag(tag);
+        }
 
-        parent.checkTag(tag);
+        log.info("new tag id:" + tag.getId());
 
         cancel();
     }

@@ -267,4 +267,43 @@ public class BoardServiceTest {
         boards = boardService.findAllBoards();
         assertEquals("test", boards.get(0).getTitle());
     }
+
+    @Test
+    void updateTagTest() {
+        Tag tag = new Tag(32, "test");
+
+        var board = new Board();
+        board.setId(1L);
+        Set<Tag> set = new HashSet<>();
+        set.add(tag);
+        board.setTags(set);
+
+        boardService.saveBoard(board);
+        var boardId = board.getId();
+
+        var res = boardService.getTags(boardId);
+        assertEquals(1, res.size());
+
+        boardService.updateTag(boardId, new Tag(32, "test2"));
+        res = boardService.getTags(boardId);
+        assertEquals(1, res.size());
+        assertEquals("test2", res.iterator().next().getTitle());
+    }
+
+    @Test
+    void updateNonExistentTagTest() {
+        Tag tag = new Tag(32, "test");
+
+        var board = new Board();
+        board.setId(1L);
+        Set<Tag> set = new HashSet<>();
+        set.add(tag);
+        board.setTags(set);
+
+        boardService.saveBoard(board);
+        var boardId = board.getId();
+
+        assertThrows(IllegalArgumentException.class, () ->
+                boardService.updateTag(boardId, new Tag(33, "test2")));
+    }
 }

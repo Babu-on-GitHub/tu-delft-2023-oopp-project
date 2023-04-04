@@ -26,6 +26,11 @@
             <Insets left="10.0" right="10.0" />
          </padding>
       </StackPane>
+      <Button fx:id="editButton" mnemonicParsing="false" onAction="#editTag" text="Edit">
+         <HBox.margin>
+            <Insets right="15.0" />
+         </HBox.margin>
+      </Button>
       <Button fx:id="deleteButton" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#deleteTag" text="Delete">
          <HBox.margin>
             <Insets right="25.0" />

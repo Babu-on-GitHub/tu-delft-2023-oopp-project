@@ -345,6 +345,15 @@ public class ServerUtils {
         }
     }
 
+    public Optional<Tag> updateTag(long boardId, Tag tag) {
+        try {
+            return Optional.of(put("api/board/updateTag/" + boardId, tag, new GenericType<>() {
+            }));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+
     public Optional<Boolean> deleteTagFromBoard(long boardId, long tagId) {
         try {
             return Optional.of(delete("api/board/deleteTag/" + tagId + "/from/" + boardId, new GenericType<>() {

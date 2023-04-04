@@ -45,6 +45,8 @@ public class DetailedCardController {
     private VBox tagArea;
 
     public DetailedCardController(CardController cardController, ServerUtils server) {
+        cardController.getModel().update(); // just in case
+
         this.parent = cardController;
         this.localCard = cardController.getModel().getCard();
         this.server = server;
@@ -75,7 +77,7 @@ public class DetailedCardController {
     void createTag(ActionEvent event) throws IOException {
         // open new window, with layout of TagCreate.fxml
         FXMLLoader loader = new FXMLLoader(getClass().getResource("TagCreate.fxml"));
-        loader.setController(new TagCreateController(this));
+        loader.setController(new TagCreateController(this, new Tag()));
 
         Stage stage = new Stage();
         stage.setScene(new Scene(loader.load()));
@@ -145,6 +147,15 @@ public class DetailedCardController {
             subtaskArea.getChildren().add(loader.getRoot());
             subtaskControllers.add(controller);
         }
+    }
+
+    public void reloadTag(Tag tag) throws IOException {
+        // replace the tag in localCard with the new one
+        // remove the tag with id of tag
+        localCard.getTags().removeIf(t -> t.getId() == tag.getId());
+        localCard.getTags().add(tag);
+
+        showTags();
     }
 
     public void showTags() throws IOException {
