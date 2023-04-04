@@ -3,6 +3,7 @@ package client.utils;
 import commons.Board;
 import commons.Card;
 import commons.CardList;
+import commons.Tag;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -179,4 +180,43 @@ public class ServerUtilsTest {
                 "/at/" + position + "/located/" + boardId));
     }
 
+    @Test
+    void updateTagTest() {
+        long boardId = 1;
+        Tag tag = new Tag();
+        serverUtils.updateTag(boardId, tag);
+        assertTrue(serverUtils.wasMade("put", "api/board/updateTag/" + boardId));
+    }
+
+    @Test
+    void addTagTest() {
+        long boardId = 1;
+        Tag tag = new Tag();
+        serverUtils.addTagToBoard(boardId, tag);
+        assertTrue(serverUtils.wasMade("post", "api/board/addTag/" + boardId));
+    }
+
+    @Test
+    void deleteTagTest() {
+        long boardId = 1;
+        long tagId = 2;
+        Tag tag = new Tag(tagId, "banan");
+        serverUtils.deleteTagFromBoard(boardId, tag.getId());
+        assertTrue(serverUtils.wasMade("delete", "api/board/deleteTag/" + tagId + "/from/" + boardId));
+    }
+
+    @Test
+    void addTagToCardTest() {
+        long cardId = 3;
+        serverUtils.addTagToCard(cardId, new Tag());
+        assertTrue(serverUtils.wasMade("post", "api/card/addTag/" + cardId));
+    }
+
+    @Test
+    void deleteTagFromCardTest() {
+        long cardId = 3;
+        long tagId = 2;
+        serverUtils.deleteTagFromCard(cardId, tagId);
+        assertTrue(serverUtils.wasMade("delete", "api/card/deleteTag/" + tagId + "/from/" + cardId));
+    }
 }

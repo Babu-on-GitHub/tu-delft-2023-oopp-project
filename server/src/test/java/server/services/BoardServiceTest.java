@@ -289,4 +289,21 @@ public class BoardServiceTest {
         assertEquals(1, res.size());
         assertEquals("test2", res.iterator().next().getTitle());
     }
+
+    @Test
+    void updateNonExistentTagTest() {
+        Tag tag = new Tag(32, "test");
+
+        var board = new Board();
+        board.setId(1L);
+        Set<Tag> set = new HashSet<>();
+        set.add(tag);
+        board.setTags(set);
+
+        boardService.saveBoard(board);
+        var boardId = board.getId();
+
+        assertThrows(IllegalArgumentException.class, () ->
+                boardService.updateTag(boardId, new Tag(33, "test2")));
+    }
 }
