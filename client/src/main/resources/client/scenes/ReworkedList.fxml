@@ -16,7 +16,7 @@
          <children>
             <TextField fx:id="listTitle" alignment="CENTER" prefHeight="63.0" prefWidth="274.0" style="-fx-background-color: inherit;" text="LIST" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="0.0">
                <font>
-                  <Font size="18.0" />
+                  <Font size="22.0" />
                </font>
             </TextField>
          </children>
@@ -25,17 +25,17 @@
    <bottom>
       <AnchorPane prefHeight="100.0" prefWidth="298.0" styleClass="list-control-pane" BorderPane.alignment="CENTER">
          <children>
-            <Button contentDisplay="TOP" graphicTextGap="0.0" layoutX="199.0" layoutY="16.0" mnemonicParsing="false" onAction="#addCardButton" prefHeight="70.0" prefWidth="87.0" style="-fx-background-color: inherit;" text="Add Card" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="20.0">
+            <Button contentDisplay="TOP" graphicTextGap="0.0" layoutX="199.0" layoutY="16.0" mnemonicParsing="false" onAction="#addCardButton" prefHeight="70.0" prefWidth="87.0" style="-fx-background-color: inherit;" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="20.0">
                <graphic>
-                  <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../icons/PNG/note_add_FILL0_wght400_GRAD0_opsz48.png" />
                      </image>
                   </ImageView>
                </graphic></Button>
-            <Button contentDisplay="TOP" graphicTextGap="0.0" layoutX="14.0" layoutY="9.0" mnemonicParsing="false" onAction="#deleteListButton" prefHeight="70.0" prefWidth="79.0" style="-fx-background-color: inherit;" text="Delete List" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="20.0">
+            <Button contentDisplay="TOP" graphicTextGap="0.0" layoutX="14.0" layoutY="9.0" mnemonicParsing="false" onAction="#deleteListButton" prefHeight="70.0" prefWidth="79.0" style="-fx-background-color: inherit;" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="20.0">
                <graphic>
-                  <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../icons/PNG/delete_FILL0_wght400_GRAD0_opsz48.png" />
                      </image>

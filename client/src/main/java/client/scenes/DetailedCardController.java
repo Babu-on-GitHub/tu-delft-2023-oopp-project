@@ -126,7 +126,6 @@ public class DetailedCardController {
             subtasks.add(controller.getTask());
         localCard.setSubTasks(subtasks);
 
-
         parent.getModel().overwriteWith(localCard);
     }
 

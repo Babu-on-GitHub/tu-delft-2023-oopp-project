@@ -19,7 +19,7 @@
             <Insets left="15.0" />
          </HBox.margin>
       </CheckBox>
-      <TextField fx:id="title" prefHeight="20.0" HBox.hgrow="ALWAYS">
+      <TextField fx:id="title" prefHeight="20.0" style="-fx-background-color: inherit;" HBox.hgrow="ALWAYS">
          <padding>
             <Insets left="15.0" />
          </padding>
