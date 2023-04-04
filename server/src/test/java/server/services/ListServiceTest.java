@@ -6,8 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import server.repository.TestCardListRepository;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ListServiceTest {
 
@@ -157,6 +156,18 @@ public class ListServiceTest {
         assertEquals(0, lists.get(0).getCards().size());
     }
 
+
+    @Test
+    public void updateBoardTitleWithException() {
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            listService.updateTitle(1, "new");
+        });
+
+        String expectedMessage = "Trying to get non-existing card list";
+        String actualMessage = exception.getMessage();
+
+        assertEquals(expectedMessage,actualMessage);
+    }
     @Test
     void testEverythingWithNull() {
         assertThrows(IllegalArgumentException.class, () -> listService.addCard(null, 0));

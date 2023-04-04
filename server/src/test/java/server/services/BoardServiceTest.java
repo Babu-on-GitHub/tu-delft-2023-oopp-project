@@ -5,10 +5,12 @@ import commons.Card;
 import commons.CardList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import server.repository.TestBoardRepository;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 public class BoardServiceTest {
 
@@ -152,7 +154,35 @@ public class BoardServiceTest {
         boards = boardService.findAllBoards();
         assertEquals("test", boards.get(0).getTitle());
     }
+    @Test
+    public void updateBoardWithException() {
+        Board board = new Board(1, "New board", null);
 
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            boardService.update(board,1);
+        });
+
+        String expectedMessage = "Trying to update non existing board " +
+                "Ids are not coherent in board update " +
+                "Something went wrong while updating board";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(expectedMessage.contains(actualMessage));
+    }
+
+    @Test
+    public void updateBoardTitleWithException() {
+        Board board = new Board(1, "New board", null);
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            boardService.updateTitle("new",1);
+        });
+
+        String expectedMessage = "Trying to update non existing board ";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(expectedMessage.contains(actualMessage));
+    }
     @Test
     void testEverythingForNull() {
         assertThrows(IllegalArgumentException.class, () -> boardService.saveBoard(null));
