@@ -31,9 +31,11 @@ public class LongPollingUtils {
         if (server.startsWith("http://"))
             return "http://" + server.substring(7) + "/long";
         if (server.startsWith("https://"))
-            return "https://" + server.substring(8) + "/long";
+            return "http://" + server.substring(8) + "/long";
         return "http://" + server + "/long";
     }
+
+    private ScheduledExecutorService executor;
 
     public void longPoll(String dest, Consumer<Optional<String>> callback) {
         RestTemplate restTemplate = new RestTemplateBuilder()
@@ -41,7 +43,12 @@ public class LongPollingUtils {
                 .setReadTimeout(Duration.ofSeconds(10L))
                 .build();
 
-        Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> {
+        if (executor != null)
+            executor.shutdownNow();
+
+        executor = Executors.newSingleThreadScheduledExecutor();
+
+        executor.scheduleAtFixedRate(() -> {
             try {
                 String res = restTemplate.exchange(server + dest, HttpMethod.GET, null,
                         String.class).getBody();
@@ -50,5 +57,10 @@ public class LongPollingUtils {
                 callback.accept(Optional.empty());
             }
         }, 0, 5, java.util.concurrent.TimeUnit.SECONDS);
+    }
+
+    public void stopLongPolling() {
+        if (executor != null)
+            executor.shutdownNow();
     }
 }
