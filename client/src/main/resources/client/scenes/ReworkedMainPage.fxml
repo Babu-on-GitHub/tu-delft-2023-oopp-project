@@ -17,7 +17,7 @@
 
 <BorderPane id="scene" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" styleClass="border-pane" stylesheets="@/client/css/mainPage.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.MainPageCtrl">
    <top>
-      <AnchorPane prefHeight="68.0" prefWidth="1001.0" style="-fx-border-color: #bababa; -fx-border-width: 2px;" BorderPane.alignment="CENTER">
+      <AnchorPane fx:id="boardTop" prefHeight="68.0" prefWidth="1001.0" style="-fx-border-color: #bababa; -fx-border-width: 2px;" BorderPane.alignment="CENTER">
          <children>
             <TextField fx:id="boardName" alignment="CENTER" layoutX="206.0" layoutY="4.0" prefHeight="68.0" prefWidth="638.0" style="-fx-background-color: inherit;" text="BOARD NAME" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="200.0" AnchorPane.topAnchor="0.0">
                <font>
@@ -114,12 +114,24 @@
       </AnchorPane>
    </center>
    <bottom>
-      <AnchorPane prefHeight="78.0" prefWidth="1000.0" style="-fx-border-color: #bababa; -fx-border-width: 2px;" BorderPane.alignment="CENTER">
+      <AnchorPane fx:id="boardBottom" prefHeight="78.0" prefWidth="1000.0" style="-fx-border-color: #bababa; -fx-border-width: 2px;" BorderPane.alignment="CENTER">
          <children>
-            <MenuButton mnemonicParsing="false" onAction="#optionsShowCustomizationMenu" text="Customize" />
             <MenuButton contentDisplay="CENTER" graphicTextGap="0.0" layoutX="41.0" layoutY="11.0" mnemonicParsing="false" popupSide="TOP" prefHeight="60.0" prefWidth="68.0" styleClass="button" AnchorPane.bottomAnchor="11.0" AnchorPane.leftAnchor="41.0" AnchorPane.topAnchor="11.0">
               <items>
-                <MenuItem mnemonicParsing="false" onAction="#optionsShowServerChoice">
+                 <MenuItem mnemonicParsing="false">
+                    <graphic>
+                       <Button mnemonicParsing="false" onAction="#optionsShowCustomizationMenu" prefHeight="50.0" prefWidth="132.0" style="-fx-background-color: inherit;" text="Customize">
+                          <graphic>
+                             <ImageView id="changeServerImage" fx:id="customizeImage" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                <image>
+                                   <Image url="@/client/icons/PNG/dns_FILL0_wght0_GRAD0_opszNaN.png" />
+                                </image>
+                             </ImageView>
+                          </graphic>
+                       </Button>
+                    </graphic>
+                 </MenuItem>
+                 <MenuItem mnemonicParsing="false" onAction="#optionsShowServerChoice">
                      <graphic>
                         <Button mnemonicParsing="false" onAction="#optionsShowServerChoice" prefHeight="50.0" prefWidth="132.0" style="-fx-background-color: inherit;" text="Change Server">
                            <graphic>

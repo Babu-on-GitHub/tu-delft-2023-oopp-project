@@ -1,6 +1,7 @@
 package client.scenes;
 
 import client.model.BoardModel;
+import client.model.CardModel;
 import client.model.ListModel;
 import client.utils.ServerUtils;
 import client.utils.UserUtils;
@@ -21,8 +22,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 
 import javafx.event.ActionEvent;
+import javafx.scene.paint.Paint;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -88,6 +91,9 @@ public class MainPageCtrl implements Initializable {
     private AnchorPane boardTop;
     @FXML
     private AnchorPane boardBottom;
+
+    private Stage customizationStage;
+    private CustomizationMenuController customizationController;
 
 
 
@@ -209,43 +215,41 @@ public class MainPageCtrl implements Initializable {
     @FXML
     public void optionsShowCustomizationMenu(ActionEvent event)  {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("CustomizationMenu.fxml"));
-            fxmlLoader.setController(new CustomizationMenuController(this));
-            Parent root = fxmlLoader.load();
-            Stage stage = new Stage();
-            stage.setScene(new Scene(root));
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.showAndWait();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("CustomizationMenu.fxml"));
+            if (customizationController == null) {
+                customizationController = new CustomizationMenuController(this);
+            }
+            loader.setController(customizationController);
+            Parent root = loader.load();
+
+            customizationStage = new Stage();
+            customizationStage.setScene(new Scene(root));
+            customizationStage.initModality(Modality.APPLICATION_MODAL);
+            customizationStage.show();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public Stage getCustomizationStage() {
+        return customizationStage;
     }
 
     public HBox getCardsListContainer() {
         return cardListsContainer;
     }
 
-    public AnchorPane getBoardTop() {
-        return boardTop;
-    }
 
-    public AnchorPane getBoardBottom() {
-        return boardBottom;
-    }
+    public void setBoardColorFXML(String color) {
+        var colorCode = Color.valueOf(color);
+        var fill = new Background(new BackgroundFill(colorCode, null, null));
+        boardTop.setBackground(fill);
+        boardBottom.setBackground(fill);
 
-
-    public void setBoardColor(Color color) {
-        boardTop.setBackground(new Background(new BackgroundFill(convertColor(color), null, null)));
-        boardBottom.setBackground(new Background(new BackgroundFill(convertColor(color), null, null)));
-
-    }
-
-    public javafx.scene.paint.Color convertColor(Color color) {
-        return new javafx.scene.paint.Color(
-                color.getRed(),
-                color.getGreen(),
-                color.getBlue(),
-                color.getAlpha());
+        var desaturated = colorCode.desaturate().desaturate();
+        var fillDesaturated = new Background(new BackgroundFill(desaturated, null, null));
+        cardListsContainer.setBackground(fillDesaturated);
     }
 
     @FXML
@@ -272,6 +276,7 @@ public class MainPageCtrl implements Initializable {
         model.setController(controller);
 
         Node newList = loader.load();
+        controller.setListColorFXML(model.getParent().getBoard().getListColor());
         cardListsContainer.getChildren().add(newList);
     }
 
@@ -311,8 +316,23 @@ public class MainPageCtrl implements Initializable {
         boardName.setText(board.getBoard().getTitle());
         boardIdPanel.setVisible(false);
         this.board.setController(this);
+
         this.board.update();
         this.board.updateChildren();
+
+        //set colors as soon as "apply is pressed"
+        this.getModel().applyColors();
+//        this.setBoardColorFXML(board.getBoard().getBoardColor());
+//
+//        var lists = this.getModel().getChildren();
+//        for(ListModel list: lists) {
+//            list.getController().setListColorFXML(board.getBoard().getListColor());
+//            var cards = list.getChildren();
+//            for(CardModel card: cards) {
+//                card.getController().setCardColorFXML(board.getBoard().getCardColor());
+//            }
+//        }
+
         if (this.board.getChildren().isEmpty()) {
             showEmptyBoardPrompt();
         }

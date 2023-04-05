@@ -27,8 +27,11 @@ public class Board implements Serializable {
 
     private String title = "Untitled board";
 
-    //private Color boardColor = Color.PINK;
-    //WE DON'T USE AWT COLOURS AT ALL!!!
+    private String boardColor = "0x91B7BF";
+
+    private String listColor = "0xD2A295";
+
+    private String cardColor = "0xF7EFD2";
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @OrderColumn
@@ -85,15 +88,33 @@ public class Board implements Serializable {
     }
 
 
-//    public void setBoardColor(Color boardColor) {
-//        this.boardColor = boardColor;
-//    }
-//
-//    public Color getBoardColor() {
-//        return boardColor;
-//    }
+    public void setBoardColor(String boardColor) {
+        this.boardColor = boardColor;
+    }
 
-    //store pair of colors for background and fonts
+    public String getBoardColor() {
+        return boardColor;
+    }
+
+    public String getListColor() {
+        return listColor;
+    }
+
+    public void setListColor(String listColor) {
+        this.listColor = listColor;
+    }
+
+    public void setTimestamp(Timestamp timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public String getCardColor() {
+        return cardColor;
+    }
+
+    public void setCardColor(String cardColor) {
+        this.cardColor = cardColor;
+    }
 
     public void sync() {
         this.timestamp = new Timestamp(System.currentTimeMillis());
@@ -180,7 +201,9 @@ public class Board implements Serializable {
                 .append(id, board.id)
                 .append(title, board.title)
                 .append(lists, board.lists)
-                //.append(boardColor, board.boardColor)
+                .append(boardColor, board.boardColor)
+                .append(listColor, board.listColor)
+                .append(cardColor, board.cardColor)
                 .isEquals();
     }
 
@@ -190,7 +213,9 @@ public class Board implements Serializable {
                 .append(id)
                 .append(title)
                 .append(lists)
-                //.append(boardColor)
+                .append(boardColor)
+                .append(listColor)
+                .append(cardColor)
                 .toHashCode();
     }
 

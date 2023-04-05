@@ -14,6 +14,8 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.input.*;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 
 import java.io.IOException;
 import java.net.URL;
@@ -39,6 +41,12 @@ public class ListController implements Initializable {
     private MainPageCtrl parent;
 
     private ServerUtils server;
+
+    @FXML
+    private AnchorPane listTop;
+
+    @FXML
+    private AnchorPane listBottom;
 
     @SuppressWarnings("unused")
     public ListController() {
@@ -89,6 +97,7 @@ public class ListController implements Initializable {
         CardModel newCard = new CardModel(new Card(), listModel, server);
         addCard(newCard); // keep this order of add card and listModel.addCard
         listModel.addCard(newCard);
+        newCard.getController().setCardColorFXML(parent.getModel().getBoard().getCardColor());
     }
 
     private int whichIndexToDropIn(double absolutePosition) {
@@ -216,5 +225,19 @@ public class ListController implements Initializable {
                 updateTitleModel();
             }
         });
+    }
+
+    public void setListColorFXML(String color) {
+        var colorCode = Color.valueOf(color);
+        var fillTop = new Background(new BackgroundFill(colorCode, new CornerRadii(10, 10, 0, 0, false), null));
+        listTop.setBackground(fillTop);
+
+        var fillBottom = new Background(new BackgroundFill(colorCode, new CornerRadii(0, 0, 10, 10, false), null));
+        listBottom.setBackground(fillBottom);
+
+        var desaturated = colorCode.desaturate().desaturate();
+        var desaturatedFill = new Background(new BackgroundFill(desaturated, null, null));
+        cardListContainer.setBackground(desaturatedFill);
+        scrollPane.setBackground(desaturatedFill);
     }
 }

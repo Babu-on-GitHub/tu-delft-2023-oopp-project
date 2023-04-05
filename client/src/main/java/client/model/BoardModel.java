@@ -128,8 +128,9 @@ public class BoardModel {
             board = serverBoard;
             controller.overwriteTitleNode(board.getTitle());
 
-            //var color = board.getBoardColor();
-            //controller.setBoardColor(color);
+            //set the color to that received from server
+
+            this.applyColors();
 
             updateChildren();
 
@@ -315,5 +316,16 @@ public class BoardModel {
         board.getTags().remove(tag);
 
         update();
+    }
+
+    public void applyColors() {
+        controller.setBoardColorFXML(board.getBoardColor());
+        for (ListModel list: children) {
+            list.getController().setListColorFXML(board.getListColor());
+            var childrenCards = list.getChildren();
+            for (CardModel card: childrenCards) {
+                card.getController().setCardColorFXML(board.getCardColor());
+            }
+        }
     }
 }

@@ -192,6 +192,8 @@ public class ListModel {
             log.info("Server timestamp is newer, overwriting local list");
             cardList = fetchedCardList;
 
+            //properly update list colors here maybe
+
             updateChildren();
             parent.updateChild(cardList);
             controller.overwriteTitleNode(cardList.getTitle());

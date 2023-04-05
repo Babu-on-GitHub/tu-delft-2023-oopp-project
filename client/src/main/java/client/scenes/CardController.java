@@ -11,11 +11,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.*;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import client.model.CardModel;
 import javafx.fxml.Initializable;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.apache.commons.lang3.NotImplementedException;
 
@@ -217,5 +216,11 @@ public class CardController implements Initializable {
         return card.getCard().getSubTasks().stream()
                 .filter(Task::isChecked)
                 .count() + "/" + card.getCard().getSubTasks().size();
+    }
+
+    public void setCardColorFXML(String color) {
+        var colorCode = Color.valueOf(color);
+        var fill = new Background(new BackgroundFill(colorCode, new CornerRadii(20), null));
+        cardContainer.setBackground(fill);
     }
 }
