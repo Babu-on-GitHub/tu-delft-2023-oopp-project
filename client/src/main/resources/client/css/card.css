@@ -6,6 +6,7 @@
     -fx-border-color: -border-color !important;
     -fx-border-width: 1px !important;
     -fx-border-radius: 20px !important;
+    -fx-background-radius: 20px;
 }
 
 /* This highlights the top border of the card with blue */
@@ -20,4 +21,8 @@
     -fx-border-color: -border-color -border-color
                         blue -border-color !important;
     -fx-border-width: 1px 1px 3px 1px !important;
+}
+
+.tag-bar{
+    -fx-spacing: 3px;
 }

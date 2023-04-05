@@ -19,6 +19,8 @@ public class Tag implements Serializable, Cloneable {
 
     private String title;
 
+    private String color;
+
     @SuppressWarnings("unused")
     public Tag(){
 
@@ -79,6 +81,14 @@ public class Tag implements Serializable, Cloneable {
         this.title = title;
     }
 
+    public void setColor(String color){
+        this.color = color;
+    }
+
+    public String getColor(){
+        return color;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -87,12 +97,12 @@ public class Tag implements Serializable, Cloneable {
 
         Tag tag = (Tag) o;
 
-        return new EqualsBuilder().append(id, tag.id).append(title, tag.title).isEquals();
+        return new EqualsBuilder().append(id, tag.id).append(title, tag.title).append(color, tag.color).isEquals();
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37).append(id).append(title).toHashCode();
+        return new HashCodeBuilder(17, 37).append(id).append(title).append(color).toHashCode();
     }
 
     @Override

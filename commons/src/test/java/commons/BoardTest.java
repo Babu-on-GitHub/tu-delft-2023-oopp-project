@@ -93,4 +93,14 @@ public class BoardTest {
         b3.setTitle("banana");
         assertEquals(b1.hashCode(), b3.hashCode());
     }
+
+    @Test
+    public void cloneTest() throws CloneNotSupportedException {
+        var b1 = new Board("banana");
+        b1.add(new CardList("apple"));
+        b1.getTags().add(new Tag("banana2"));
+
+        var b2 = b1.clone();
+        assertEquals(b1, b2);
+    }
 }

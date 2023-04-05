@@ -89,4 +89,14 @@ public class CardListTest {
         c3.setTitle("banana");
         assertEquals(c.hashCode(), c3.hashCode());
     }
+
+    @Test
+    public void cloneTest() throws CloneNotSupportedException {
+        var c = new CardList("banana");
+        c.setCards(List.of(new Card("apple")));
+        c.getCards().get(0).getTags().add(new Tag("pear"));
+
+        var c2 = c.clone();
+        assertEquals(c, c2);
+    }
 }

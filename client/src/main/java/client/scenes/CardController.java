@@ -1,10 +1,12 @@
 package client.scenes;
 
 import client.utils.ServerUtils;
+import commons.Tag;
 import commons.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -64,6 +66,9 @@ public class CardController implements Initializable {
 
     @FXML
     private Label subtaskInfo;
+
+    @FXML
+    private HBox tagBar;
 
 
     @SuppressWarnings("unused")
@@ -230,11 +235,28 @@ public class CardController implements Initializable {
         cardContainer.getStyleClass().add("default-border");
     }
 
+    public void showTags() throws IOException {
+        tagBar.getChildren().clear();
+        for (Tag tag : card.getCard().getTags()) {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("TagBarTag.fxml"));
+            var controller = new TagBarTagCtrl(tag);
+            loader.setController(controller);
+
+            Node newTag = loader.load();
+            tagBar.getChildren().add(newTag);
+        }
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         cardTitle.setText(card.getCard().getTitle());
         descLabel.setText(card.getCard().getDescription());
         updateSubTaskInfo();
+        try {
+            showTags();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         cardTitle.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {

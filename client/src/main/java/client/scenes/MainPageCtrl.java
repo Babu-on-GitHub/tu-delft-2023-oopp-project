@@ -474,6 +474,17 @@ public class MainPageCtrl implements Initializable {
         return admin;
     }
 
+    @FXML
+    public void showTagsButton(ActionEvent event) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("TagOverview.fxml"));
+        fxmlLoader.setController(new TagOverviewCtrl(this));
+        Parent root = fxmlLoader.load();
+        Stage stage = new Stage();
+        stage.setScene(new Scene(root));
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.showAndWait();
+    }
+
     public void shutDown() {
         server.getSocketUtils().disconnect();
         server.getPollingUtils().stopLongPolling();

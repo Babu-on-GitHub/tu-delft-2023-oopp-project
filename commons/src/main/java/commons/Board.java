@@ -15,7 +15,7 @@ import java.util.Set;
 import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
 
 @Entity
-public class Board implements Serializable {
+public class Board implements Serializable, Cloneable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -179,5 +179,18 @@ public class Board implements Serializable {
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this, MULTI_LINE_STYLE);
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        Board board = (Board) super.clone();
+        board.lists = new ArrayList<>();
+        board.tags = new HashSet<>();
+        for (CardList cardList : lists)
+            board.lists.add((CardList) cardList.clone());
+
+        for (Tag tag : tags)
+            board.tags.add((Tag) tag.clone());
+        return board;
     }
 }
