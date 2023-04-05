@@ -109,7 +109,26 @@ public class MainPageCtrl implements Initializable {
 
         boardIdPanel.setVisible(false);
         boardIdLabel.setEditable(false);
+    }
 
+    @FXML
+    void tagOverviewButton(ActionEvent event){
+        showTagOverview();
+    }
+
+    public void showTagOverview(){
+
+    }
+
+    public void updateTitleModel() {
+        board.updateTitle(boardName.getText());
+    }
+
+    public Board getBoard() {
+        return board.getBoard();
+    }
+
+    public void initializeServerStuff(){
         try {
             initializeBoard();
 
@@ -156,14 +175,6 @@ public class MainPageCtrl implements Initializable {
         }
     }
 
-    public void updateTitleModel() {
-        board.updateTitle(boardName.getText());
-    }
-
-    public Board getBoard() {
-        return board.getBoard();
-    }
-
     public void refresh() {
         if(admin){
             refreshBoardsListButton.setVisible(true);
@@ -171,10 +182,6 @@ public class MainPageCtrl implements Initializable {
         }else{
             refreshBoardsListButton.setVisible(false);
             leaveBoardButton.setVisible(true);
-        }
-
-        if (!server.getSocketUtils().isConnected()) {
-            server.getSocketUtils().connect();
         }
         boardList = userUtils.getUserBoardsIds();
         try {
@@ -465,5 +472,10 @@ public class MainPageCtrl implements Initializable {
 
     public boolean getAdmin() {
         return admin;
+    }
+
+    public void shutDown() {
+        server.getSocketUtils().disconnect();
+        server.getPollingUtils().stopLongPolling();
     }
 }
