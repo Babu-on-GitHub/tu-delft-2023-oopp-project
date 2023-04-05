@@ -55,6 +55,14 @@ public class TagTest {
     }
 
     @Test
+    public void setColorTest(){
+        var t = new Tag("banana");
+        assertNotEquals(t.getColor(),"#bababa");
+        t.setColor("#bababa");
+        assertEquals(t.getColor(),"#bababa");
+    }
+
+    @Test
     public void equalsPositiveTest() {
         var t = new Tag("banana");
         var t2 = new Tag("banana");
@@ -64,6 +72,12 @@ public class TagTest {
         t3.setTitle("banana");
 
         assertEquals(t, t3);
+        t.setColor("#bababa");
+        assertNotEquals(t,t2);
+        t2.setColor("#bababa");
+        assertEquals(t,t2);
+        t3.setColor("#bbbbbb");
+        assertNotEquals(t,t3);
     }
 
     @Test
@@ -87,6 +101,12 @@ public class TagTest {
         t3.setTitle("banana");
 
         assertEquals(t.hashCode(), t3.hashCode());
+        t.setColor("#bababa");
+        assertNotEquals(t.hashCode(),t2.hashCode());
+        t2.setColor("#bababa");
+        assertEquals(t.hashCode(),t2.hashCode());
+        t3.setColor("#bbbbbb");
+        assertNotEquals(t.hashCode(),t3.hashCode());
     }
 
     @Test
