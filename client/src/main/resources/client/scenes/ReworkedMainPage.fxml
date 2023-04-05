@@ -182,7 +182,7 @@
                   </TextField>
                </children>
             </AnchorPane>
-            <Button contentDisplay="TOP" graphicTextGap="0.0" layoutX="143.0" layoutY="15.0" mnemonicParsing="false" prefHeight="65.0" prefWidth="90.0" text="Tags" AnchorPane.bottomAnchor="13.0" AnchorPane.leftAnchor="143.0" AnchorPane.topAnchor="13.0">
+            <Button contentDisplay="TOP" graphicTextGap="0.0" layoutX="143.0" layoutY="15.0" mnemonicParsing="false" onAction="#showTagsButton" prefHeight="65.0" prefWidth="90.0" text="Tags" AnchorPane.bottomAnchor="13.0" AnchorPane.leftAnchor="143.0" AnchorPane.topAnchor="13.0">
                <graphic>
                   <ImageView id="shareImage" fx:id="shareImage1" fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
                      <image>

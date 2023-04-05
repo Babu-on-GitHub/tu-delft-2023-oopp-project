@@ -11,12 +11,11 @@ import javafx.scene.text.Text;
 import commons.Tag;
 import javafx.stage.Stage;
 
-import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class TagController implements Initializable {
+public class DetailedCardTagController implements Initializable {
 
     @FXML
     private Text title;
@@ -27,13 +26,13 @@ public class TagController implements Initializable {
     @FXML
     private HBox tagRoot;
 
-    private DetailedCardController parent;
+    private DetailedCardController detailedCardController;
     private Tag tag;
 
     private boolean initiallyChecked;
 
-    public TagController(Tag tag, DetailedCardController parent, boolean checked) {
-        this.parent = parent;
+    public DetailedCardTagController(Tag tag, DetailedCardController parent, boolean checked) {
+        this.detailedCardController = parent;
         this.tag = tag;
         this.initiallyChecked = checked;
     }
@@ -41,6 +40,7 @@ public class TagController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         title.setText(tag.getTitle());
+        tagRoot.setStyle("-fx-background-color: "+tag.getColor()+";");
 
         status.setSelected(initiallyChecked);
         statusHint(initiallyChecked);
@@ -51,25 +51,25 @@ public class TagController implements Initializable {
         statusHint(status.isSelected());
 
         if (status.isSelected()) {
-            parent.checkTag(tag);
+            detailedCardController.checkTag(tag);
         } else {
-            parent.uncheckTag(tag);
+            detailedCardController.uncheckTag(tag);
         }
     }
 
     @FXML
     void deleteTag(ActionEvent event) throws IOException {
-        parent.deleteTagWithController(this);
+        detailedCardController.deleteTagWithController(this);
 
         // yes, I am so proud of myself for this traversal. (again)
-        parent.getParent().getModel().getParent().getParent().deleteTag(tag);
+        detailedCardController.getParent().getModel().getParent().getParent().deleteTag(tag);
     }
 
     @FXML
     void editTag(ActionEvent event) throws IOException {
         // open new window, with layout of TagCreate.fxml
         FXMLLoader loader = new FXMLLoader(getClass().getResource("TagCreate.fxml"));
-        loader.setController(new TagCreateController(parent, tag));
+        loader.setController(new TagCreateController(detailedCardController, tag));
 
         Stage stage = new Stage();
         stage.setScene(new Scene(loader.load()));
@@ -84,8 +84,8 @@ public class TagController implements Initializable {
         return tagRoot;
     }
 
-    public DetailedCardController getParent() {
-        return parent;
+    public DetailedCardController getDetailedCardController() {
+        return detailedCardController;
     }
 
     private void statusHint(boolean checked) {

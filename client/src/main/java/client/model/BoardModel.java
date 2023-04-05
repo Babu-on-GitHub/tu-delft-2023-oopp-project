@@ -9,6 +9,7 @@ import commons.Tag;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
 
@@ -311,5 +312,9 @@ public class BoardModel {
         board.getTags().remove(tag);
 
         update();
+    }
+
+    public Set<Tag> getAllTags() {
+        return getBoard().getTags();
     }
 }
