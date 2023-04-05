@@ -6,6 +6,7 @@ import client.utils.ServerUtils;
 import commons.Card;
 import commons.Tag;
 
+import java.io.IOException;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -142,6 +143,11 @@ public class CardModel {
         controller.overwriteTitleNode(card.getTitle());
         controller.overwriteDescriptionNode(card.getDescription());
         controller.updateSubTaskInfo();
+        try {
+            controller.showTags();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         update();
     }
