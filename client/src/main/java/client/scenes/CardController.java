@@ -1,13 +1,16 @@
 package client.scenes;
 
 import client.utils.ServerUtils;
+import commons.Tag;
 import commons.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.*;
@@ -57,6 +60,16 @@ public class CardController implements Initializable {
     @FXML
     private Button tagButton;
 
+    @FXML
+    private Label descLabel;
+
+    @FXML
+    private Label subtaskInfo;
+
+    @FXML
+    private HBox tagBar;
+
+
     @SuppressWarnings("unused")
     public CardController() {
     }
@@ -81,20 +94,29 @@ public class CardController implements Initializable {
     @FXML
     void checkDoubleClick(MouseEvent event) throws IOException {
         if (event.getClickCount() == 2) {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("DetailedCard.fxml"));
-            var detailedCardController = new DetailedCardController(this, server);
-            card.setDetailedController(detailedCardController);
-            loader.setController(detailedCardController);
-
-            Parent root = loader.load();
-            secondStage = new Stage();
-            secondStage.setScene(new Scene(root));
-            secondStage.initOwner(cardContainer.getScene().getWindow());
-            secondStage.show();
-
-            getModel().getParent().getParent().update();
-            detailedCardController.showDetails();
+            showDetailedCardScene();
         }
+    }
+
+    @FXML
+    public void editButtonAction(ActionEvent event) throws IOException {
+        showDetailedCardScene();
+    }
+
+    void showDetailedCardScene() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("DetailedCard.fxml"));
+        var detailedCardController = new DetailedCardController(this, server);
+        card.setDetailedController(detailedCardController);
+        loader.setController(detailedCardController);
+
+        Parent root = loader.load();
+        secondStage = new Stage();
+        secondStage.setScene(new Scene(root));
+        secondStage.initOwner(cardContainer.getScene().getWindow());
+        secondStage.show();
+
+        getModel().getParent().getParent().update();
+        detailedCardController.showDetails();
     }
 
     @FXML
@@ -169,6 +191,18 @@ public class CardController implements Initializable {
         cardTitle.setText(text);
     }
 
+    public void overwriteDescriptionNode(String text) {
+        descLabel.setText(text);
+    }
+
+    public void updateSubTaskInfo() {
+        if (card.getCard().getSubTasks() == null || card.getCard().getSubTasks().size() == 0) {
+            subtaskInfo.setText("");
+        } else {
+            subtaskInfo.setText(getTasksProgress());
+        }
+    }
+
     public void updateTitleModel() {
         card.updateTitle(cardTitle.getText());
     }
@@ -200,9 +234,28 @@ public class CardController implements Initializable {
         cardContainer.getStyleClass().add("default-border");
     }
 
+    public void showTags() throws IOException {
+        tagBar.getChildren().clear();
+        for (Tag tag : card.getCard().getTags()) {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("TagBarTag.fxml"));
+            var controller = new TagBarTagCtrl(tag);
+            loader.setController(controller);
+
+            Node newTag = loader.load();
+            tagBar.getChildren().add(newTag);
+        }
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         cardTitle.setText(card.getCard().getTitle());
+        descLabel.setText(card.getCard().getDescription());
+        updateSubTaskInfo();
+        try {
+            showTags();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         cardTitle.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
@@ -211,7 +264,7 @@ public class CardController implements Initializable {
         });
     }
 
-    protected String getTasksProgress() {
+    public String getTasksProgress() {
         // number of subtasks completed + "/" + number of subtasks
         return card.getCard().getSubTasks().stream()
                 .filter(Task::isChecked)

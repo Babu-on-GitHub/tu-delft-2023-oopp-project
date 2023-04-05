@@ -2,6 +2,8 @@
     -fx-border-image-width: 4px;
     -fx-border-color: #bababa;
     -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-background-clip: padding-box;
 }
 
 .scroll-pane{

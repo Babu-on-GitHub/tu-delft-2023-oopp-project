@@ -50,6 +50,7 @@ public class MainCtrl {
         primaryStage.setTitle("Board Overview");
         primaryStage.setScene(mainPage);
         mainPageCtrl.setAdmin(false);
+        mainPageCtrl.initializeServerStuff();
         mainPageCtrl.refresh();
     }
 
@@ -65,4 +66,10 @@ public class MainCtrl {
         primaryStage.setScene(serverChoice);
         serverChoiceCtrl.resetFieldsStyle();
     }
+
+    public void shutDown(){
+        mainPageCtrl.shutDown();
+        serverChoiceCtrl.shutDown();
+    }
+
 }

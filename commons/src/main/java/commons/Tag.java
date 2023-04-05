@@ -11,13 +11,15 @@ import java.io.Serializable;
 import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
 
 @Entity
-public class Tag implements Serializable {
+public class Tag implements Serializable, Cloneable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     private String title;
+
+    private String color;
 
     @SuppressWarnings("unused")
     public Tag(){
@@ -32,6 +34,11 @@ public class Tag implements Serializable {
     public Tag(long id, String title) {
         this.id = id;
         this.title = title;
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 
     /**
@@ -74,6 +81,14 @@ public class Tag implements Serializable {
         this.title = title;
     }
 
+    public void setColor(String color){
+        this.color = color;
+    }
+
+    public String getColor(){
+        return color;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -82,12 +97,12 @@ public class Tag implements Serializable {
 
         Tag tag = (Tag) o;
 
-        return new EqualsBuilder().append(id, tag.id).append(title, tag.title).isEquals();
+        return new EqualsBuilder().append(id, tag.id).append(title, tag.title).append(color, tag.color).isEquals();
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37).append(id).append(title).toHashCode();
+        return new HashCodeBuilder(17, 37).append(id).append(title).append(color).toHashCode();
     }
 
     @Override

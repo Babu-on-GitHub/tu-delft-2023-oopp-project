@@ -27,7 +27,7 @@ public class DetailedCardController {
     private ServerUtils server;
 
     private List<SubtaskController> subtaskControllers = new ArrayList<>();
-    private List<TagController> tagControllers = new ArrayList<>();
+    private List<DetailedCardTagController> detailedCardTagControllers = new ArrayList<>();
 
     @FXML
     private TextArea description;
@@ -48,7 +48,11 @@ public class DetailedCardController {
         cardController.getModel().update(); // just in case
 
         this.parent = cardController;
-        this.localCard = cardController.getModel().getCard();
+        try {
+            this.localCard = (Card) cardController.getModel().getCard().clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
         this.server = server;
 
         subtaskControllers = new ArrayList<>();
@@ -122,7 +126,6 @@ public class DetailedCardController {
             subtasks.add(controller.getTask());
         localCard.setSubTasks(subtasks);
 
-
         parent.getModel().overwriteWith(localCard);
     }
 
@@ -160,30 +163,30 @@ public class DetailedCardController {
 
     public void showTags() throws IOException {
         tagArea.getChildren().clear();
-        tagControllers.clear();
+        detailedCardTagControllers.clear();
 
         // we want to firstly show all the tags that are already on the card
         for (Tag tag : localCard.getTags()) {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("Tag.fxml"));
-            var controller = new TagController(tag, this, true);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("CardDetailsTag.fxml"));
+            var controller = new DetailedCardTagController(tag, this, true);
             loader.setController(controller);
             loader.load();
 
             tagArea.getChildren().add(loader.getRoot());
-            tagControllers.add(controller);
+            detailedCardTagControllers.add(controller);
         }
 
         // and then we want to show all the tags that are not on the card, but on the board
         for (Tag tag : parent.getModel().getAllTags()) {
             if (localCard.getTags().contains(tag)) continue;
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("Tag.fxml"));
-            var controller = new TagController(tag, this, false);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("CardDetailsTag.fxml"));
+            var controller = new DetailedCardTagController(tag, this, false);
             loader.setController(controller);
             loader.load();
 
             tagArea.getChildren().add(loader.getRoot());
-            tagControllers.add(controller);
+            detailedCardTagControllers.add(controller);
         }
     }
 
@@ -236,8 +239,8 @@ public class DetailedCardController {
         showTags();
     }
 
-    public void deleteTagWithController(TagController controller) throws IOException {
-        tagControllers.remove(controller);
+    public void deleteTagWithController(DetailedCardTagController controller) throws IOException {
+        detailedCardTagControllers.remove(controller);
         tagArea.getChildren().remove(controller.getRoot());
         localCard.getTags().remove(controller.getTag());
     }

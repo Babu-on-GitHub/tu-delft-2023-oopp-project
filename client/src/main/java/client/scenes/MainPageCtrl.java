@@ -119,7 +119,26 @@ public class MainPageCtrl implements Initializable {
 
         boardIdPanel.setVisible(false);
         boardIdLabel.setEditable(false);
+    }
 
+    @FXML
+    void tagOverviewButton(ActionEvent event){
+        showTagOverview();
+    }
+
+    public void showTagOverview(){
+
+    }
+
+    public void updateTitleModel() {
+        board.updateTitle(boardName.getText());
+    }
+
+    public Board getBoard() {
+        return board.getBoard();
+    }
+
+    public void initializeServerStuff(){
         try {
             initializeBoard();
 
@@ -166,14 +185,6 @@ public class MainPageCtrl implements Initializable {
         }
     }
 
-    public void updateTitleModel() {
-        board.updateTitle(boardName.getText());
-    }
-
-    public Board getBoard() {
-        return board.getBoard();
-    }
-
     public void refresh() {
         if(admin){
             refreshBoardsListButton.setVisible(true);
@@ -181,10 +192,6 @@ public class MainPageCtrl implements Initializable {
         }else{
             refreshBoardsListButton.setVisible(false);
             leaveBoardButton.setVisible(true);
-        }
-
-        if (!server.getSocketUtils().isConnected()) {
-            server.getSocketUtils().connect();
         }
         boardList = userUtils.getUserBoardsIds();
         try {
@@ -531,5 +538,21 @@ public class MainPageCtrl implements Initializable {
 
     public boolean getAdmin() {
         return admin;
+    }
+
+    @FXML
+    public void showTagsButton(ActionEvent event) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("TagOverview.fxml"));
+        fxmlLoader.setController(new TagOverviewCtrl(this));
+        Parent root = fxmlLoader.load();
+        Stage stage = new Stage();
+        stage.setScene(new Scene(root));
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.showAndWait();
+    }
+
+    public void shutDown() {
+        server.getSocketUtils().disconnect();
+        server.getPollingUtils().stopLongPolling();
     }
 }

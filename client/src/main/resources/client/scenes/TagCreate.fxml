@@ -1,38 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ColorPicker?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
 
-
-<VBox fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="root" prefHeight="222.0" prefWidth="564.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <TextField alignment="CENTER" text="New Tag" fx:id="title">
+      <TextField fx:id="title" alignment="CENTER" layoutX="20.0" layoutY="14.0" prefHeight="67.0" prefWidth="433.0" text="New Tag" AnchorPane.leftAnchor="22.0" AnchorPane.rightAnchor="22.0" AnchorPane.topAnchor="14.0">
          <font>
             <Font size="22.0" />
          </font>
       </TextField>
-      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Here will be color customization and maybe something else if we have enough time" textAlignment="CENTER" wrappingWidth="596.990234375" />
-      <StackPane>
-         <children>
-            <Button mnemonicParsing="false" text="Cancel" onAction="#cancel" StackPane.alignment="BOTTOM_LEFT">
-               <StackPane.margin>
-                  <Insets bottom="5.0" left="5.0" />
-               </StackPane.margin>
-            </Button>
-            <Button mnemonicParsing="false" text="Save" onAction="#save" StackPane.alignment="BOTTOM_RIGHT">
-               <StackPane.margin>
-                  <Insets bottom="5.0" right="5.0" />
-               </StackPane.margin>
-            </Button>
-         </children>
-         <VBox.margin>
-            <Insets top="20.0" />
-         </VBox.margin>
-      </StackPane>
+      <Button layoutX="295.0" layoutY="147.0" mnemonicParsing="false" onAction="#save" prefHeight="39.0" prefWidth="77.0" text="Save" AnchorPane.bottomAnchor="30.0" AnchorPane.rightAnchor="30.0">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
+      <Button layoutX="23.0" layoutY="147.0" mnemonicParsing="false" onAction="#cancel" text="Cancel" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="30.0">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
+      <ColorPicker fx:id="colorPicker" layoutX="264.0" layoutY="97.0" prefHeight="39.0" prefWidth="144.0" promptText="Choose color" style="-fx-background-color: inherit;" AnchorPane.rightAnchor="156.0" AnchorPane.topAnchor="97.0" />
+      <Label layoutX="30.0" layoutY="103.0" text="Choose a color for the tag:">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
    </children>
-</VBox>
+</AnchorPane>

@@ -7,7 +7,6 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
@@ -30,7 +29,7 @@
                   <Insets right="10.0" />
                </StackPane.margin>
                <graphic>
-                  <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="22.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../icons/PNG/add_FILL0_wght400_GRAD0_opsz48.png" />
                      </image>
@@ -67,9 +66,9 @@
                   <Insets right="10.0" />
                </StackPane.margin>
                <graphic>
-                  <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../icons/PNG/add_FILL0_wght400_GRAD0_opsz48.png" />
+                        <Image url="@../icons/PNG/new_label_FILL0_wght400_GRAD0_opsz48.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -78,7 +77,7 @@
       </StackPane>
       <ScrollPane hbarPolicy="NEVER" prefWidth="300.0" style="-fx-fit-to-width: true;" styleClass="scroll" VBox.vgrow="ALWAYS">
          <content>
-            <VBox prefHeight="170.0" fx:id="tagArea" />
+            <VBox fx:id="tagArea" prefHeight="170.0" styleClass="tag-area" />
          </content>
       </ScrollPane>
       <StackPane maxHeight="63.0" prefHeight="63.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
