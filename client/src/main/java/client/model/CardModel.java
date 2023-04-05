@@ -82,6 +82,13 @@ public class CardModel {
 
     public void updateChildren() {
         controller.overwriteTitleNode(card.getTitle());
+        try {
+            controller.showTags();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        controller.overwriteDescriptionNode(card.getDescription());
+
     }
 
     public void disown() {

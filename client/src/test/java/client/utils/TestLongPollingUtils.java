@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TestLongPollingUtils {
@@ -41,7 +41,7 @@ public class TestLongPollingUtils {
             Assertions.assertTrue(s.isEmpty());
             wasCalled.set(true);
         });
-        Thread.sleep(12000L);
+        Thread.sleep(10000L);
         utils.stopLongPolling();
 
         assertTrue(wasCalled.get());

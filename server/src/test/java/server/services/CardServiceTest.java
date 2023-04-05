@@ -6,8 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import server.repository.TestCardRepository;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class CardServiceTest {
 
@@ -83,6 +82,17 @@ public class CardServiceTest {
     }
 
     @Test
+    public void updateBoardTitleWithException() {
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            cardService.updateTitle(1, "new");
+        });
+
+        String expectedMessage = "Trying to get non existing card";
+        String actualMessage = exception.getMessage();
+
+        assertEquals(expectedMessage,actualMessage);
+    }
+    @Test
     void testEverythingWithNull() {
         assertThrows(IllegalArgumentException.class, () -> cardService.saveCard(null));
         assertThrows(IllegalArgumentException.class, () -> cardService.update(null, 5L));
@@ -124,4 +134,5 @@ public class CardServiceTest {
         var foundCard = cardService.getCardById(cardId);
         assertEquals("title", foundCard.getTitle());
     }
+
 }

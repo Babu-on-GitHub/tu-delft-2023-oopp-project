@@ -8,10 +8,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import server.repository.TestBoardRepository;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
+
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -157,7 +156,35 @@ public class BoardServiceTest {
         boards = boardService.findAllBoards();
         assertEquals("test", boards.get(0).getTitle());
     }
+    @Test
+    public void updateBoardWithException() {
+        Board board = new Board(1, "New board", null);
 
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            boardService.update(board,1);
+        });
+
+        String expectedMessage = "Trying to update non existing board " +
+                "Ids are not coherent in board update " +
+                "Something went wrong while updating board";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(expectedMessage.contains(actualMessage));
+    }
+
+    @Test
+    public void updateBoardTitleWithException() {
+        Board board = new Board(1, "New board", null);
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            boardService.updateTitle("new",1);
+        });
+
+        String expectedMessage = "Trying to update non existing board ";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(expectedMessage.contains(actualMessage));
+    }
     @Test
     void testEverythingForNull() {
         assertThrows(IllegalArgumentException.class, () -> boardService.saveBoard(null));
