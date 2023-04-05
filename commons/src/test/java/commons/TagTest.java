@@ -88,4 +88,11 @@ public class TagTest {
 
         assertEquals(t.hashCode(), t3.hashCode());
     }
+
+    @Test
+    public void testClone() throws CloneNotSupportedException {
+        var t = new Tag("banana");
+        var t2 = t.clone();
+        assertEquals(t, t2);
+    }
 }
