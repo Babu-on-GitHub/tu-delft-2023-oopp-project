@@ -5,6 +5,26 @@ This information can be added throughout the course, except for the names of the
 Add your own name (do not add the names for others!) to the section below.
 
 ## Description of project
+This project is an application built in Java using Spring framework and JavaFX.
+
+The purpose of the application is to be used as a task management tool. It can be used from the perspective of users - people that can start the client and connect to a server or an admin - a person that maintains the server and represents the contact for users, if there are
+issues with the application. 
+Each user starts its client application on their own computer. After the application is started, user defines IP of the server they want to connect to. Admins log in through the same screen, by clicking the "log in as an admin button" and entering the correct password.
+If IP is correct, user will connect to the server and will be able to use the application.
+
+Main page of the application shows an overview of all the boards user is a member of, buttons with additional features as well as the contents of the board user is currently looking at.
+Each board can have a number of lists and every list can contain cards. Card is a representation of a task. Main component of a card is its title.
+Apart from title, cards can have descriptions, subtasks and tags.
+Subtasks can be completed, deleted and changed and each tag has its color and title. Tags can be assigned to any card of the board they exist on.
+
+User can add, remove or rename lists and cards as well as all the components of cards. Individual cards can be moved inside the list as well as in between all the lists on the board.
+From the main page user can log out of the server he is and go back to server login page.
+User is able to create new boards or join them by ID. ID of the board is shown upon pressing share button, which gives option to copy the ID. Other users can join that board by using that ID.
+When the board has more than one member, data of the board is synced between them in real time using websockets.
+Aspects of the app such as color scheme of the boards, colors of tags and color preset of tasks can be customized through either customization menu of the app or detailed card view.
+App supports standard keyboard shortcuts of which a list can be seen when pressing ? anywhere.
+
+When client closes his application, the data he modified will be saved on the server, so when he logs back in he will be able to access all boards from before as well as content that was on them.
 
 ## Group members
 
@@ -15,11 +35,6 @@ Add your own name (do not add the names for others!) to the section below.
 | ![](misc/rknyazhitskiy-icon.png)                                                                        | Roman Knyazhitskiy | r.knyazhitskiy@student.tudelft.nl |
 | ![](https://secure.gravatar.com/avatar/1d11e62d8b683a281515ec43e84b4e8e?s=800&d=identicon&size=50)      | Adrian-Robert Buse | A.R.Buse@student.tudelft.nl       |
 | ![](https://secure.gravatar.com/avatar/e6c58a4957d1070a0048ef2640ab522b?s=800&d=identicon&size=50)      | Mate Rodić         | M.Rodic@student.tudelft.nl        |
-<!-- Instructions (remove once assignment has been completed -->
-<!-- - Add (only!) your own name to the table above (use Markdown formatting) -->
-<!-- - Mention your *student* email address -->
-<!-- - Preferably add a recognizable photo, otherwise add your GitLab photo -->
-<!-- - (please make sure the photos have the same size) --> 
 
 ## How to run it
 
