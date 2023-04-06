@@ -1,11 +1,8 @@
 # Talio: the best task management tool ever
 
-This README will need to contain a description of your project, how to run it, how to set up the development environment, and who worked on it.
-This information can be added throughout the course, except for the names of the group members.
-Add your own name (do not add the names for others!) to the section below.
+This project is an application built in Java using Spring framework and JavaFX.
 
 ## Description of project
-This project is an application built in Java using Spring framework and JavaFX.
 
 The purpose of the application is to be used as a task management tool. It can be used from the perspective of users - people that can start the client and connect to a server or an admin - a person that maintains the server and represents the contact for users, if there are
 issues with the application. 
