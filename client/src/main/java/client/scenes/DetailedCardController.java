@@ -7,6 +7,7 @@ import commons.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -15,11 +16,13 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
-public class DetailedCardController {
+public class DetailedCardController implements Initializable {
     private static Logger log = Logger.getLogger(DetailedCardController.class.getName());
 
     private CardController parent;
@@ -60,6 +63,7 @@ public class DetailedCardController {
 
     /**
      * Adds a new subtask to the card. This is called by the FXML event listener, for this controller.
+     *
      * @param event the event that triggered this method
      * @throws IOException if the FXML file cannot be loaded
      */
@@ -90,6 +94,7 @@ public class DetailedCardController {
 
     /**
      * Removes a subtask from the card. This is called by the subtask controller when the user clicks the delete button.
+     *
      * @param controller the controller containing task to remove
      */
     @FXML
@@ -100,6 +105,7 @@ public class DetailedCardController {
 
     /**
      * Closes the detailed card view. Since all the changes are stored locally, we don't need to do anything else.
+     *
      * @param event the event that triggered this action
      */
     @FXML
@@ -110,7 +116,8 @@ public class DetailedCardController {
 
     /**
      * Saves the changes made to the card. This includes just overwriting
-     *          the state of the card in the parent controller with the local copy.
+     * the state of the card in the parent controller with the local copy.
+     *
      * @param event the event that triggered this action
      */
     @FXML
@@ -243,5 +250,16 @@ public class DetailedCardController {
         detailedCardTagControllers.remove(controller);
         tagArea.getChildren().remove(controller.getRoot());
         localCard.getTags().remove(controller.getTag());
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        detailedCardBox.setOnKeyPressed(event -> {
+            if (event.getCode() == javafx.scene.input.KeyCode.ESCAPE) {
+                System.out.println("Escape key pressed. Exiting...");
+                Stage secondStage = (Stage) detailedCardBox.getScene().getWindow();
+                secondStage.close();
+            }
+        });
     }
 }
