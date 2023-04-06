@@ -180,9 +180,15 @@ public class CardController implements Initializable {
     }
 
     @FXML
-    void keyPress(KeyEvent event) {
+    void keyPress(KeyEvent event) throws IOException {
         if (event.getCode() == KeyCode.BACK_SPACE || event.getCode() == KeyCode.DELETE) {
             deleteCard();
+        }
+        if (event.getCode() == KeyCode.E && !event.isShortcutDown()) {
+            cardTitle.requestFocus();
+        }
+        if (event.getCode() == KeyCode.ENTER) {
+            showDetailedCardScene();
         }
     }
 
