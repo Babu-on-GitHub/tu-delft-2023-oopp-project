@@ -179,6 +179,18 @@ public class CardController implements Initializable {
         }
     }
 
+    @FXML
+    void keyPress(KeyEvent event) {
+        if (event.getCode() == KeyCode.BACK_SPACE || event.getCode() == KeyCode.DELETE) {
+            deleteCard();
+        }
+    }
+
+    @FXML
+    void highlight(MouseEvent event) {
+        cardContainer.requestFocus();
+    }
+
     public void deleteCardButton(ActionEvent event) {
         deleteCard();
     }

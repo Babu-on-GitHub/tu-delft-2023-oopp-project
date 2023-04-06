@@ -26,3 +26,7 @@
 .tag-bar{
     -fx-spacing: 3px;
 }
+
+.default-border:hover {
+    -fx-opacity: 0.5;
+}
