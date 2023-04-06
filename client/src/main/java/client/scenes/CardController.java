@@ -196,20 +196,51 @@ public class CardController implements Initializable {
             showDetailedCardScene(true);
 
         }
-        if (up(event)) return;
-        if (down(event)) return;
-        if(event.getCode() == KeyCode.RIGHT){
-            int listIndex = card.getParent().getParent()
-                    .getBoard().getLists()
-                    .indexOf(card.getParent().getCardList());
+        up(event);
+        down(event);
+        right(event);
+        left(event);
+    }
 
+    private void right(KeyEvent event){
+        if(event.getCode() == KeyCode.RIGHT){
+            var l = card.getParent();
+            var b = card.getParent().getParent();
+            var lists = b.getChildren();
+            int lIndex = lists.indexOf(l);
+            for(int i = lIndex +1; i< lists.size(); i++){
+                if(lists.get(i).getChildren()!=null){
+                    for(CardModel c: lists.get(i).getChildren()){
+                        c.getController().focus();
+                        return;
+                    }
+                }
+            }
         }
     }
 
-    private boolean down(KeyEvent event) throws IOException {
+    private void left(KeyEvent event){
+        if(event.getCode() == KeyCode.LEFT){
+            var l = card.getParent();
+            var b = card.getParent().getParent();
+            var lists = b.getChildren();
+            int lIndex = lists.indexOf(l);
+            for(int i = lIndex -1; i>=0; i--){
+                if(lists.get(i).getChildren()!=null){
+                    for(CardModel c: lists.get(i).getChildren()){
+                        c.getController().focus();
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
+
+    private void down(KeyEvent event) throws IOException {
         if(event.getCode() == KeyCode.DOWN){
             int index = card.getParent().getCardList().getCards().indexOf(this.card.getCard());
-            if(index>=card.getParent().getCardList().getCards().size()-1) return false;
+            if(index>=card.getParent().getCardList().getCards().size()-1) return;
             if(event.isShiftDown()){
                 var board = getParent().getParent();
                 var model = board.getModel();
@@ -230,7 +261,7 @@ public class CardController implements Initializable {
                         index+1
                 );
 
-                //card.getController().focus();
+                card.getController().focus();
             }else{
                 long id = card.getParent().getCardList().getCards().get(index+1).getId();
                 CardController c = card.getParent().getChildren().stream()
@@ -239,15 +270,13 @@ public class CardController implements Initializable {
                         get().getController();
                 c.focus();
             }
-            return true;
         }
-        return false;
     }
 
-    private boolean up(KeyEvent event) throws IOException {
+    private void up(KeyEvent event) throws IOException {
         if(event.getCode() == KeyCode.UP){
             int index = card.getParent().getCardList().getCards().indexOf(this.card.getCard());
-            if(index<=0) return false;
+            if(index<=0) return;
             if(event.isShiftDown()){
                 var board = getParent().getParent();
                 var model = board.getModel();
@@ -268,7 +297,7 @@ public class CardController implements Initializable {
                         index-1
                 );
 
-                //card.getController().focus();
+                card.getController().focus();
             }else{
                 long id = card.getParent().getCardList().getCards().get(index-1).getId();
                 CardController c = card.getParent().getChildren().stream()
@@ -277,9 +306,7 @@ public class CardController implements Initializable {
                         get().getController();
                 c.focus();
             }
-            return true;
         }
-        return false;
     }
 
     @FXML
