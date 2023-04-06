@@ -99,6 +99,12 @@ public class ListModel {
     }
 
     public void moveCard(int from, int to) {
+        if(to<0 || to>=cardList.getCards().size()){
+            return;
+        }
+        if(from<0 || from>=cardList.getCards().size()){
+            return;
+        }
         var card = cardList.getCards().get(from);
         cardList.getCards().remove(from);
         cardList.getCards().add(to, card);

@@ -1,5 +1,6 @@
 package client.scenes;
 
+import client.model.ListModel;
 import client.utils.ServerUtils;
 import commons.Tag;
 import commons.Task;
@@ -29,6 +30,7 @@ import static client.scenes.ListController.TARGET_LIST;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class CardController implements Initializable {
@@ -190,10 +192,68 @@ public class CardController implements Initializable {
         if (event.getCode() == KeyCode.ENTER) {
             showDetailedCardScene();
         }
+        if(event.getCode() == KeyCode.UP){
+            int index = card.getParent().getCardList().getCards().indexOf(this.card.getCard());
+            if(event.isShiftDown()){
+                if(index<=0) return;
+                var board = getParent().getParent();
+                var model = board.getModel();
+
+                ListModel targetList = this.getModel().getParent();
+                var newParentController = targetList.getController();
+
+                parent.getCardsContainer().getChildren().remove(cardContainer);
+                newParentController.moveCard(
+                        card,
+                        index-1
+                );
+                parent = newParentController;
+
+                model.moveCard(
+                        card,
+                        targetList,
+                        index-1
+                );
+            }
+            if(index >= 0){
+                card.getParent().getChildren().get(index).getController().focus();
+            }
+        }
+        if(event.getCode() == KeyCode.DOWN){
+            int index = card.getParent().getCardList().getCards().indexOf(this.card.getCard());
+            if(event.isShiftDown()){
+                if(index>=card.getParent().getCardList().getCards().size()-1) return;
+                var board = getParent().getParent();
+                var model = board.getModel();
+
+                ListModel targetList = this.getModel().getParent();
+                var newParentController = targetList.getController();
+
+                parent.getCardsContainer().getChildren().remove(cardContainer);
+                newParentController.moveCard(
+                        card,
+                        index+1
+                );
+                parent = newParentController;
+
+                model.moveCard(
+                        card,
+                        targetList,
+                        index+1
+                );
+            }
+            if(index < card.getParent().getChildren().size()){
+                card.getParent().getChildren().get(index).getController().focus();
+            }
+        }
     }
 
     @FXML
     void highlight(MouseEvent event) {
+        cardContainer.requestFocus();
+    }
+
+    public void focus(){
         cardContainer.requestFocus();
     }
 
