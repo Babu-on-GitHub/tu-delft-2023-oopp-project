@@ -9,11 +9,14 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -37,16 +40,25 @@ public class DetailedCardController implements Initializable {
     private TextArea description;
 
     @FXML
-    private TextField title;
-
-    @FXML
     private VBox detailedCardBox;
 
     @FXML
     private VBox subtaskArea;
 
     @FXML
+    private Text subtaskLabel;
+
+    @FXML
+    private ScrollPane subtaskScrollPane;
+
+    @FXML
+    private StackPane subtaskStackPane;
+
+    @FXML
     private VBox tagArea;
+
+    @FXML
+    private TextField title;
 
     public DetailedCardController(CardController cardController, ServerUtils server) {
         cardController.getModel().update(); // just in case
@@ -62,6 +74,21 @@ public class DetailedCardController implements Initializable {
         subtaskControllers = new ArrayList<>();
     }
 
+    public void hideProperties() {
+        title.setEditable(false);
+
+        description.setVisible(false);
+        description.setManaged(false);
+
+        subtaskArea.setVisible(false);
+        subtaskArea.setManaged(false);
+
+        subtaskStackPane.setVisible(false);
+        subtaskStackPane.setManaged(false);
+
+        subtaskScrollPane.setVisible(false);
+        subtaskScrollPane.setManaged(false);
+    }
     /**
      * Adds a new subtask to the card. This is called by the FXML event listener, for this controller.
      *

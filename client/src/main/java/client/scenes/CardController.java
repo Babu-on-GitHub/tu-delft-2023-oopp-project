@@ -96,11 +96,11 @@ public class CardController implements Initializable {
     @FXML
     void checkDoubleClick(MouseEvent event) throws IOException {
         if (event.getClickCount() == 2) {
-            showDetailedCardScene();
+            showDetailedCardScene(false);
         }
     }
 
-    void showDetailedCardScene() throws IOException {
+    void showDetailedCardScene(boolean showOnlyTag) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("DetailedCard.fxml"));
         var detailedCardController = new DetailedCardController(this, server);
         card.setDetailedController(detailedCardController);
@@ -110,6 +110,12 @@ public class CardController implements Initializable {
         secondStage = new Stage();
         secondStage.setScene(new Scene(root));
         secondStage.initOwner(cardContainer.getScene().getWindow());
+
+        if (showOnlyTag) {
+            detailedCardController.hideProperties();
+
+        }
+
         secondStage.show();
 
         getModel().getParent().getParent().update();
@@ -184,7 +190,11 @@ public class CardController implements Initializable {
             cardTitle.requestFocus();
         }
         if (event.getCode() == KeyCode.ENTER) {
-            showDetailedCardScene();
+            showDetailedCardScene(false);
+        }
+        if (event.getCode() ==KeyCode.T) {
+            showDetailedCardScene(true);
+
         }
         if (up(event)) return;
         down(event);
