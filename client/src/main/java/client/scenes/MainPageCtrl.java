@@ -20,6 +20,8 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 
@@ -85,6 +87,7 @@ public class MainPageCtrl implements Initializable {
     private Button leaveBoardButton;
 
     private boolean admin = false;
+    private Stage secondStage;
 
 
     @Inject
@@ -100,7 +103,20 @@ public class MainPageCtrl implements Initializable {
         Image image = new Image(file.toURI().toString());
         img.setImage(image);
     }
+    @FXML
+    public void keyPressBoard(KeyEvent event) throws IOException {
+        if (event.isShiftDown() && event.getCode() == KeyCode.SLASH) {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("HelpScreen.fxml"));
 
+
+            Parent root = loader.load();
+
+            secondStage = new Stage();
+            secondStage.setScene(new Scene(root));
+            secondStage.initOwner(boardName.getScene().getWindow());
+            secondStage.show();
+        }
+    }
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         boardName.setText("Default board");

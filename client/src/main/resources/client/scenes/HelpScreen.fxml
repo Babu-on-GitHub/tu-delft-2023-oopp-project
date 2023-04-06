@@ -7,7 +7,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.HelpScreen">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.HelpScreenController">
     <children>
         <Label alignment="TOP_CENTER" layoutX="147.0" layoutY="14.0" prefHeight="58.0" prefWidth="321.0" text="Help Screen">
             <font>
@@ -68,6 +68,6 @@
             </Text>
          </children>
       </VBox>
-      <Button layoutX="246.0" layoutY="339.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="124.0" text="OK" />
+      <Button fx:id="okButton" layoutX="246.0" layoutY="339.0" mnemonicParsing="false" onAction="#okPressed" prefHeight="41.0" prefWidth="124.0" text="OK" />
     </children>
 </AnchorPane>
