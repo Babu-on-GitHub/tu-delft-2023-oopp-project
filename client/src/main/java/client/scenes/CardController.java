@@ -30,7 +30,6 @@ import static client.scenes.ListController.TARGET_LIST;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class CardController implements Initializable {
@@ -99,11 +98,6 @@ public class CardController implements Initializable {
         if (event.getClickCount() == 2) {
             showDetailedCardScene();
         }
-    }
-
-    @FXML
-    public void editButtonAction(ActionEvent event) throws IOException {
-        showDetailedCardScene();
     }
 
     void showDetailedCardScene() throws IOException {
@@ -192,32 +186,11 @@ public class CardController implements Initializable {
         if (event.getCode() == KeyCode.ENTER) {
             showDetailedCardScene();
         }
-        if(event.getCode() == KeyCode.UP){
-            int index = card.getParent().getCardList().getCards().indexOf(this.card.getCard());
-            if(event.isShiftDown()){
-                if(index<=0) return;
-                var board = getParent().getParent();
-                var model = board.getModel();
+        if (up(event)) return;
+        down(event);
+    }
 
-                ListModel targetList = this.getModel().getParent();
-                var newParentController = targetList.getController();
-
-                parent.getCardsContainer().getChildren().remove(cardContainer);
-                newParentController.moveCard(
-                        card,
-                        index-1
-                );
-                parent = newParentController;
-
-                model.moveCard(
-                        card,
-                        targetList,
-                        index-1
-                );
-
-                card.getController().focus();
-            }
-        }
+    private void down(KeyEvent event) throws IOException {
         if(event.getCode() == KeyCode.DOWN){
             int index = card.getParent().getCardList().getCards().indexOf(this.card.getCard());
             if(event.isShiftDown()){
@@ -244,6 +217,36 @@ public class CardController implements Initializable {
                 card.getController().focus();
             }
         }
+    }
+
+    private boolean up(KeyEvent event) throws IOException {
+        if(event.getCode() == KeyCode.UP){
+            int index = card.getParent().getCardList().getCards().indexOf(this.card.getCard());
+            if(event.isShiftDown()){
+                if(index<=0) return true;
+                var board = getParent().getParent();
+                var model = board.getModel();
+
+                ListModel targetList = this.getModel().getParent();
+                var newParentController = targetList.getController();
+
+                parent.getCardsContainer().getChildren().remove(cardContainer);
+                newParentController.moveCard(
+                        card,
+                        index-1
+                );
+                parent = newParentController;
+
+                model.moveCard(
+                        card,
+                        targetList,
+                        index-1
+                );
+
+                card.getController().focus();
+            }
+        }
+        return false;
     }
 
     @FXML
