@@ -27,12 +27,6 @@ public class Board implements Serializable, Cloneable {
 
     private String title = "Untitled board";
 
-    private String boardColor = "0x91B7BF";
-
-    private String listColor = "0xD2A295";
-
-    private String cardColor = "0xF7EFD2";
-
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @OrderColumn
     private List<CardList> lists;
@@ -85,35 +79,6 @@ public class Board implements Serializable, Cloneable {
 
     public Timestamp getTimestamp() {
         return timestamp;
-    }
-
-
-    public void setBoardColor(String boardColor) {
-        this.boardColor = boardColor;
-    }
-
-    public String getBoardColor() {
-        return boardColor;
-    }
-
-    public String getListColor() {
-        return listColor;
-    }
-
-    public void setListColor(String listColor) {
-        this.listColor = listColor;
-    }
-
-    public void setTimestamp(Timestamp timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    public String getCardColor() {
-        return cardColor;
-    }
-
-    public void setCardColor(String cardColor) {
-        this.cardColor = cardColor;
     }
 
     public void sync() {
@@ -201,9 +166,6 @@ public class Board implements Serializable, Cloneable {
                 .append(id, board.id)
                 .append(title, board.title)
                 .append(lists, board.lists)
-                .append(boardColor, board.boardColor)
-                .append(listColor, board.listColor)
-                .append(cardColor, board.cardColor)
                 .isEquals();
     }
 
@@ -213,9 +175,6 @@ public class Board implements Serializable, Cloneable {
                 .append(id)
                 .append(title)
                 .append(lists)
-                .append(boardColor)
-                .append(listColor)
-                .append(cardColor)
                 .toHashCode();
     }
 

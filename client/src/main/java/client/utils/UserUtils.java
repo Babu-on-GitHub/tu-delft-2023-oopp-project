@@ -1,6 +1,7 @@
 package client.utils;
 
 import com.google.inject.Inject;
+import commons.BoardIdWithColors;
 import commons.User;
 
 import java.io.*;
@@ -23,13 +24,13 @@ public class UserUtils {
         USER_FILE = file;
     }
 
-    public List<Long> getUserBoardsIds() {
+    public List<BoardIdWithColors> getUserBoardsIds() {
         if (user == null) retrieveSavedUser();
         String server = utils.getSERVER();
         return user.getUserBoardsIds(server);
     }
 
-    public void updateUserBoards(List<Long> boards) {
+    public void updateUserBoards(List<BoardIdWithColors> boards) {
         if (user == null) retrieveSavedUser();
         String server = utils.getSERVER();
         user.setUserBoardsForServer(server, boards);

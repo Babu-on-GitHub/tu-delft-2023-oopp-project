@@ -22,7 +22,7 @@ public class User implements Serializable {
         return u;
     }
 
-    public void setUserBoardsForServer(String server, List<Long> boards) {
+    public void setUserBoardsForServer(String server, List<BoardIdWithColors> boards) {
         var s = serverBoardsPairs.stream().filter(q -> q.getServerAddress().equals(server)).findFirst();
         if (s.isPresent()) {
             s.get().setBoardsIds(boards);
@@ -31,32 +31,33 @@ public class User implements Serializable {
         }
     }
 
-    public List<Long> getUserBoardsIds(String server) {
+    public List<BoardIdWithColors> getUserBoardsIds(String server) {
         if (serverBoardsPairs == null) {
-            serverBoardsPairs = new ArrayList<>();
-            List<Long> boards = new ArrayList<>();
-            boards.add(1L);
-            serverBoardsPairs.add(new ServerInfo(server, boards));
-            return boards;
+            return makeDefaultBoard(server);
         }
         for (ServerInfo userServer : serverBoardsPairs) {
             if (userServer.getServerAddress().equals(server)) {
                 var b = userServer.getBoardsIds();
                 if (b == null || b.isEmpty()) {
-                    List<Long> boards = new ArrayList<>();
-                    boards.add(1L);
-                    userServer.setBoardsIds(boards);
-                    return boards;
+                    return makeDefaultBoard(server);
                 }
-                if (b.stream().filter(id -> id == 1).findAny().isEmpty()) {
-                    userServer.getBoardsIds().add(1L);
+                if (b.stream().filter(info -> info.getBoardId() == 1).findAny().isEmpty()) {
+                    userServer.getBoardsIds().add(new BoardIdWithColors(1L));
                     return userServer.getBoardsIds();
                 }
                 return userServer.getBoardsIds();
             }
         }
-        List<Long> boards = new ArrayList<>();
-        boards.add(1L);
+        List<BoardIdWithColors> boards = new ArrayList<>();
+        boards.add(new BoardIdWithColors(1L));
+        serverBoardsPairs.add(new ServerInfo(server, boards));
+        return boards;
+    }
+
+    private List<BoardIdWithColors> makeDefaultBoard(String server) {
+        serverBoardsPairs = new ArrayList<>();
+        List<BoardIdWithColors> boards = new ArrayList<>();
+        boards.add(new BoardIdWithColors(1L));
         serverBoardsPairs.add(new ServerInfo(server, boards));
         return boards;
     }
@@ -91,65 +92,5 @@ public class User implements Serializable {
             return false;
 
         return obj instanceof User && ((User) obj).getServerBoardsPairs().equals(serverBoardsPairs);
-    }
-
-    public static class ServerInfo implements Serializable {
-        private String serverAddress;
-        private List<Long> boardsIds;
-
-        public ServerInfo() {
-            boardsIds = new ArrayList<>();
-        }
-
-        public ServerInfo(String serverAddress) {
-            this.serverAddress = serverAddress;
-            boardsIds = new ArrayList<>();
-        }
-
-        public ServerInfo(String serverAddress, List<Long> boardsIds) {
-            this.serverAddress = serverAddress;
-            this.boardsIds = boardsIds;
-        }
-
-        /**
-         * Getter for serverAddress
-         */
-        public String getServerAddress() {
-            return serverAddress;
-        }
-
-        /**
-         * Setter for serverAddress
-         *
-         * @param serverAddress Value for serverAddress
-         */
-        public void setServerAddress(String serverAddress) {
-            this.serverAddress = serverAddress;
-        }
-
-        /**
-         * Getter for boardsIds
-         */
-        public List<Long> getBoardsIds() {
-            return boardsIds;
-        }
-
-        /**
-         * Setter for boardsIds
-         *
-         * @param boardsIds Value for boardsIds
-         */
-        public void setBoardsIds(List<Long> boardsIds) {
-            this.boardsIds = boardsIds;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (obj == null) return false;
-
-            return obj instanceof ServerInfo &&
-                    ((ServerInfo) obj).getServerAddress().equals(serverAddress)
-                    && ((ServerInfo) obj).getBoardsIds().equals(boardsIds);
-        }
     }
 }

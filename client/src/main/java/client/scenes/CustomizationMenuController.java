@@ -2,6 +2,7 @@ package client.scenes;
 
 import client.model.BoardModel;
 import client.model.ListModel;
+import client.utils.UserUtils;
 import commons.Board;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -19,6 +20,8 @@ public class CustomizationMenuController {
 
     private MainPageCtrl mainPageCtrl;
 
+    private UserUtils userUtils;
+
     @FXML
     private ColorPicker boardBackground;
 
@@ -28,6 +31,16 @@ public class CustomizationMenuController {
     @FXML
     private ColorPicker cardBackground;
 
+    @FXML
+    private ColorPicker boardFont;
+
+    @FXML
+    private ColorPicker listFont;
+
+    @FXML
+    private ColorPicker cardFont;
+
+
 
     public CustomizationMenuController(MainPageCtrl mainPageCtrl) {
         this.mainPageCtrl = mainPageCtrl;
@@ -36,14 +49,14 @@ public class CustomizationMenuController {
     public void closeStage(ActionEvent event) {
         mainPageCtrl.getModel().update();
         mainPageCtrl.getCustomizationStage().close();
-        boardBackground.setValue(Color.WHITE);
     }
 
     public void applyChanges(ActionEvent event) {
         // display updated board
         mainPageCtrl.showBoard();
-        // we need this because changing the colour twice breaks the colours
-        boardBackground.setValue(Color.WHITE);
+
+        //write colors to user utils
+        //userUtils.
     }
 
     public String makeColorString(Color color) {
@@ -54,6 +67,9 @@ public class CustomizationMenuController {
         return String.format("0x%08X", (r + g + b + a));
     }
 
+    public String makeColorStringWithHashtag(Color color) {
+        return "#" + makeColorString(color).substring(2);
+    }
 
     public void setBoardBackground(ActionEvent event) {
         BoardModel model = mainPageCtrl.getModel();
@@ -61,7 +77,7 @@ public class CustomizationMenuController {
 
         Color color = boardBackground.getValue();
         String colorString = this.makeColorString(color);
-        board.setBoardColor(colorString);
+        //board.setBoardColor(colorString);
 
         board.sync(); // make client board's timestamp newer
         model.update(); // hence update board on the database
@@ -72,24 +88,11 @@ public class CustomizationMenuController {
         Board board = model.getBoard();
 
         String colorString = "0x91B7BF";
-        board.setBoardColor(colorString);
+        //board.setBoardColor(colorString);
 
-        board.sync(); //make client board's timestamp newer
-        model.update(); // hence update board on the database
+        board.sync();
+        model.update();
         mainPageCtrl.showBoard(); // display updated board
-    }
-
-    public void boardPreset1(ActionEvent event) {
-        BoardModel model = mainPageCtrl.getModel();
-        Board board = model.getBoard();
-
-        String colorString = "0x22ee33";
-        //also have ist and card colours
-        board.setBoardColor(colorString);
-
-        board.sync(); //make client board's timestamp newer
-        model.update(); //hence update board on the database
-        mainPageCtrl.showBoard(); //display updated board
     }
 
     public void setListBackground(ActionEvent event) {
@@ -98,7 +101,7 @@ public class CustomizationMenuController {
 
         Color color = listBackground.getValue();
         String colorString = this.makeColorString(color);
-        board.setListColor(colorString);
+        //board.setListColor(colorString);
 
         board.sync();
         model.update();
@@ -109,21 +112,21 @@ public class CustomizationMenuController {
         Board board = model.getBoard();
 
         String colorString = "0xD2A295";
-        board.setListColor(colorString);
+        //board.setListColor(colorString);
 
-        board.sync(); //make client board's timestamp newer
-        model.update(); // hence update board on the database
-        mainPageCtrl.showBoard(); // display updated board
+        board.sync();
+        model.update();
+        mainPageCtrl.showBoard();
     }
 
-    public void setCardBackground(ActionEvent event) {
+    public void setCardBackground() {
         BoardModel model = mainPageCtrl.getModel();
         List<ListModel> listModels = model.getChildren();
         Board board = model.getBoard();
 
         Color color = cardBackground.getValue();
         String colorString = this.makeColorString(color);
-        board.setCardColor(colorString);
+        //board.setCardColor(colorString);
 
         board.sync();
         model.update();
@@ -135,10 +138,38 @@ public class CustomizationMenuController {
         Board board = model.getBoard();
 
         String colorString = "0xF7EFD2";
-        board.setCardColor(colorString);
+        //board.setCardColor(colorString);
 
-        board.sync(); //make client board's timestamp newer
-        model.update(); // hence update board on the database
-        mainPageCtrl.showBoard(); // display updated board
+        board.sync();
+        model.update();
+        mainPageCtrl.showBoard();
+    }
+
+    public void setBoardFont(ActionEvent event) {
+        BoardModel model = mainPageCtrl.getModel();
+        Board board = model.getBoard();
+
+        Color color = boardFont.getValue();
+        String colorString = this.makeColorStringWithHashtag(color);
+        //board.setBoardFont(colorString);
+
+        board.sync();
+        model.update();
+    }
+
+    public void setListFont(ActionEvent event) {
+        BoardModel model = mainPageCtrl.getModel();
+        Board board = model.getBoard();
+
+        //Color color = setCardBackground().getValue();
+        //String colorString = this.makeColorStringWithHashtag(color);
+        //board.setCardFont(colorString);
+
+        board.sync();
+        model.update();
+    }
+
+    public void setCardFont(ActionEvent event) {
+
     }
 }

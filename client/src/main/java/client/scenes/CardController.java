@@ -276,4 +276,6 @@ public class CardController implements Initializable {
         var fill = new Background(new BackgroundFill(colorCode, new CornerRadii(20), null));
         cardContainer.setBackground(fill);
     }
+
+
 }

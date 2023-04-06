@@ -7,6 +7,7 @@ import client.utils.ServerUtils;
 import client.utils.UserUtils;
 import com.google.inject.Inject;
 import commons.Board;
+import commons.BoardIdWithColors;
 import commons.CardList;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -19,6 +20,8 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.control.skin.TextFieldSkin;
+import javafx.scene.control.skin.TextInputControlSkin;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -26,6 +29,7 @@ import javafx.scene.paint.Color;
 
 import javafx.event.ActionEvent;
 import javafx.scene.paint.Paint;
+import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -62,7 +66,7 @@ public class MainPageCtrl implements Initializable {
 
     private BoardModel board;
 
-    private List<Long> boardList;
+    private List<BoardIdWithColors> boardList;
 
     @FXML
     private SplitPane splitPane;
@@ -193,7 +197,11 @@ public class MainPageCtrl implements Initializable {
             refreshBoardsListButton.setVisible(false);
             leaveBoardButton.setVisible(true);
         }
-        boardList = userUtils.getUserBoardsIds();
+        //boardListWithClors = userUtils.getUserBoardsIds();
+        //this.setBoardsColors(boardListWithColors.get(this.board.id));
+        //this.setBoardListColors(boardListWithColors);
+
+
         try {
             showBoardsList();
         } catch (IOException e) {
@@ -257,6 +265,12 @@ public class MainPageCtrl implements Initializable {
         var desaturated = colorCode.desaturate().desaturate();
         var fillDesaturated = new Background(new BackgroundFill(desaturated, null, null));
         cardListsContainer.setBackground(fillDesaturated);
+        boardScrollPane.setBackground(fillDesaturated);
+    }
+
+
+    public void setBoardFont(String boardFont) {
+        boardName.setStyle("-fx-text-fill: " + boardFont + ";");
     }
 
     @FXML
@@ -283,7 +297,7 @@ public class MainPageCtrl implements Initializable {
         model.setController(controller);
 
         Node newList = loader.load();
-        controller.setListColorFXML(model.getParent().getBoard().getListColor());
+        //controller.setListColorFXML(model.getParent().getBoard().getListColor());
         cardListsContainer.getChildren().add(newList);
     }
 
@@ -291,7 +305,7 @@ public class MainPageCtrl implements Initializable {
         return cardListsContainer;
     }
 
-    public List<Long> getBoardList() {
+    public List<BoardIdWithColors> getBoardList() {
         return boardList;
     }
 
@@ -329,16 +343,6 @@ public class MainPageCtrl implements Initializable {
 
         //set colors as soon as "apply is pressed"
         this.getModel().applyColors();
-//        this.setBoardColorFXML(board.getBoard().getBoardColor());
-//
-//        var lists = this.getModel().getChildren();
-//        for(ListModel list: lists) {
-//            list.getController().setListColorFXML(board.getBoard().getListColor());
-//            var cards = list.getChildren();
-//            for(CardModel card: cards) {
-//                card.getController().setCardColorFXML(board.getBoard().getCardColor());
-//            }
-//        }
 
         if (this.board.getChildren().isEmpty()) {
             showEmptyBoardPrompt();
@@ -406,7 +410,11 @@ public class MainPageCtrl implements Initializable {
         if (newBoardList.isEmpty()) {
             log.warning("Something went wrong fetching the boards");
         } else {
-            boardList = newBoardList.get().stream().map(Board::getId).toList();
+            var boardListIds = newBoardList.get().stream().map(Board::getId).toList();
+            boardList.clear();
+            for(Long id: boardListIds) {
+                boardList.add(new BoardIdWithColors(id));
+            }
         }
     }
 
@@ -418,7 +426,7 @@ public class MainPageCtrl implements Initializable {
         }
         boardsListContainer.getChildren().clear();
         for (var newBoard : boardList) {
-            addBoardListItemToList(newBoard);
+            addBoardListItemToList(newBoard.getBoardId());
         }
 
     }

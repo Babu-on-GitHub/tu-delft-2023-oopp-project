@@ -3,6 +3,7 @@ package client.scenes;
 import client.utils.ServerUtils;
 import client.utils.UserUtils;
 import commons.Board;
+import commons.BoardIdWithColors;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -46,9 +47,9 @@ public class AddBoardController {
                 idBar.setStyle("-fx-border-color: red;");
                 return;
             }
-            List<Long> boards = parent.getBoardList();
-            if(boards.stream().filter(q->q == added.get().getId()).findAny().isEmpty()){
-                boards.add(added.get().getId());
+            List<BoardIdWithColors> boards = parent.getBoardList();
+            if(boards.stream().filter(q->q.getBoardId() == added.get().getId()).findAny().isEmpty()){
+                boards.add(new BoardIdWithColors(added.get().getId()));
                 userUtils.updateUserBoards(parent.getBoardList());
                 parent.addBoardListItemToList(added.get().getId());
             }
@@ -71,7 +72,7 @@ public class AddBoardController {
             log.warning("Failed to add board");
             return;
         }
-        parent.getBoardList().add(added.get().getId());
+        parent.getBoardList().add(new BoardIdWithColors(added.get().getId()));
         userUtils.updateUserBoards(parent.getBoardList());
         try {
             parent.addBoardListItemToList(added.get().getId());

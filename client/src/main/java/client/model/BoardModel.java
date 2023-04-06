@@ -320,14 +320,15 @@ public class BoardModel {
     }
 
     public void applyColors() {
-        controller.setBoardColorFXML(board.getBoardColor());
-        for (ListModel list : children) {
-            list.getController().setListColorFXML(board.getListColor());
-            var childrenCards = list.getChildren();
-            for (CardModel card : childrenCards) {
-                card.getController().setCardColorFXML(board.getCardColor());
-            }
-        }
+//        controller.setBoardColorFXML(board.getBoardColor());
+//        controller.setBoardFont(board.getBoardFont());
+//        for (ListModel list : children) {
+//            list.getController().setListColorFXML(board.getListColor());
+//            var childrenCards = list.getChildren();
+//            for (CardModel card : childrenCards) {
+//                card.getController().setCardColorFXML(board.getCardColor());
+//            }
+//        }
     }
     public Set<Tag> getAllTags() {
         return getBoard().getTags();

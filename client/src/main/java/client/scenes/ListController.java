@@ -97,7 +97,7 @@ public class ListController implements Initializable {
         CardModel newCard = new CardModel(new Card(), listModel, server);
         addCard(newCard); // keep this order of add card and listModel.addCard
         listModel.addCard(newCard);
-        newCard.getController().setCardColorFXML(parent.getModel().getBoard().getCardColor());
+        //newCard.getController().setCardColorFXML(parent.getModel().getBoard().getCardColor());
     }
 
     private int whichIndexToDropIn(double absolutePosition) {
