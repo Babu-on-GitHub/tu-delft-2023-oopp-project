@@ -214,9 +214,8 @@ public class CardController implements Initializable {
                         targetList,
                         index-1
                 );
-            }
-            if(index >= 0){
-                card.getParent().getChildren().get(index).getController().focus();
+
+                card.getController().focus();
             }
         }
         if(event.getCode() == KeyCode.DOWN){
@@ -241,9 +240,8 @@ public class CardController implements Initializable {
                         targetList,
                         index+1
                 );
-            }
-            if(index < card.getParent().getChildren().size()){
-                card.getParent().getChildren().get(index).getController().focus();
+
+                card.getController().focus();
             }
         }
     }

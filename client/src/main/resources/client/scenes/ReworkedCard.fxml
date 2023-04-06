@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="cardContainer" minHeight="-Infinity" onDragDetected="#dragDetected" onDragDone="#dragDone" onKeyPressed="#keyPress" onMouseClicked="#checkDoubleClick" onMouseEntered="#highlight" prefHeight="193.0" prefWidth="313.0" styleClass="default-border" stylesheets="@../css/card.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="cardContainer" minHeight="-Infinity" onDragDetected="#dragDetected" onDragDone="#dragDone" onKeyPressed="#keyPress" onMouseClicked="#checkDoubleClick" onMouseMoved="#highlight" prefHeight="193.0" prefWidth="313.0" styleClass="default-border" stylesheets="@../css/card.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <TextField fx:id="cardTitle" layoutX="18.0" layoutY="7.0" prefHeight="80.0" prefWidth="213.0" style="-fx-background-color: inherit;" text="NEW CARD" AnchorPane.leftAnchor="17.0" AnchorPane.rightAnchor="83.0" AnchorPane.topAnchor="6.0">
          <font>
