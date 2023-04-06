@@ -22,7 +22,7 @@
          <font>
             <Font size="16.0" />
          </font></TextArea>
-      <StackPane VBox.vgrow="NEVER">
+      <StackPane fx:id="subtaskStackPane" VBox.vgrow="NEVER">
          <children>
             <Button mnemonicParsing="false" onAction="#addTask" text="Add subtask" StackPane.alignment="CENTER_RIGHT">
                <StackPane.margin>
@@ -36,7 +36,7 @@
                   </ImageView>
                </graphic>
             </Button>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Subtasks" StackPane.alignment="CENTER_LEFT">
+            <Text fx:id="subtaskLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="Subtasks" StackPane.alignment="CENTER_LEFT">
                <font>
                   <Font size="22.0" />
                </font>
@@ -46,7 +46,7 @@
             </Text>
          </children>
       </StackPane>
-      <ScrollPane hbarPolicy="NEVER" prefWidth="300.0" style="-fx-fit-to-width: true;" styleClass="scroll" VBox.vgrow="ALWAYS">
+      <ScrollPane fx:id="subtaskScrollPane" hbarPolicy="NEVER" prefWidth="300.0" style="-fx-fit-to-width: true;" styleClass="scroll" VBox.vgrow="ALWAYS">
          <content>
             <VBox fx:id="subtaskArea" prefHeight="170.0" />
          </content>

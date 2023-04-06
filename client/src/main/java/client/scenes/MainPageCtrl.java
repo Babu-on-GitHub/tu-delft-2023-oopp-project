@@ -112,7 +112,6 @@ public class MainPageCtrl implements Initializable {
         if (event.isShiftDown() && event.getCode() == KeyCode.SLASH) {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("HelpScreen.fxml"));
 
-
             Parent root = loader.load();
 
             secondStage = new Stage();
