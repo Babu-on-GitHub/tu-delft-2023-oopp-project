@@ -23,6 +23,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 
 import javafx.event.ActionEvent;
@@ -57,6 +58,9 @@ public class MainPageCtrl implements Initializable {
 
     @FXML
     private HBox cardListsContainer;
+
+    @FXML
+    private BorderPane pageRoot;
 
     @FXML
     private ScrollPane boardScrollPane;
@@ -116,6 +120,11 @@ public class MainPageCtrl implements Initializable {
             secondStage.initOwner(boardName.getScene().getWindow());
             secondStage.show();
         }
+//        if(event.getCode() == KeyCode.DOWN){
+//            Stage stage = (Stage) pageRoot.getScene().getWindow();
+//            Node focused = stage.getScene().getFocusOwner();
+//            if focused
+//        }
     }
     @Override
     public void initialize(URL location, ResourceBundle resources) {

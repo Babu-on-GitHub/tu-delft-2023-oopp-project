@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane id="scene" maxHeight="-Infinity" maxWidth="-Infinity" onKeyPressed="#keyPressBoard" prefHeight="800.0" prefWidth="1000.0" styleClass="border-pane" stylesheets="@/client/css/mainPage.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.MainPageCtrl">
+<BorderPane id="scene" fx:id="pageRoot" maxHeight="-Infinity" maxWidth="-Infinity" onKeyPressed="#keyPressBoard" prefHeight="800.0" prefWidth="1000.0" styleClass="border-pane" stylesheets="@/client/css/mainPage.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.MainPageCtrl">
    <top>
       <AnchorPane prefHeight="79.0" prefWidth="1000.0" style="-fx-border-color: #bababa; -fx-border-width: 2px;" BorderPane.alignment="CENTER">
          <children>

@@ -194,8 +194,8 @@ public class CardController implements Initializable {
         }
         if(event.getCode() == KeyCode.UP){
             int index = card.getParent().getCardList().getCards().indexOf(this.card.getCard());
+            if(index<=0) return;
             if(event.isShiftDown()){
-                if(index<=0) return;
                 var board = getParent().getParent();
                 var model = board.getModel();
 
@@ -216,12 +216,19 @@ public class CardController implements Initializable {
                 );
 
                 card.getController().focus();
+            }else {
+                Long id = card.getParent().getCardList().getCards().get(index-1).getId();
+                CardController c = card.getParent().getChildren().stream()
+                        .filter(q->q.getCard().getId()==id)
+                        .findFirst().
+                        get().getController();
+                c.focus();
             }
         }
         if(event.getCode() == KeyCode.DOWN){
             int index = card.getParent().getCardList().getCards().indexOf(this.card.getCard());
+            if(index>=card.getParent().getCardList().getCards().size()-1) return;
             if(event.isShiftDown()){
-                if(index>=card.getParent().getCardList().getCards().size()-1) return;
                 var board = getParent().getParent();
                 var model = board.getModel();
 
@@ -242,13 +249,20 @@ public class CardController implements Initializable {
                 );
 
                 card.getController().focus();
+            }else{
+                long id = card.getParent().getCardList().getCards().get(index+1).getId();
+                CardController c = card.getParent().getChildren().stream()
+                        .filter(q->q.getCard().getId()==id)
+                        .findFirst().
+                        get().getController();
+                c.focus();
             }
         }
     }
 
     @FXML
     void highlight(MouseEvent event) {
-        cardContainer.requestFocus();
+        focus();
     }
 
     public void focus(){
