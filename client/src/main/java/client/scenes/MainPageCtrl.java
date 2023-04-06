@@ -120,11 +120,6 @@ public class MainPageCtrl implements Initializable {
             secondStage.initOwner(boardName.getScene().getWindow());
             secondStage.show();
         }
-//        if(event.getCode() == KeyCode.DOWN){
-//            Stage stage = (Stage) pageRoot.getScene().getWindow();
-//            Node focused = stage.getScene().getFocusOwner();
-//            if focused
-//        }
     }
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -137,11 +132,11 @@ public class MainPageCtrl implements Initializable {
     }
 
     @FXML
-    void tagOverviewButton(ActionEvent event){
+    void tagOverviewButton(ActionEvent event) {
         showTagOverview();
     }
 
-    public void showTagOverview(){
+    public void showTagOverview() {
 
     }
 
@@ -153,7 +148,7 @@ public class MainPageCtrl implements Initializable {
         return board.getBoard();
     }
 
-    public void initializeServerStuff(){
+    public void initializeServerStuff() {
         try {
             initializeBoard();
 
@@ -201,10 +196,10 @@ public class MainPageCtrl implements Initializable {
     }
 
     public void refresh() {
-        if(admin){
+        if (admin) {
             refreshBoardsListButton.setVisible(true);
             leaveBoardButton.setVisible(false);
-        }else{
+        } else {
             refreshBoardsListButton.setVisible(false);
             leaveBoardButton.setVisible(true);
         }
@@ -396,9 +391,9 @@ public class MainPageCtrl implements Initializable {
     public void addBoardButton(ActionEvent event) throws IOException {
         if (admin) {
             var b = server.addBoard(new Board());
-            if(b.isEmpty()){
+            if (b.isEmpty()) {
                 log.warning("Failed to add board");
-            }else{
+            } else {
                 setBoardOverview(b.get().getId());
                 showBoardsList();
             }
@@ -443,7 +438,7 @@ public class MainPageCtrl implements Initializable {
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == buttonTypeOK) {
             server.deleteBoardById(board.getBoard().getId());
-            if(!admin){
+            if (!admin) {
                 boardList.remove(board.getBoard().getId());
                 userUtils.updateUserBoards(boardList);
             }
