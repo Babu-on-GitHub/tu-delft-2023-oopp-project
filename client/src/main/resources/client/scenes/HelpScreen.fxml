@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.HelpScreen">
+    <children>
+        <Label alignment="TOP_CENTER" layoutX="147.0" layoutY="14.0" prefHeight="58.0" prefWidth="321.0" text="Help Screen">
+            <font>
+                <Font size="42.0" />
+            </font>
+        </Label>
+      <VBox layoutX="17.0" layoutY="99.0" prefHeight="231.0" prefWidth="567.0">
+         <children>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="● Press “?” anywhere in the application to open a help screen." wrappingWidth="562.13671875">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Text>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="● Hover with the mouse over a task to highlight it." wrappingWidth="562.13671875">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Text>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="● Move the task highlight with arrow keys (Up/Down/Left/Right)." wrappingWidth="562.13671875">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Text>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="● Press “Shift+Up/Down” to change the order of tasks in the list." wrappingWidth="562.13671875">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Text>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="● Press “E” to edit the task title directly in the overview." wrappingWidth="562.13671875">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Text>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="● Press “Del” or “Backspace” to delete a task." wrappingWidth="562.13671875">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Text>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="● Press “Enter” to open the task details." wrappingWidth="562.13671875">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Text>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="● Press “Esc” to close the task details." wrappingWidth="562.13671875">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Text>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="● Press “T” for a popup for adding tags (by mouse click)." wrappingWidth="562.13671875">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Text>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="● Press “C” for a popup for color preset selection (by click)." wrappingWidth="562.13671875">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Text>
+         </children>
+      </VBox>
+      <Button layoutX="246.0" layoutY="339.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="124.0" text="OK" />
+    </children>
+</AnchorPane>
