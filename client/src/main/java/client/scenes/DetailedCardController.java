@@ -11,6 +11,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -254,12 +255,13 @@ public class DetailedCardController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        detailedCardBox.setOnKeyPressed(event -> {
-            if (event.getCode() == javafx.scene.input.KeyCode.ESCAPE) {
-                System.out.println("Escape key pressed. Exiting...");
-                Stage secondStage = (Stage) detailedCardBox.getScene().getWindow();
-                secondStage.close();
-            }
-        });
+    }
+
+    public void keyPress(KeyEvent event){
+        if (event.getCode() == javafx.scene.input.KeyCode.ESCAPE) {
+            System.out.println("Escape key pressed. Exiting...");
+            Stage secondStage = (Stage) detailedCardBox.getScene().getWindow();
+            secondStage.close();
+        }
     }
 }
