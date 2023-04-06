@@ -32,7 +32,10 @@ public class TagCreateController implements Initializable {
     public AnchorPane root;
 
     @FXML
-    public ColorPicker colorPicker;
+    public ColorPicker backgroundColorPicker;
+
+    @FXML
+    public ColorPicker fontColorPicker;
 
     private Tag tag;
 
@@ -60,15 +63,19 @@ public class TagCreateController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         title.setText(tag.getTitle());
-        String color = tag.getColor();
-        if(color!=null) colorPicker.setValue(Color.web(color));
+        String bgColor = tag.getColorPair().getBackground();
+        String fontColor = tag.getColorPair().getFont();
+        if(bgColor!=null) backgroundColorPicker.setValue(Color.web(bgColor));
+        if(fontColor!=null) fontColorPicker.setValue(Color.web(fontColor));
     }
 
     @FXML
     void save() throws IOException {
         tag.setTitle(title.getText());
-        Color color = colorPicker.getValue();
-        tag.setColor(toHexString(color));
+        Color bgColor = backgroundColorPicker.getValue();
+        Color fontColor = fontColorPicker.getValue();
+        tag.getColorPair().setBackground(toHexString(bgColor));
+        tag.getColorPair().setFont(toHexString(fontColor));
 
         if(detailedCardController!=null){
             if (tag.getId() == 0) {

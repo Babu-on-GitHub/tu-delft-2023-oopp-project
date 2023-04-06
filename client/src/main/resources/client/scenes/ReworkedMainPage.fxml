@@ -127,7 +127,7 @@
                           <graphic>
                              <ImageView id="changeServerImage" fx:id="customizeImage" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                 <image>
-                                   <Image url="@/client/icons/PNG/dns_FILL0_wght0_GRAD0_opszNaN.png" />
+                                   <Image url="@/client/icons/PNG/tune_FILL0_wght400_GRAD0_opsz48.png" />
                                 </image>
                              </ImageView>
                           </graphic>

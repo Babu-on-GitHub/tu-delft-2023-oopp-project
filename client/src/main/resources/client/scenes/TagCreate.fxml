@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="root" prefHeight="222.0" prefWidth="564.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="root" prefHeight="257.0" prefWidth="564.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <TextField fx:id="title" alignment="CENTER" layoutX="20.0" layoutY="14.0" prefHeight="67.0" prefWidth="433.0" text="New Tag" AnchorPane.leftAnchor="22.0" AnchorPane.rightAnchor="22.0" AnchorPane.topAnchor="14.0">
          <font>
@@ -24,8 +24,14 @@
             <Font size="18.0" />
          </font>
       </Button>
-      <ColorPicker fx:id="colorPicker" layoutX="264.0" layoutY="97.0" prefHeight="39.0" prefWidth="144.0" promptText="Choose color" style="-fx-background-color: inherit;" AnchorPane.rightAnchor="156.0" AnchorPane.topAnchor="97.0" />
-      <Label layoutX="30.0" layoutY="103.0" text="Choose a color for the tag:">
+      <ColorPicker fx:id="backgroundColorPicker" layoutX="360.0" layoutY="97.0" prefHeight="39.0" prefWidth="144.0" promptText="Choose background color" style="-fx-background-color: inherit;" AnchorPane.rightAnchor="60.0" AnchorPane.topAnchor="97.0" />
+      <Label layoutX="30.0" layoutY="103.0" text="Choose a background color for the tag:">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <ColorPicker fx:id="fontColorPicker" layoutX="360.0" layoutY="136.0" prefHeight="39.0" prefWidth="144.0" promptText="Choose font color" style="-fx-background-color: inherit;" />
+      <Label layoutX="30.0" layoutY="142.0" text="Choose a font color for the tag:">
          <font>
             <Font size="18.0" />
          </font>
