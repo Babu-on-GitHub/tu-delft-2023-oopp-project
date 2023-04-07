@@ -58,26 +58,14 @@ public class CustomizationMenuController implements Initializable {
         }
         catch (Exception e) {
             e.printStackTrace();
-        }    }
-
-    public void closeStage(ActionEvent event) {
-        this.mainPageCtrl = mainPageCtrl;
-        try {
-            // find the board with the id
-            var thisBoardColors = mainPageCtrl.getColors();
-
-            if (thisBoardColors == null)
-                throw new Exception("Board not found, impossible");
-
-            colorState = thisBoardColors.clone();
-        }
-        catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
+    public void closeStage(ActionEvent event) {
+        mainPageCtrl.getCustomizationStage().close();
+    }
+
     public void applyChanges(ActionEvent event) {
-        mainPageCtrl.showBoard();
         mainPageCtrl.getUserUtils().updateSingleBoard(colorState);
         mainPageCtrl.globalColorUpdate();
     }
@@ -108,7 +96,7 @@ public class CustomizationMenuController implements Initializable {
 
     public void resetBoardBackground(ActionEvent event) {
         try {
-            colorState.setBoardPair(mainPageCtrl.getBoardColor().clone());
+            colorState.setBoardPair(mainPageCtrl.getDefaultBoardColor().clone());
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException(e);
         }
@@ -126,7 +114,7 @@ public class CustomizationMenuController implements Initializable {
 
     public void resetListBackground(ActionEvent event) {
         try {
-            colorState.setListPair(mainPageCtrl.getListColor().clone());
+            colorState.setListPair(mainPageCtrl.getDefaultListColor().clone());
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException(e);
         }
@@ -143,7 +131,7 @@ public class CustomizationMenuController implements Initializable {
 
     public void resetCardBackground(ActionEvent event) {
         try {
-            colorState.setCardPair(mainPageCtrl.getCardColor(-1).clone());
+            colorState.setCardPair(mainPageCtrl.getDefaultCardColor().clone());
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException(e);
         }

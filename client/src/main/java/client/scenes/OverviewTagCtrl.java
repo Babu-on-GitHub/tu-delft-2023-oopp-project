@@ -51,7 +51,6 @@ public class OverviewTagCtrl implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        System.out.println(tag.getTitle() + tag.getColorPair().getBackground());
         tagRoot.setStyle("-fx-background-color: " + tag.getColorPair().getBackground() + ";");
         title.setText(tag.getTitle());
         title.setStyle("-fx-fill: " + tag.getColorPair().getFont() + ";");

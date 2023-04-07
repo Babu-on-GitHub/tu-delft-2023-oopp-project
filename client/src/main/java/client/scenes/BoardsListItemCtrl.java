@@ -62,8 +62,6 @@ public class BoardsListItemCtrl implements Initializable {
         return props;
     }
 
-
-
     private void setImage(ImageView img, String path){
         File file = new File(path);
         Image image = new Image(file.toURI().toString());
@@ -80,7 +78,7 @@ public class BoardsListItemCtrl implements Initializable {
         var board = utils.getBoardById(props.getBoardId());
         if(board.isEmpty()){
             boardName = "???";
-            //adding an entire style sheet here is redundant.
+            // adding an entire style sheet here is redundant.
             // If the style is applied the scene will be deleted on first interaction anyways
             boardItemButton.setStyle("-fx-text-fill: red;");
         }
