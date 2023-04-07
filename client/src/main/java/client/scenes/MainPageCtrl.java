@@ -103,7 +103,6 @@ public class MainPageCtrl implements Initializable {
 
     private Stage customizationStage;
 
-
     @FXML
     private Button customizeButton;
 
@@ -130,8 +129,6 @@ public class MainPageCtrl implements Initializable {
 
     @FXML
     private MenuItem leaveBoardMenuItem;
-
-
 
 
     @Inject
@@ -276,7 +273,6 @@ public class MainPageCtrl implements Initializable {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("CustomizationMenu.fxml"));
             loader.setController(new CustomizationMenuController(this));
-
             Parent root = loader.load();
 
             customizationStage = new Stage();
@@ -431,7 +427,7 @@ public class MainPageCtrl implements Initializable {
             alert.setHeaderText("This board no longer exists");
             alert.showAndWait();
 
-            boardList.remove(id);
+            boardList.removeIf((board) -> board.getBoardId() == id);
             userUtils.updateUserBoards(boardList);
             ///showBoardsList();
 
@@ -440,7 +436,7 @@ public class MainPageCtrl implements Initializable {
             showBoardsList();
             return;
         }
-        boardName.setText(board.getBoard().getTitle());
+        userUtils.setMyId((int) res.get().getId());
         this.board = new BoardModel(res.get(), server);
         cardListsContainer.getChildren().clear();
         showBoard();
@@ -498,6 +494,8 @@ public class MainPageCtrl implements Initializable {
         AnchorPane toAdd = loader.load();
 
         boardsListContainer.getChildren().add(toAdd);
+        boardListControllers.add(controller);
+        boardListControllers.add(controller);
     }
 
     @FXML
@@ -552,7 +550,7 @@ public class MainPageCtrl implements Initializable {
         if (result.get() == buttonTypeOK) {
             server.deleteBoardById(board.getBoard().getId());
             if(!admin){
-                boardList.remove(board.getBoard().getId());
+                boardList.removeIf(b -> b.getBoardId() == board.getBoard().getId());
                 userUtils.updateUserBoards(boardList);
             }
             showBoardsList();
@@ -574,7 +572,7 @@ public class MainPageCtrl implements Initializable {
             alert.showAndWait();
             return;
         }
-        boardList.remove(board.getBoard().getId());
+        boardList.removeIf(b -> b.getBoardId() == board.getBoard().getId());
         userUtils.updateUserBoards(boardList);
         showBoardsList();
         initializeBoard();
@@ -659,6 +657,18 @@ public class MainPageCtrl implements Initializable {
         if (color == null)
             return new ColorPair();
         return color.getBoardPair();
+    }
+
+    public ColorPair getDefaultBoardColor() {
+        return new BoardIdWithColors(1).getBoardPair();
+    }
+
+    public ColorPair getDefaultListColor() {
+        return new BoardIdWithColors(1).getListPair();
+    }
+
+    public ColorPair getDefaultCardColor() {
+        return new BoardIdWithColors(1).getCardPair();
     }
 
     public void globalColorUpdate() {
