@@ -3,11 +3,11 @@ package commons;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class ColorPair implements Serializable {
+public class ColorPair implements Serializable, Cloneable {
 
-    String background = "#FFFFFF";
+    private String background = "#ffffff";
 
-    String font = "#000000";
+    private String font = "#111111";
 
     public ColorPair() {
     }
@@ -37,17 +37,21 @@ public class ColorPair implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         ColorPair colorPair = (ColorPair) o;
-
-        if (!Objects.equals(background, colorPair.background)) return false;
-        return Objects.equals(font, colorPair.font);
+        return Objects.equals(background, colorPair.background)
+                && Objects.equals(font, colorPair.font);
     }
 
     @Override
     public int hashCode() {
-        int result = background != null ? background.hashCode() : 0;
-        result = 31 * result + (font != null ? font.hashCode() : 0);
-        return result;
+        return Objects.hash(background, font);
+    }
+
+    @Override
+    public ColorPair clone() throws CloneNotSupportedException {
+        ColorPair colorPair = (ColorPair) super.clone();
+        colorPair.setBackground(background);
+        colorPair.setFont(font);
+        return colorPair;
     }
 }

@@ -8,12 +8,12 @@
 <?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="341.0" prefWidth="425.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
-    <children>
-        <Label layoutX="118.0" layoutY="10.0" text="Customization">
-            <font>
-                <Font size="30.0" />
-            </font>
-        </Label>
+   <children>
+      <Label layoutX="118.0" layoutY="10.0" text="Customization">
+         <font>
+            <Font size="30.0" />
+         </font>
+      </Label>
       <Pane layoutX="38.0" layoutY="44.0" prefHeight="273.0" prefWidth="349.0">
          <children>
             <Label layoutY="61.0" prefHeight="27.0" prefWidth="75.0" text="Board">
@@ -60,12 +60,12 @@
                   <Font size="18.0" />
                </font>
             </Button>
-            <Button fx:id="doneButton" layoutX="269.0" layoutY="227.0" mnemonicParsing="false" onAction="#closeStage" prefHeight="39.0" prefWidth="77.0" text="Done">
+            <Button fx:id="doneButton" layoutX="269.0" layoutY="227.0" mnemonicParsing="false" onAction="#done" prefHeight="39.0" prefWidth="77.0" text="Done">
                <font>
                   <Font size="18.0" />
                </font>
             </Button>
          </children>
       </Pane>
-    </children>
+   </children>
 </AnchorPane>

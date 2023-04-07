@@ -47,11 +47,12 @@ public class AddBoardController {
                 idBar.setStyle("-fx-border-color: red;");
                 return;
             }
-            List<BoardIdWithColors> boards = parent.getBoardList();
+            var boards = parent.getBoardList();
             if(boards.stream().filter(q->q.getBoardId() == added.get().getId()).findAny().isEmpty()){
-                boards.add(new BoardIdWithColors(added.get().getId()));
+                var col = new BoardIdWithColors(added.get().getId());
+                boards.add(col);
                 userUtils.updateUserBoards(parent.getBoardList());
-                parent.addBoardListItemToList(added.get().getId());
+                parent.addBoardListItemToList(col);
             }
             closeWindow(event);
         } catch (NumberFormatException | IOException e) {
@@ -72,10 +73,11 @@ public class AddBoardController {
             log.warning("Failed to add board");
             return;
         }
-        parent.getBoardList().add(new BoardIdWithColors(added.get().getId()));
+        var col = new BoardIdWithColors(added.get().getId());
+        parent.getBoardList().add(col);
         userUtils.updateUserBoards(parent.getBoardList());
         try {
-            parent.addBoardListItemToList(added.get().getId());
+            parent.addBoardListItemToList(col);
         } catch (IOException e) {
             log.warning("Failed to show newly created board");
         }

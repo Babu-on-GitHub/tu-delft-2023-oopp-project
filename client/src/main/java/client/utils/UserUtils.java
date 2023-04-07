@@ -15,6 +15,8 @@ public class UserUtils {
     private String USER_FILE = "src/main/resources/client/user.data";
     private User user;
 
+    private BoardIdWithColors currentBoard;
+
     @Inject
     public UserUtils(ServerUtils utils) {
         this.utils = utils;
@@ -22,6 +24,10 @@ public class UserUtils {
 
     public void setUserFile(String file) {
         USER_FILE = file;
+    }
+
+    public BoardIdWithColors getCurrentBoardColors() {
+        return currentBoard;
     }
 
     public List<BoardIdWithColors> getUserBoardsIds() {
@@ -34,7 +40,36 @@ public class UserUtils {
         if (user == null) retrieveSavedUser();
         String server = utils.getSERVER();
         user.setUserBoardsForServer(server, boards);
+        setMyId((int) currentBoard.getBoardId());
         storeUser();
+    }
+
+    public void updateSingleBoard(BoardIdWithColors board) {
+        if (user == null) retrieveSavedUser();
+        String server = utils.getSERVER();
+        user.updateSingleBoardForServer(server, board);
+        setMyId((int) currentBoard.getBoardId());
+        storeUser();
+    }
+
+    public void setMyId(int id) {
+        // find the board with the same id as the current board
+        if (user == null) retrieveSavedUser();
+        String server = utils.getSERVER();
+        var boards = user.getUserBoardsIds(server);
+        var boardOpt = boards.stream()
+                .filter(b -> b.getBoardId() == id)
+                .findFirst();
+        if (boardOpt.isEmpty()) {
+            log.warning("Couldn't find board with id " + currentBoard.getBoardId());
+            return;
+        }
+        try {
+            currentBoard = boardOpt.get().clone();
+        } catch (CloneNotSupportedException e) {
+            log.warning("Couldn't clone board");
+            e.printStackTrace();
+        }
     }
 
     private void retrieveSavedUser() {
