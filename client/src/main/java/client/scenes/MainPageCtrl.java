@@ -1,7 +1,6 @@
 package client.scenes;
 
 import client.model.BoardModel;
-import client.model.CardModel;
 import client.model.ListModel;
 import client.utils.ServerUtils;
 import client.utils.UserUtils;
@@ -9,6 +8,7 @@ import com.google.inject.Inject;
 import commons.Board;
 import commons.BoardIdWithColors;
 import commons.CardList;
+import commons.ColorPair;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,18 +18,16 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
-import javafx.scene.control.skin.TextFieldSkin;
-import javafx.scene.control.skin.TextInputControlSkin;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
 import javafx.event.ActionEvent;
-import javafx.scene.paint.Paint;
-import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -44,6 +42,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
+
+import static client.tools.ColorTools.toHexString;
 
 public class MainPageCtrl implements Initializable {
 
@@ -68,6 +68,8 @@ public class MainPageCtrl implements Initializable {
 
     private List<BoardIdWithColors> boardList;
 
+    private List<BoardsListItemCtrl> boardListControllers;
+
     @FXML
     private SplitPane splitPane;
 
@@ -89,6 +91,9 @@ public class MainPageCtrl implements Initializable {
     @FXML
     private Button leaveBoardButton;
 
+    @FXML
+    private Button addListButton;
+
     private boolean admin = false;
 
     @FXML
@@ -97,7 +102,35 @@ public class MainPageCtrl implements Initializable {
     private AnchorPane boardBottom;
 
     private Stage customizationStage;
-    private CustomizationMenuController customizationController;
+
+
+    @FXML
+    private Button customizeButton;
+
+    @FXML
+    private Button changeServerBtn;
+
+    @FXML
+    private Button tagsButton;
+
+    @FXML
+    private Label boardIdLabelText;
+
+    @FXML
+    private Button shareButton;
+
+    @FXML
+    private Button deleteButton;
+
+    @FXML
+    private AnchorPane boardsListAnchorPane;
+
+    @FXML
+    private MenuItem deleteBoardMenuItem;
+
+    @FXML
+    private MenuItem leaveBoardMenuItem;
+
 
 
 
@@ -107,6 +140,10 @@ public class MainPageCtrl implements Initializable {
         this.mainCtrl = mainCtrl;
         this.userUtils = userUtils;
         boardList = new ArrayList<>();
+        userUtils.setMyId(1);
+
+        boardList = new ArrayList<>();
+        boardListControllers = new ArrayList<>();
     }
 
     private void setImage(ImageView img, String path) {
@@ -123,6 +160,12 @@ public class MainPageCtrl implements Initializable {
 
         boardIdPanel.setVisible(false);
         boardIdLabel.setEditable(false);
+
+        updateBoardColors(getBoardColor());
+    }
+
+    public BoardIdWithColors getColors() {
+        return userUtils.getCurrentBoardColors();
     }
 
     @FXML
@@ -218,8 +261,9 @@ public class MainPageCtrl implements Initializable {
         board.updateWithNewBoard(b);
     }
 
-    public void overwriteTitleNode(String text) {
-        boardName.setText(text);
+    public void overWriteWithModel() {
+        boardName.setText(board.getBoard().getTitle());
+        updateBoardColors(getBoardColor());
     }
 
     @FXML
@@ -231,10 +275,8 @@ public class MainPageCtrl implements Initializable {
     public void optionsShowCustomizationMenu(ActionEvent event)  {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("CustomizationMenu.fxml"));
-            if (customizationController == null) {
-                customizationController = new CustomizationMenuController(this);
-            }
-            loader.setController(customizationController);
+            loader.setController(new CustomizationMenuController(this));
+
             Parent root = loader.load();
 
             customizationStage = new Stage();
@@ -261,16 +303,34 @@ public class MainPageCtrl implements Initializable {
         var fill = new Background(new BackgroundFill(colorCode, null, null));
         boardTop.setBackground(fill);
         boardBottom.setBackground(fill);
+        boardsListAnchorPane.setBackground(fill);
 
         var desaturated = colorCode.desaturate().desaturate();
         var fillDesaturated = new Background(new BackgroundFill(desaturated, null, null));
         cardListsContainer.setBackground(fillDesaturated);
         boardScrollPane.setBackground(fillDesaturated);
+        boardListScrollPane.setBackground(fillDesaturated);
+        //deleteBoardMenuItem.setStyle("-fx-fill: " + "blue" + ";");
+
     }
 
 
-    public void setBoardFont(String boardFont) {
-        boardName.setStyle("-fx-text-fill: " + boardFont + ";");
+    public void setBoardFontFXML(String color) {
+        var colorCode = Color.valueOf(color);
+
+        var styleStr = "-fx-text-fill: " + toHexString(colorCode) + " !important; -fx-background-color: inherit !important;";
+        boardName.setStyle(styleStr);
+        addListButton.setStyle(styleStr);
+        refreshBoardsListButton.setStyle(styleStr);
+        leaveBoardButton.setStyle(styleStr);
+        customizeButton.setStyle(styleStr);
+        changeServerBtn.setStyle(styleStr);
+        tagsButton.setStyle(styleStr);
+        boardIdLabelText.setStyle(styleStr);
+        shareButton.setStyle(styleStr);
+        deleteButton.setStyle(styleStr);
+        boardListScrollPane.setStyle(styleStr);
+        boardsListAnchorPane.setStyle(styleStr);
     }
 
     @FXML
@@ -340,9 +400,6 @@ public class MainPageCtrl implements Initializable {
 
         this.board.update();
         this.board.updateChildren();
-
-        //set colors as soon as "apply is pressed"
-        this.getModel().applyColors();
 
         if (this.board.getChildren().isEmpty()) {
             showEmptyBoardPrompt();
@@ -425,16 +482,18 @@ public class MainPageCtrl implements Initializable {
             getAllBoardsIds();
         }
         boardsListContainer.getChildren().clear();
+        boardListControllers.clear();
         for (var newBoard : boardList) {
-            addBoardListItemToList(newBoard.getBoardId());
+            addBoardListItemToList(newBoard);
         }
 
     }
 
-    public void addBoardListItemToList(long boardId) throws IOException {
+    public void addBoardListItemToList(BoardIdWithColors props) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("BoardsListItem.fxml"));
 
-        loader.setController(new BoardsListItemCtrl(boardId, this));
+        var controller = new BoardsListItemCtrl(props, this);
+        loader.setController(controller);
 
         AnchorPane toAdd = loader.load();
 
@@ -562,5 +621,76 @@ public class MainPageCtrl implements Initializable {
     public void shutDown() {
         server.getSocketUtils().disconnect();
         server.getPollingUtils().stopLongPolling();
+    }
+
+
+    public ColorPair getCardColor(long id) {
+        var data = userUtils.getUserBoardsIds();
+
+        var boardData = data.stream().
+                filter(x -> x.getBoardId() == board.getBoard().
+                        getId()).findFirst();
+
+        if (boardData.isEmpty()) {
+            log.severe("Hmm, something went wrong");
+            return new ColorPair();
+        }
+
+        var cardData = boardData.get().getCardHighlightColors().get(id);
+
+        if (cardData == null) {
+            log.info("No color found for card " + id + " applying default: " +
+                    boardData.get().getCardPair().getBackground());
+            return boardData.get().getCardPair();
+        }
+
+        return cardData;
+    }
+
+    public ColorPair getListColor() {
+        var color = getColors();
+        if (color == null)
+            return new ColorPair();
+        return color.getListPair();
+    }
+
+    public ColorPair getBoardColor() {
+        var color = getColors();
+        if (color == null)
+            return new ColorPair();
+        return color.getBoardPair();
+    }
+
+    public void globalColorUpdate() {
+        updateBoardOverviewColors();
+        updateBoardColors(getColors().getBoardPair());
+
+        for (var list : board.getChildren()) {
+            var ctrl = (ListController) list.getController();
+            ctrl.updateListColors(getColors().getListPair());
+
+            for (var card : list.getChildren()) {
+                var cardCtrl = (CardController) card.getController();
+
+                cardCtrl.updateCardColors(getCardColor(card.getCard().getId()));
+            }
+        }
+    }
+
+    public void updateBoardOverviewColors() {
+        try {
+            boardListControllers.forEach(x -> {
+                x.updateProps(userUtils.getUserBoardsIds().stream()
+                        .filter(y -> y.getBoardId() == x.getProps().getBoardId())
+                        .findFirst().get());
+            });
+        } catch (Exception e) {
+            log.severe("Failed to update board overview colors");
+        }
+    }
+
+    public void updateBoardColors(ColorPair pair) {
+        setBoardColorFXML(pair.getBackground());
+        setBoardFontFXML(pair.getFont());
     }
 }

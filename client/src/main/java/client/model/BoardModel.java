@@ -96,6 +96,7 @@ public class BoardModel {
 
         utils.deleteCardListById(id, board.getId());
 
+        update();
         quietTest();
     }
 
@@ -127,14 +128,8 @@ public class BoardModel {
         if (serverTimestamp.after(localTimestamp)) {
             log.info("Server-side board is newer, overwriting local");
             board = serverBoard;
-            controller.overwriteTitleNode(board.getTitle());
-
-            //set the color to that received from server
-
-            this.applyColors();
 
             updateChildren();
-
             return true;
         }
 
@@ -161,11 +156,12 @@ public class BoardModel {
         }
 
         board = newBoard;
+        children.clear();
         updateChildren();
     }
 
     public void updateChildren() {
-        controller.overwriteTitleNode(board.getTitle());
+        controller.overWriteWithModel();
 
         if (board.getLists() == null) return;
 
@@ -187,6 +183,7 @@ public class BoardModel {
             controller.recreateChildren(temp);
         } catch (IOException e) {
             log.warning("Problems during board children recreation..");
+            e.printStackTrace();
         }
 
         for (ListModel child : children)
@@ -272,7 +269,7 @@ public class BoardModel {
                 log.severe("Board title is not up to date");
 
                 board.setTitle(res.get());
-                controller.overwriteTitleNode(board.getTitle());
+                controller.overWriteWithModel();
             }
         }
     }
@@ -319,17 +316,6 @@ public class BoardModel {
         update();
     }
 
-    public void applyColors() {
-//        controller.setBoardColorFXML(board.getBoardColor());
-//        controller.setBoardFont(board.getBoardFont());
-//        for (ListModel list : children) {
-//            list.getController().setListColorFXML(board.getListColor());
-//            var childrenCards = list.getChildren();
-//            for (CardModel card : childrenCards) {
-//                card.getController().setCardColorFXML(board.getCardColor());
-//            }
-//        }
-    }
     public Set<Tag> getAllTags() {
         return getBoard().getTags();
     }

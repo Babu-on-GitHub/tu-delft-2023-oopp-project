@@ -23,10 +23,30 @@ public class User implements Serializable {
     }
 
     public void setUserBoardsForServer(String server, List<BoardIdWithColors> boards) {
-        var s = serverBoardsPairs.stream().filter(q -> q.getServerAddress().equals(server)).findFirst();
+        var s = serverBoardsPairs.stream()
+                .filter(q -> q.getServerAddress().equals(server)).findFirst();
         if (s.isPresent()) {
             s.get().setBoardsIds(boards);
         } else {
+            serverBoardsPairs.add(new ServerInfo(server, boards));
+        }
+    }
+
+
+    public void updateSingleBoardForServer(String server, BoardIdWithColors board) {
+        var s = serverBoardsPairs.stream()
+                .filter(q -> q.getServerAddress().equals(server)).findFirst();
+
+        if (s.isPresent()) {
+            var boards = s.get().getBoardsIds();
+            var b = boards.stream().filter(q -> q.getBoardId() == board.getBoardId()).findFirst();
+
+            b.ifPresent(boards::remove);
+            boards.add(board);
+
+        } else {
+            List<BoardIdWithColors> boards = new ArrayList<>();
+            boards.add(board);
             serverBoardsPairs.add(new ServerInfo(server, boards));
         }
     }

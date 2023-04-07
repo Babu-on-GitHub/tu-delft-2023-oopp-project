@@ -4,23 +4,30 @@ import client.model.BoardModel;
 import client.model.ListModel;
 import client.utils.UserUtils;
 import commons.Board;
+import commons.BoardIdWithColors;
+import commons.ColorPair;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.ColorPicker;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
+import java.io.Serializable;
 import java.util.List;
 
+import static client.tools.ColorTools.toHexString;
 
-public class CustomizationMenuController {
+
+public class CustomizationMenuController implements Initializable {
 
     private MainPageCtrl mainPageCtrl;
 
     private UserUtils userUtils;
+
+    @FXML
+    private AnchorPane customizationMenuAnchorPane;
 
     @FXML
     private ColorPicker boardBackground;
@@ -40,23 +47,88 @@ public class CustomizationMenuController {
     @FXML
     private ColorPicker cardFont;
 
+    @FXML
+    private Label backgroundLabel;
 
+    @FXML
+    private Label fontLabel;
+
+    @FXML
+    private Label boardLabel;
+
+    @FXML
+    private Label listLabel;
+
+    @FXML
+    private Label cardLabel;
+
+    @FXML
+    private Label customizationLabel;
+
+    @FXML
+    private Button boardColorReset;
+
+    @FXML
+    private Button listColorReset;
+
+    @FXML
+    private Button cardColorReset;
+
+    @FXML
+    private Button doneButton;
+
+    @FXML
+    private Button applyButton;
+
+    @FXML
+    private Button cancelButton;
+
+
+
+
+    private BoardIdWithColors colorState;
 
     public CustomizationMenuController(MainPageCtrl mainPageCtrl) {
         this.mainPageCtrl = mainPageCtrl;
+        try {
+            // find the board with the id
+            var thisBoardColors = mainPageCtrl.getColors();
+
+            if (thisBoardColors == null)
+                throw new Exception("Board not found, impossible");
+
+            colorState = thisBoardColors.clone();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void closeStage(ActionEvent event) {
-        mainPageCtrl.getModel().update();
-        mainPageCtrl.getCustomizationStage().close();
+        this.mainPageCtrl = mainPageCtrl;
+        try {
+            // find the board with the id
+            var thisBoardColors = mainPageCtrl.getColors();
+
+            if (thisBoardColors == null)
+                throw new Exception("Board not found, impossible");
+
+            colorState = thisBoardColors.clone();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void applyChanges(ActionEvent event) {
-        // display updated board
         mainPageCtrl.showBoard();
+        mainPageCtrl.getUserUtils().updateSingleBoard(colorState);
+        mainPageCtrl.globalColorUpdate();
+    }
 
-        //write colors to user utils
-        //userUtils.
+    public void done(ActionEvent event) {
+        applyChanges(event);
+        closeStage(event);
     }
 
     public String makeColorString(Color color) {
@@ -72,104 +144,142 @@ public class CustomizationMenuController {
     }
 
     public void setBoardBackground(ActionEvent event) {
-        BoardModel model = mainPageCtrl.getModel();
-        Board board = model.getBoard();
-
         Color color = boardBackground.getValue();
         String colorString = this.makeColorString(color);
-        //board.setBoardColor(colorString);
 
-        board.sync(); // make client board's timestamp newer
-        model.update(); // hence update board on the database
+        colorState.getBoardPair().setBackground(colorString);
     }
 
     public void resetBoardBackground(ActionEvent event) {
-        BoardModel model = mainPageCtrl.getModel();
-        Board board = model.getBoard();
+        try {
+            colorState.setBoardPair(mainPageCtrl.getBoardColor().clone());
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
 
-        String colorString = "0x91B7BF";
-        //board.setBoardColor(colorString);
-
-        board.sync();
-        model.update();
-        mainPageCtrl.showBoard(); // display updated board
+        syncUIWithLocalState();
     }
 
     public void setListBackground(ActionEvent event) {
-        BoardModel model = mainPageCtrl.getModel();
-        Board board = model.getBoard();
-
         Color color = listBackground.getValue();
         String colorString = this.makeColorString(color);
-        //board.setListColor(colorString);
 
-        board.sync();
-        model.update();
+        colorState.getListPair().setBackground(colorString);
+        syncUIWithLocalState();
     }
 
     public void resetListBackground(ActionEvent event) {
-        BoardModel model = mainPageCtrl.getModel();
-        Board board = model.getBoard();
-
-        String colorString = "0xD2A295";
-        //board.setListColor(colorString);
-
-        board.sync();
-        model.update();
-        mainPageCtrl.showBoard();
+        try {
+            colorState.setListPair(mainPageCtrl.getListColor().clone());
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
+        syncUIWithLocalState();
     }
 
     public void setCardBackground() {
-        BoardModel model = mainPageCtrl.getModel();
-        List<ListModel> listModels = model.getChildren();
-        Board board = model.getBoard();
-
         Color color = cardBackground.getValue();
         String colorString = this.makeColorString(color);
-        //board.setCardColor(colorString);
 
-        board.sync();
-        model.update();
-        //todo: apply card color when drag and drop is used
+        colorState.getCardPair().setBackground(colorString);
+        syncUIWithLocalState();
     }
 
     public void resetCardBackground(ActionEvent event) {
-        BoardModel model = mainPageCtrl.getModel();
-        Board board = model.getBoard();
-
-        String colorString = "0xF7EFD2";
-        //board.setCardColor(colorString);
-
-        board.sync();
-        model.update();
-        mainPageCtrl.showBoard();
+        try {
+            colorState.setCardPair(mainPageCtrl.getCardColor(-1).clone());
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
+        syncUIWithLocalState();
     }
 
     public void setBoardFont(ActionEvent event) {
-        BoardModel model = mainPageCtrl.getModel();
-        Board board = model.getBoard();
-
         Color color = boardFont.getValue();
-        String colorString = this.makeColorStringWithHashtag(color);
-        //board.setBoardFont(colorString);
+        String colorString = this.makeColorString(color);
 
-        board.sync();
-        model.update();
+        colorState.getBoardPair().setFont(colorString);
+        syncUIWithLocalState();
     }
 
     public void setListFont(ActionEvent event) {
-        BoardModel model = mainPageCtrl.getModel();
-        Board board = model.getBoard();
+        Color color = listFont.getValue();
+        String colorString = this.makeColorString(color);
 
-        //Color color = setCardBackground().getValue();
-        //String colorString = this.makeColorStringWithHashtag(color);
-        //board.setCardFont(colorString);
-
-        board.sync();
-        model.update();
+        colorState.getListPair().setFont(colorString);
+        syncUIWithLocalState();
     }
 
     public void setCardFont(ActionEvent event) {
+        Color color = cardFont.getValue();
+        String colorString = this.makeColorString(color);
 
+        colorState.getCardPair().setFont(colorString);
+        syncUIWithLocalState();
+    }
+
+    public void syncUIWithLocalState() {
+        boardBackground.setValue(Color.web(colorState.getBoardPair().getBackground()));
+        listBackground.setValue(Color.web(colorState.getListPair().getBackground()));
+        cardBackground.setValue(Color.web(colorState.getCardPair().getBackground()));
+        boardFont.setValue(Color.web(colorState.getBoardPair().getFont()));
+        listFont.setValue(Color.web(colorState.getListPair().getFont()));
+        cardFont.setValue(Color.web(colorState.getCardPair().getFont()));
+    }
+
+    @Override
+    public void initialize(java.net.URL location, java.util.ResourceBundle resources) {
+        syncUIWithLocalState();
+
+        updateColors(mainPageCtrl.getBoardColor());
+    }
+
+    private void updateColors(ColorPair colorPair) {
+        setCustomizationMenuBackgroundFXML(colorPair.getBackground());
+        setCustomizationMenuFontFXML(colorPair.getFont());
+    }
+
+    private void setCustomizationMenuFontFXML(String color) {
+        var colorCode = Color.valueOf(color);
+        var darker = colorCode.darker();
+
+        var styleStr = "-fx-text-fill: " + toHexString(colorCode) + " !important; " +
+                "-fx-background-color: inherit !important;" +
+                "-fx-border-color: " + toHexString(darker) + " !important; " +
+                "-fx-border-radius: 10px !important; " ;
+        var styleStrWithoutBorder = "-fx-text-fill: " + toHexString(colorCode) + " !important; " +
+                "-fx-background-color: inherit !important;" ;
+        boardLabel.setStyle(styleStrWithoutBorder);
+        cardLabel.setStyle(styleStrWithoutBorder);
+        listLabel.setStyle(styleStrWithoutBorder);
+        backgroundLabel.setStyle(styleStrWithoutBorder);
+        fontLabel.setStyle(styleStrWithoutBorder);
+        customizationLabel.setStyle(styleStrWithoutBorder);
+        applyButton.setStyle(styleStr);
+        doneButton.setStyle(styleStr);
+        cancelButton.setStyle(styleStr);
+        boardColorReset.setStyle(styleStr);
+        listColorReset.setStyle(styleStr);
+        cardColorReset.setStyle(styleStr);
+    }
+
+    public void setCustomizationMenuBackgroundFXML(String color) {
+        var colorCode = Color.valueOf(color);
+        var darker = colorCode.darker();
+        var fill = new Background(new BackgroundFill(colorCode, null, null));
+        var darkerFill = new Background(new BackgroundFill(darker, new CornerRadii(10), null));
+        customizationMenuAnchorPane.setBackground(fill);
+        boardLabel.setBackground(fill);
+        cardLabel.setBackground(fill);
+        listLabel.setBackground(fill);
+        backgroundLabel.setBackground(fill);
+        fontLabel.setBackground(fill);
+        customizationLabel.setBackground(fill);
+        applyButton.setBackground(darkerFill);
+        doneButton.setBackground(darkerFill);
+        cancelButton.setBackground(darkerFill);
+        boardColorReset.setBackground(darkerFill);
+        listColorReset.setBackground(darkerFill);
+        cardColorReset.setBackground(darkerFill);
     }
 }

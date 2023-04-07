@@ -5,6 +5,7 @@ import client.model.CardModel;
 import client.model.ListModel;
 import client.utils.ServerUtils;
 import commons.Card;
+import commons.ColorPair;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,6 +22,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+
+import static client.tools.ColorTools.toHexString;
 
 public class ListController implements Initializable {
 
@@ -62,6 +65,8 @@ public class ListController implements Initializable {
         listModel.setController(this);
         this.parent = parent;
         server = parent.getServer();
+
+        //todo: add font?
     }
 
     public void recreateChildren(ArrayList<CardModel> temp) throws IOException {
@@ -71,6 +76,9 @@ public class ListController implements Initializable {
     }
 
     public void addCard(CardModel model) throws IOException {
+        var id = model.getCard().getId();
+        // search for the corresponding card color stored in the board controller
+
         insertCard(model, cardListContainer.getChildren().size());
     }
 
@@ -211,9 +219,12 @@ public class ListController implements Initializable {
         listModel.updateTitle(listTitle.getText());
     }
 
-    public void overwriteTitleNode(String title) {
-        listTitle.setText(title);
+    public void overwriteWithModel() {
+        listTitle.setText(listModel.getCardList().getTitle());
+
+        updateListColors(listModel.getParent().getController().getListColor());
     }
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -225,6 +236,7 @@ public class ListController implements Initializable {
                 updateTitleModel();
             }
         });
+        overwriteWithModel();
     }
 
     public void setListColorFXML(String color) {
@@ -239,5 +251,16 @@ public class ListController implements Initializable {
         var desaturatedFill = new Background(new BackgroundFill(desaturated, null, null));
         cardListContainer.setBackground(desaturatedFill);
         scrollPane.setBackground(desaturatedFill);
+    }
+
+
+    public void setFontColorFXML(String color) {
+        var colorCode = Color.valueOf(color);
+        listTitle.setStyle("-fx-text-fill: " + toHexString(colorCode) + " !important; -fx-background-color: inherit;");
+    }
+
+    public void updateListColors(ColorPair pair) {
+        setListColorFXML(pair.getBackground());
+        setFontColorFXML(pair.getFont());
     }
 }

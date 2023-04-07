@@ -196,7 +196,6 @@ public class ListModel {
 
             updateChildren();
             parent.updateChild(cardList);
-            controller.overwriteTitleNode(cardList.getTitle());
 
             return true;
         }
@@ -238,7 +237,7 @@ public class ListModel {
     }
 
     public void updateChildren() {
-        controller.overwriteTitleNode(cardList.getTitle());
+        controller.overwriteWithModel();
 
         if (cardList.getCards() == null) return;
 
@@ -304,7 +303,7 @@ public class ListModel {
             else {
                 log.severe("Failed to update card list title, overwriting new name");
                 cardList.setTitle(res.get());
-                controller.overwriteTitleNode(cardList.getTitle());
+                controller.overwriteWithModel();
             }
         }
     }

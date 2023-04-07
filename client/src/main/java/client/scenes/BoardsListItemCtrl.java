@@ -1,5 +1,6 @@
 package client.scenes;
 
+import commons.BoardIdWithColors;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -10,6 +11,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.Color;
 
 
 import java.io.File;
@@ -26,20 +32,36 @@ public class BoardsListItemCtrl implements Initializable {
     @FXML
     private Button boardItemButton;
 
+    @FXML
+    private AnchorPane root;
+
+
     private MainPageCtrl mainPageCtrl;
 
     private long boardId;
 
     private String boardName;
 
-    public BoardsListItemCtrl(long boardId,MainPageCtrl mainPageCtrl) {
+    private BoardIdWithColors props;
+
+    public BoardsListItemCtrl(BoardIdWithColors props, MainPageCtrl mainPageCtrl) {
         this.mainPageCtrl = mainPageCtrl;
-        this.boardId = boardId;
+        this.props = props;
     }
 
     public void setBoardButton() throws IOException {
-        mainPageCtrl.setBoardOverview(boardId);
+        mainPageCtrl.setBoardOverview(props.getBoardId());
     }
+
+    public void updateProps(BoardIdWithColors props) {
+        this.props = props;
+        showColors();
+    }
+
+    public BoardIdWithColors getProps() {
+        return props;
+    }
+
 
 
     private void setImage(ImageView img, String path){
@@ -55,7 +77,7 @@ public class BoardsListItemCtrl implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         ServerUtils utils = mainPageCtrl.getServer();
-        var board = utils.getBoardById(boardId);
+        var board = utils.getBoardById(props.getBoardId());
         if(board.isEmpty()){
             boardName = "???";
             //adding an entire style sheet here is redundant.
@@ -64,12 +86,19 @@ public class BoardsListItemCtrl implements Initializable {
         }
         else{
             boardName = board.get().getTitle();
+            showColors();
         }
         boardItemButton.setText(boardName);
-        if(boardId == 1){
+        if(props.getBoardId() == 1){
             setImage(icon,"src/main/resources/client/icons/PNG/home_FILL0_wght400_GRAD0_opsz48.png");
         }else{
             setImage(icon,"src/main/resources/client/icons/PNG/tab_FILL0_wght400_GRAD0_opsz48.png");
         }
+    }
+
+    public void showColors() {
+        var colorCode = Color.valueOf(props.getBoardPair().getBackground());
+        var fill = new Background(new BackgroundFill(colorCode, new CornerRadii(20), null));
+        root.setBackground(fill);
     }
 }
