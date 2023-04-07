@@ -97,7 +97,8 @@ public class Tag implements Serializable, Cloneable {
 
         Tag tag = (Tag) o;
 
-        return new EqualsBuilder().append(id, tag.id).append(title, tag.title).append(colorPair, tag.colorPair).isEquals();
+        return new EqualsBuilder().append(id, tag.id).
+                append(title, tag.title).append(colorPair, tag.colorPair).isEquals();
     }
 
     @Override

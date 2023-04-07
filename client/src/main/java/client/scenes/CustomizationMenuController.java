@@ -1,21 +1,14 @@
 package client.scenes;
 
-import client.model.BoardModel;
-import client.model.ListModel;
 import client.utils.UserUtils;
-import commons.Board;
 import commons.BoardIdWithColors;
 import commons.ColorPair;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-
-import java.io.Serializable;
-import java.util.List;
 
 import static client.tools.ColorTools.toHexString;
 

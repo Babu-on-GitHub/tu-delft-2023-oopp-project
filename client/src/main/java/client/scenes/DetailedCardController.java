@@ -5,7 +5,6 @@ import commons.Card;
 import commons.ColorPair;
 import commons.Tag;
 import commons.Task;
-import jakarta.ws.rs.sse.InboundSseEvent;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,8 +17,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafx.util.Pair;
-import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.net.URL;
@@ -205,7 +202,8 @@ public class DetailedCardController implements Initializable {
         scrollPaneSubTasks.setBackground(textBoxFill);
 
         var fontColor = Color.valueOf(color.getFont());
-        var styleStr = "-fx-text-fill: " + toHexString(fontColor) + "; -fx-background-color:" + toHexString(colorCode.darker()) + ";";
+        var styleStr = "-fx-text-fill: " + toHexString(fontColor) +
+                "; -fx-background-color:" + toHexString(colorCode.darker()) + ";";
 
         addSubTaskButton.setStyle(styleStr);
         addTagButton.setStyle(styleStr);

@@ -314,7 +314,8 @@ public class MainPageCtrl implements Initializable {
     public void setBoardFontFXML(String color) {
         var colorCode = Color.valueOf(color);
 
-        var styleStr = "-fx-text-fill: " + toHexString(colorCode) + " !important; -fx-background-color: inherit !important;";
+        var styleStr = "-fx-text-fill: " + toHexString(colorCode)
+                + " !important; -fx-background-color: inherit !important;";
         boardName.setStyle(styleStr);
         addListButton.setStyle(styleStr);
         refreshBoardsListButton.setStyle(styleStr);
