@@ -9,10 +9,6 @@ public class BoardIdWithColors implements Serializable {
 
     ColorPair boardPair;
 
-    ColorPair listPair;
-
-    ColorPair cardPair;
-
     public BoardIdWithColors() {
     }
 
@@ -36,22 +32,6 @@ public class BoardIdWithColors implements Serializable {
         this.boardPair = boardPair;
     }
 
-    public ColorPair getListPair() {
-        return listPair;
-    }
-
-    public void setListPair(ColorPair listPair) {
-        this.listPair = listPair;
-    }
-
-    public ColorPair getCardPair() {
-        return cardPair;
-    }
-
-    public void setCardPair(ColorPair cardPair) {
-        this.cardPair = cardPair;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -60,17 +40,13 @@ public class BoardIdWithColors implements Serializable {
         BoardIdWithColors that = (BoardIdWithColors) o;
 
         if (boardId != that.boardId) return false;
-        if (!Objects.equals(boardPair, that.boardPair)) return false;
-        if (!Objects.equals(listPair, that.listPair)) return false;
-        return Objects.equals(cardPair, that.cardPair);
+        return Objects.equals(boardPair, that.boardPair);
     }
 
     @Override
     public int hashCode() {
         int result = (int) (boardId ^ (boardId >>> 32));
         result = 31 * result + (boardPair != null ? boardPair.hashCode() : 0);
-        result = 31 * result + (listPair != null ? listPair.hashCode() : 0);
-        result = 31 * result + (cardPair != null ? cardPair.hashCode() : 0);
         return result;
     }
 }

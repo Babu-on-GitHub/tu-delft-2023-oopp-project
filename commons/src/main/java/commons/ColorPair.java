@@ -5,9 +5,17 @@ import java.util.Objects;
 
 public class ColorPair implements Serializable {
 
-    String background = "#32cd32";
+    String background = "#FFFFFF";
 
-    String font = "#ffc0cb";
+    String font = "#000000";
+
+    public ColorPair() {
+    }
+
+    public ColorPair(String background, String font) {
+        this.background = background;
+        this.font = font;
+    }
 
     public String getFont() {
         return font;

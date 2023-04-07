@@ -19,7 +19,7 @@ public class Tag implements Serializable, Cloneable {
 
     private String title;
 
-    private ColorPair colorPair = new ColorPair();
+    private ColorPair colorPair;
 
     @SuppressWarnings("unused")
     public Tag(){
