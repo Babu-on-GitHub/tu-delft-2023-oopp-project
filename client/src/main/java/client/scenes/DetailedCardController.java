@@ -2,24 +2,35 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import commons.Card;
+import commons.ColorPair;
 import commons.Tag;
 import commons.Task;
+import jakarta.ws.rs.sse.InboundSseEvent;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.util.Pair;
+import org.w3c.dom.Text;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
-public class DetailedCardController {
+import static client.tools.ColorTools.toHexString;
+
+public class DetailedCardController implements Initializable {
     private static Logger log = Logger.getLogger(DetailedCardController.class.getName());
 
     private CardController parent;
@@ -43,6 +54,30 @@ public class DetailedCardController {
 
     @FXML
     private VBox tagArea;
+
+    @FXML
+    private ScrollPane scrollPaneTags;
+
+    @FXML
+    private ScrollPane scrollPaneSubTasks;
+
+    @FXML
+    private Label subtasksTitle;
+
+    @FXML
+    private Label tagsTitle;
+
+    @FXML
+    private Button addSubTaskButton;
+
+    @FXML
+    private Button addTagButton;
+
+    @FXML
+    private Button saveButton;
+
+    @FXML
+    private Button cancelButton;
 
     public DetailedCardController(CardController cardController, ServerUtils server) {
         cardController.getModel().update(); // just in case
@@ -132,10 +167,50 @@ public class DetailedCardController {
     public void showDetails() throws IOException {
         log.info("Showing details");
 
+        updateCardDetailColors();
+
         title.setText(localCard.getTitle());
         description.setText(localCard.getDescription());
         showSubtasks();
         showTags();
+    }
+
+    public void updateCardDetailColors(){
+        setBackgroundColorFXML(parent.getParent().getParent().getBoardColor());
+        setFontColorFXML(parent.getParent().getParent().getBoardColor());
+    }
+
+    public void setFontColorFXML(ColorPair color){
+        var fontColor = Color.valueOf(color.getFont());
+        var backgroundColor = Color.valueOf(color.getBackground());
+        var styleStr = "-fx-text-fill: " + toHexString(fontColor) + "; -fx-background-color:" + backgroundColor + ";";
+
+        title.setStyle(styleStr);
+        tagsTitle.setStyle(styleStr);
+        subtasksTitle.setStyle(styleStr);
+    }
+
+    public void setBackgroundColorFXML(ColorPair color){
+        var colorCode = Color.valueOf(color.getBackground());
+        var fill = new Background(new BackgroundFill(colorCode, null, null));
+        detailedCardBox.setBackground(fill);
+        title.setBackground(fill);
+
+        var textBoxFill =  new Background(new BackgroundFill(colorCode.brighter(), null, null));
+
+        description.setBackground(textBoxFill);
+        subtaskArea.setBackground(textBoxFill);
+        tagArea.setBackground(textBoxFill);
+        scrollPaneTags.setBackground(textBoxFill);
+        scrollPaneSubTasks.setBackground(textBoxFill);
+
+        var fontColor = Color.valueOf(color.getFont());
+        var styleStr = "-fx-text-fill: " + toHexString(fontColor) + "; -fx-background-color:" + toHexString(colorCode.darker()) + ";";
+
+        addSubTaskButton.setStyle(styleStr);
+        addTagButton.setStyle(styleStr);
+        saveButton.setStyle(styleStr);
+        cancelButton.setStyle(styleStr);
     }
 
     private void showSubtasks() throws IOException {
@@ -243,5 +318,10 @@ public class DetailedCardController {
         detailedCardTagControllers.remove(controller);
         tagArea.getChildren().remove(controller.getRoot());
         localCard.getTags().remove(controller.getTag());
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+
     }
 }
