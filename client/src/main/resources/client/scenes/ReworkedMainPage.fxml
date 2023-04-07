@@ -35,9 +35,9 @@
                <font>
                   <Font size="14.0" />
                </font></Button>
-            <MenuButton graphicTextGap="0.0" layoutX="40.0" layoutY="11.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="68.0" styleClass="button" AnchorPane.bottomAnchor="11.0" AnchorPane.leftAnchor="40.0" AnchorPane.topAnchor="11.0">
+            <MenuButton fx:id="menuButtonDeleteLeaveBoard" graphicTextGap="0.0" layoutX="40.0" layoutY="11.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="68.0" styleClass="button" AnchorPane.bottomAnchor="11.0" AnchorPane.leftAnchor="40.0" AnchorPane.topAnchor="11.0">
                <items>
-                  <MenuItem mnemonicParsing="false">
+                  <MenuItem fx:id="deleteBoardMenuItem" mnemonicParsing="false">
                      <graphic>
                         <Button fx:id="deleteButton" minWidth="-Infinity" mnemonicParsing="false" onAction="#deleteBoardButton" prefHeight="58.0" prefWidth="160.0" style="-fx-background-color: inherit;" text="Delete board">
                            <graphic>
@@ -50,7 +50,7 @@
                         </Button>
                      </graphic>
                   </MenuItem>
-                  <MenuItem mnemonicParsing="false">
+                  <MenuItem fx:id="leaveBoardMenuItem" mnemonicParsing="false">
                      <graphic>
                         <Button fx:id="leaveBoardButton" minWidth="-Infinity" mnemonicParsing="false" onAction="#leaveBoardButton" prefHeight="58.0" prefWidth="160.0" style="-fx-background-color: inherit;" text="Leave Board">
                            <graphic>
@@ -80,14 +80,14 @@
          <children>
             <SplitPane fx:id="splitPane" centerShape="false" dividerPositions="0.2715430861723447" prefHeight="654.0" prefWidth="1000.0" scaleShape="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <items>
-                  <AnchorPane prefHeight="652.0" prefWidth="216.0" styleClass="left-split-pane">
+                  <AnchorPane fx:id="boardsListAnchorPane" prefHeight="652.0" prefWidth="216.0" styleClass="left-split-pane">
                      <children>
                         <ScrollPane fx:id="boardListScrollPane" layoutY="63.0" prefHeight="592.0" prefWidth="268.0" style="-fx-border-color: #bababa; -fx-border-width: 1px;" styleClass="boards-view" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <content>
                               <VBox fx:id="boardsListContainer" />
                            </content>
                         </ScrollPane>
-                        <Button graphicTextGap="5.0" layoutX="14.0" layoutY="580.0" mnemonicParsing="false" onAction="#addBoardButton" prefHeight="38.0" prefWidth="193.0" text="Add Board" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0">
+                        <Button graphicTextGap="5.0" layoutX="21.0" layoutY="569.6666666666666" mnemonicParsing="false" onAction="#addBoardButton" prefHeight="38.0" prefWidth="193.0" text="Add Board" AnchorPane.bottomAnchor="9.0" AnchorPane.leftAnchor="21.0">
                            <graphic>
                               <ImageView id="addBoardImage" fx:id="addBoardImage" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -95,7 +95,7 @@
                                  </image>
                               </ImageView>
                            </graphic></Button>
-                        <Button fx:id="refreshBoardsListButton" layoutX="207.0" layoutY="579.0" mnemonicParsing="false" onAction="#showBoardsList" prefHeight="40.0" prefWidth="52.0" AnchorPane.bottomAnchor="13.0" AnchorPane.leftAnchor="207.0">
+                        <Button fx:id="refreshBoardsListButton" layoutX="214.0" layoutY="568.6666666666666" mnemonicParsing="false" onAction="#showBoardsList" prefHeight="40.0" prefWidth="52.0" AnchorPane.bottomAnchor="8.0" AnchorPane.leftAnchor="214.0">
                            <graphic>
                               <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                                  <image>

@@ -1,7 +1,6 @@
 package client.scenes;
 
 import client.model.BoardModel;
-import client.model.CardModel;
 import client.model.ListModel;
 import client.utils.ServerUtils;
 import client.utils.UserUtils;
@@ -20,18 +19,15 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
-import javafx.scene.control.skin.TextFieldSkin;
-import javafx.scene.control.skin.TextInputControlSkin;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
 import javafx.event.ActionEvent;
-import javafx.scene.paint.Paint;
-import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -107,7 +103,6 @@ public class MainPageCtrl implements Initializable {
 
     private Stage customizationStage;
 
-
     @FXML
     private Button customizeButton;
 
@@ -126,7 +121,14 @@ public class MainPageCtrl implements Initializable {
     @FXML
     private Button deleteButton;
 
+    @FXML
+    private AnchorPane boardsListAnchorPane;
 
+    @FXML
+    private MenuItem deleteBoardMenuItem;
+
+    @FXML
+    private MenuItem leaveBoardMenuItem;
 
 
     @Inject
@@ -297,11 +299,15 @@ public class MainPageCtrl implements Initializable {
         var fill = new Background(new BackgroundFill(colorCode, null, null));
         boardTop.setBackground(fill);
         boardBottom.setBackground(fill);
+        boardsListAnchorPane.setBackground(fill);
 
         var desaturated = colorCode.desaturate().desaturate();
         var fillDesaturated = new Background(new BackgroundFill(desaturated, null, null));
         cardListsContainer.setBackground(fillDesaturated);
         boardScrollPane.setBackground(fillDesaturated);
+        boardListScrollPane.setBackground(fillDesaturated);
+        //deleteBoardMenuItem.setStyle("-fx-fill: " + "blue" + ";");
+
     }
 
 
@@ -319,6 +325,8 @@ public class MainPageCtrl implements Initializable {
         boardIdLabelText.setStyle(styleStr);
         shareButton.setStyle(styleStr);
         deleteButton.setStyle(styleStr);
+        boardListScrollPane.setStyle(styleStr);
+        boardsListAnchorPane.setStyle(styleStr);
     }
 
     @FXML
@@ -419,7 +427,7 @@ public class MainPageCtrl implements Initializable {
             alert.setHeaderText("This board no longer exists");
             alert.showAndWait();
 
-            boardList.remove(id);
+            boardList.removeIf((board) -> board.getBoardId() == id);
             userUtils.updateUserBoards(boardList);
             ///showBoardsList();
 
@@ -428,7 +436,7 @@ public class MainPageCtrl implements Initializable {
             showBoardsList();
             return;
         }
-        boardName.setText(board.getBoard().getTitle());
+        userUtils.setMyId((int) res.get().getId());
         this.board = new BoardModel(res.get(), server);
         cardListsContainer.getChildren().clear();
         showBoard();
@@ -486,6 +494,8 @@ public class MainPageCtrl implements Initializable {
         AnchorPane toAdd = loader.load();
 
         boardsListContainer.getChildren().add(toAdd);
+        boardListControllers.add(controller);
+        boardListControllers.add(controller);
     }
 
     @FXML
@@ -540,7 +550,7 @@ public class MainPageCtrl implements Initializable {
         if (result.get() == buttonTypeOK) {
             server.deleteBoardById(board.getBoard().getId());
             if(!admin){
-                boardList.remove(board.getBoard().getId());
+                boardList.removeIf(b -> b.getBoardId() == board.getBoard().getId());
                 userUtils.updateUserBoards(boardList);
             }
             showBoardsList();
@@ -562,7 +572,7 @@ public class MainPageCtrl implements Initializable {
             alert.showAndWait();
             return;
         }
-        boardList.remove(board.getBoard().getId());
+        boardList.removeIf(b -> b.getBoardId() == board.getBoard().getId());
         userUtils.updateUserBoards(boardList);
         showBoardsList();
         initializeBoard();
@@ -647,6 +657,18 @@ public class MainPageCtrl implements Initializable {
         if (color == null)
             return new ColorPair();
         return color.getBoardPair();
+    }
+
+    public ColorPair getDefaultBoardColor() {
+        return new BoardIdWithColors(1).getBoardPair();
+    }
+
+    public ColorPair getDefaultListColor() {
+        return new BoardIdWithColors(1).getListPair();
+    }
+
+    public ColorPair getDefaultCardColor() {
+        return new BoardIdWithColors(1).getCardPair();
     }
 
     public void globalColorUpdate() {
