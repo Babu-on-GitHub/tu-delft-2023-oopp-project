@@ -10,6 +10,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
+import static client.tools.ColorTools.makeColorString;
 import static client.tools.ColorTools.toHexString;
 
 public class CustomizationMenuController implements Initializable {
@@ -108,13 +109,6 @@ public class CustomizationMenuController implements Initializable {
         closeStage(event);
     }
 
-    public String makeColorString(Color color) {
-        int r = ((int) Math.round(color.getRed()     * 255)) << 24;
-        int g = ((int) Math.round(color.getGreen()   * 255)) << 16;
-        int b = ((int) Math.round(color.getBlue()    * 255)) << 8;
-        int a = ((int) Math.round(color.getOpacity() * 255));
-        return String.format("0x%08X", (r + g + b + a));
-    }
 
     public String makeColorStringWithHashtag(Color color) {
         return "#" + makeColorString(color).substring(2);
@@ -122,7 +116,7 @@ public class CustomizationMenuController implements Initializable {
 
     public void setBoardBackground(ActionEvent event) {
         Color color = boardBackground.getValue();
-        String colorString = this.makeColorString(color);
+        String colorString = makeColorString(color);
 
         colorState.getBoardPair().setBackground(colorString);
     }
@@ -139,7 +133,7 @@ public class CustomizationMenuController implements Initializable {
 
     public void setListBackground(ActionEvent event) {
         Color color = listBackground.getValue();
-        String colorString = this.makeColorString(color);
+        String colorString = makeColorString(color);
 
         colorState.getListPair().setBackground(colorString);
         syncUIWithLocalState();
@@ -156,7 +150,7 @@ public class CustomizationMenuController implements Initializable {
 
     public void setCardBackground() {
         Color color = cardBackground.getValue();
-        String colorString = this.makeColorString(color);
+        String colorString = makeColorString(color);
 
         colorState.getCardPair().setBackground(colorString);
         syncUIWithLocalState();
@@ -173,7 +167,7 @@ public class CustomizationMenuController implements Initializable {
 
     public void setBoardFont(ActionEvent event) {
         Color color = boardFont.getValue();
-        String colorString = this.makeColorString(color);
+        String colorString = makeColorString(color);
 
         colorState.getBoardPair().setFont(colorString);
         syncUIWithLocalState();
@@ -181,7 +175,7 @@ public class CustomizationMenuController implements Initializable {
 
     public void setListFont(ActionEvent event) {
         Color color = listFont.getValue();
-        String colorString = this.makeColorString(color);
+        String colorString = makeColorString(color);
 
         colorState.getListPair().setFont(colorString);
         syncUIWithLocalState();
@@ -189,7 +183,7 @@ public class CustomizationMenuController implements Initializable {
 
     public void setCardFont(ActionEvent event) {
         Color color = cardFont.getValue();
-        String colorString = this.makeColorString(color);
+        String colorString = makeColorString(color);
 
         colorState.getCardPair().setFont(colorString);
         syncUIWithLocalState();

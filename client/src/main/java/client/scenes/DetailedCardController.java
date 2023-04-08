@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
+import static client.tools.ColorTools.makeColorString;
 import static client.tools.ColorTools.toHexString;
 
 public class DetailedCardController implements Initializable {
@@ -68,10 +69,28 @@ public class DetailedCardController implements Initializable {
     private Button addTagButton;
 
     @FXML
+    private Button promoteColorButton;
+
+    @FXML
+    private Label colorLabel;
+
+    @FXML
+    private Label firstColorLabel;
+
+    @FXML
+    private Label secondColorLabel;
+
+    @FXML
     private Button saveButton;
 
     @FXML
     private Button cancelButton;
+
+    @FXML
+    private ColorPicker fontPicker;
+
+    @FXML
+    private ColorPicker backPicker;
 
     public DetailedCardController(CardController cardController, ServerUtils server) {
         cardController.getModel().update(); // just in case
@@ -156,6 +175,18 @@ public class DetailedCardController implements Initializable {
         localCard.setSubTasks(subtasks);
 
         parent.getModel().overwriteWith(localCard);
+
+        var boardCtrl = parent.getParent().getParent();
+        var userUtils = boardCtrl.getUserUtils();
+        var b = userUtils.getCurrentBoardColors();
+
+        var fontColor = makeColorString(fontPicker.getValue());
+        var backColor = makeColorString(backPicker.getValue());
+
+        b.getCardHighlightColors().put(localCard.getId(), new ColorPair(backColor, fontColor));
+        userUtils.updateSingleBoard(b);
+
+        boardCtrl.globalColorUpdate();
     }
 
     public void showDetails() throws IOException {
@@ -183,6 +214,9 @@ public class DetailedCardController implements Initializable {
         title.setStyle(styleStr);
         tagsTitle.setStyle(styleStr);
         subtasksTitle.setStyle(styleStr);
+        colorLabel.setStyle(styleStr);
+        firstColorLabel.setStyle(styleStr);
+        secondColorLabel.setStyle(styleStr);
     }
 
     public void setBackgroundColorFXML(ColorPair color){
@@ -208,6 +242,10 @@ public class DetailedCardController implements Initializable {
         addTagButton.setStyle(styleStr);
         saveButton.setStyle(styleStr);
         cancelButton.setStyle(styleStr);
+        promoteColorButton.setStyle(styleStr);
+
+        fontPicker.setStyle(styleStr);
+        backPicker.setStyle(styleStr);
     }
 
     private void showSubtasks() throws IOException {
@@ -319,6 +357,22 @@ public class DetailedCardController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        var color = parent.getParent().getParent().getCardColor(parent.getModel().getCard().getId());
+        fontPicker.setValue(Color.valueOf(color.getFont()));
+        backPicker.setValue(Color.valueOf(color.getBackground()));
+    }
 
+    public void promoteColor() {
+        var backColor = makeColorString(backPicker.getValue());
+        var fontColor = makeColorString(fontPicker.getValue());
+        var boardCtrl = parent.getParent().getParent();
+        var userUtils = boardCtrl.getUserUtils();
+
+        var b = userUtils.getCurrentBoardColors();
+        b.setCardPair(new ColorPair(backColor, fontColor));
+        b.getCardHighlightColors().clear();
+        userUtils.updateSingleBoard(b);
+
+        boardCtrl.globalColorUpdate();
     }
 }
