@@ -23,6 +23,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import client.tools.ColorTools;
+
 
 public class BoardsListItemCtrl implements Initializable {
 
@@ -98,5 +100,8 @@ public class BoardsListItemCtrl implements Initializable {
         var colorCode = Color.valueOf(props.getBoardPair().getBackground());
         var fill = new Background(new BackgroundFill(colorCode, new CornerRadii(20), null));
         root.setBackground(fill);
+        var font = ColorTools.toHexString(Color.valueOf(props.getBoardPair().getFont()));
+        var style = "-fx-text-fill: " + font + ";";
+        boardItemButton.setStyle(style);
     }
 }

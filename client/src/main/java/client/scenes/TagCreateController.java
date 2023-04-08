@@ -1,12 +1,18 @@
 package client.scenes;
 
 import client.model.BoardModel;
+import commons.ColorPair;
 import commons.Tag;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
@@ -14,6 +20,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
+
+import static client.tools.ColorTools.toHexString;
 
 public class TagCreateController implements Initializable {
 
@@ -36,6 +44,18 @@ public class TagCreateController implements Initializable {
 
     @FXML
     public ColorPicker fontColorPicker;
+
+    @FXML
+    public Label fontText;
+
+    @FXML
+    public Label bgText;
+
+    @FXML
+    public Button cancel;
+
+    @FXML
+    public Button save;
 
     private Tag tag;
 
@@ -67,6 +87,7 @@ public class TagCreateController implements Initializable {
         String fontColor = tag.getColorPair().getFont();
         if(bgColor!=null) backgroundColorPicker.setValue(Color.web(bgColor));
         if(fontColor!=null) fontColorPicker.setValue(Color.web(fontColor));
+        updateColors(tagOverviewCtrl.parent.getBoardColor());
     }
 
     @FXML
@@ -114,5 +135,42 @@ public class TagCreateController implements Initializable {
 
     public String toHexString(Color value) {
         return "#" + (format(value.getRed()) + format(value.getGreen()) + format(value.getBlue()));
+    }
+
+    private void updateColors(ColorPair colorPair) {
+        setTagCreateFontFXML(colorPair.getFont());
+        setTagCreateBackgroundFXML(colorPair.getBackground());
+    }
+
+    private void setTagCreateFontFXML(String color) {
+        var colorCode = Color.valueOf(color);
+
+        var styleStr = "-fx-text-fill: " + toHexString(colorCode) + " !important; " +
+                "-fx-background-color: inherit !important;" +
+                "-fx-border-radius: 10px !important; " ;
+        var styleStrWithoutBorder = "-fx-text-fill: " + toHexString(colorCode) + " !important; " +
+                "-fx-background-color: inherit !important;" ;
+        bgText.setStyle(styleStrWithoutBorder);
+        fontText.setStyle(styleStrWithoutBorder);
+        cancel.setStyle(styleStr);
+        save.setStyle(styleStr);
+        fontColorPicker.setStyle(styleStrWithoutBorder);
+        backgroundColorPicker.setStyle(styleStrWithoutBorder);
+        title.setStyle(styleStrWithoutBorder);
+    }
+
+    public void setTagCreateBackgroundFXML(String color) {
+        var colorCode = Color.valueOf(color);
+        var darker = colorCode.darker();
+        var fill = new Background(new BackgroundFill(colorCode, null, null));
+        var darkerFill = new Background(new BackgroundFill(darker, new CornerRadii(10), null));
+        cancel.setBackground(darkerFill);
+        save.setBackground(darkerFill);
+        fontColorPicker.setBackground(darkerFill);
+        backgroundColorPicker.setBackground(darkerFill);
+        title.setBackground(darkerFill);
+        root.setBackground(fill);
+        bgText.setBackground(fill);
+        fontText.setBackground(fill);
     }
 }

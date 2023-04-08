@@ -218,11 +218,9 @@ public class CustomizationMenuController implements Initializable {
 
     private void setCustomizationMenuFontFXML(String color) {
         var colorCode = Color.valueOf(color);
-        var darker = colorCode.darker();
 
         var styleStr = "-fx-text-fill: " + toHexString(colorCode) + " !important; " +
                 "-fx-background-color: inherit !important;" +
-                "-fx-border-color: " + toHexString(darker) + " !important; " +
                 "-fx-border-radius: 10px !important; " ;
         var styleStrWithoutBorder = "-fx-text-fill: " + toHexString(colorCode) + " !important; " +
                 "-fx-background-color: inherit !important;" ;
@@ -258,5 +256,13 @@ public class CustomizationMenuController implements Initializable {
         boardColorReset.setBackground(darkerFill);
         listColorReset.setBackground(darkerFill);
         cardColorReset.setBackground(darkerFill);
+        var styleStrWithoutBorder = "-fx-text-fill: " + toHexString(colorCode) + " !important; " +
+                "-fx-background-color: "+ toHexString(darker) +" !important;" ;
+        boardBackground.setBackground(darkerFill);
+        boardFont.setBackground(darkerFill);
+        listBackground.setBackground(darkerFill);
+        listFont.setBackground(darkerFill);
+        cardBackground.setBackground(darkerFill);
+        cardFont.setBackground(darkerFill);
     }
 }

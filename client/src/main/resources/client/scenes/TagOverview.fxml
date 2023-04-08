@@ -15,7 +15,7 @@
    <children>
       <StackPane>
          <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Tags" textAlignment="CENTER" wrappingWidth="606.72607421875" StackPane.alignment="CENTER_LEFT">
+            <Text fx:id="title" strokeType="OUTSIDE" strokeWidth="0.0" text="Tags" textAlignment="CENTER" wrappingWidth="606.72607421875" StackPane.alignment="CENTER_LEFT">
                <font>
                   <Font size="24.0" />
                </font>
@@ -23,7 +23,7 @@
                   <Insets />
                </StackPane.margin>
             </Text>
-            <Button mnemonicParsing="false" onAction="#addTag" text="Add Tag" StackPane.alignment="CENTER_RIGHT">
+            <Button fx:id="addTagButton" mnemonicParsing="false" onAction="#addTag" text="Add Tag" StackPane.alignment="CENTER_RIGHT">
                <StackPane.margin>
                   <Insets right="20.0" />
                </StackPane.margin>
@@ -40,7 +40,7 @@
             <Insets bottom="5.0" top="5.0" />
          </VBox.margin>
       </StackPane>
-      <ScrollPane prefHeight="442.0" prefWidth="599.0" style="-fx-fit-to-width: true;">
+      <ScrollPane fx:id="tagsScrollPane" prefHeight="442.0" prefWidth="599.0" style="-fx-fit-to-width: true;">
          <content>
             <VBox fx:id="tagArea" minWidth="-Infinity" prefHeight="244.0" prefWidth="597.0" style="-fx-padding: 10px; -fx-spacing: 10px;" />
          </content>
@@ -48,9 +48,9 @@
             <Insets left="5.0" right="5.0" />
          </VBox.margin>
       </ScrollPane>
-      <AnchorPane prefHeight="148.0" prefWidth="609.0">
+      <AnchorPane fx:id="bottom" prefHeight="148.0" prefWidth="609.0">
          <children>
-            <Button layoutX="527.0" layoutY="21.0" mnemonicParsing="false" onAction="#close" prefHeight="39.0" prefWidth="118.0" text="DONE" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="21.0">
+            <Button fx:id="done" layoutX="527.0" layoutY="21.0" mnemonicParsing="false" onAction="#close" prefHeight="39.0" prefWidth="118.0" text="Done" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="21.0">
                <font>
                   <Font size="18.0" />
                </font>

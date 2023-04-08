@@ -33,7 +33,7 @@
             </Label>
             <ColorPicker fx:id="boardBackground" layoutX="91.0" layoutY="62.0" onAction="#setBoardBackground" prefHeight="25.0" prefWidth="45.0" style="-fx-color-label-visible: false;" />
             <ColorPicker fx:id="boardFont" layoutX="182.0" layoutY="62.0" onAction="#setBoardFont" prefHeight="25.0" prefWidth="45.0" style="-fx-color-label-visible: false;" />
-            <Button fx:id="boardColorReset" layoutX="270.0" layoutY="62.0" mnemonicParsing="false" onAction="#resetBoardBackground" prefHeight="25.0" prefWidth="75.0" text="Reset" />
+            <Button fx:id="boardColorReset" layoutX="270.0" layoutY="58.0" mnemonicParsing="false" onAction="#resetBoardBackground" prefHeight="25.0" prefWidth="75.0" text="Reset" />
             <Label fx:id="listLabel" layoutY="114.0" prefHeight="27.0" prefWidth="75.0" text="List">
                <font>
                   <Font size="18.0" />
@@ -41,7 +41,7 @@
             </Label>
             <ColorPicker fx:id="listBackground" layoutX="90.0" layoutY="115.0" onAction="#setListBackground" prefHeight="25.0" prefWidth="45.0" style="-fx-color-label-visible: false;" />
             <ColorPicker fx:id="listFont" layoutX="182.0" layoutY="115.0" onAction="#setListFont" prefHeight="25.0" prefWidth="45.0" style="-fx-color-label-visible: false;" />
-            <Button fx:id="listColorReset" layoutX="270.0" layoutY="115.0" mnemonicParsing="false" onAction="#resetListBackground" prefHeight="25.0" prefWidth="75.0" text="Reset" />
+            <Button fx:id="listColorReset" layoutX="270.0" layoutY="111.0" mnemonicParsing="false" onAction="#resetListBackground" prefHeight="25.0" prefWidth="75.0" text="Reset" />
             <Label fx:id="cardLabel" layoutY="167.0" prefHeight="27.0" prefWidth="75.0" text="Card">
                <font>
                   <Font size="18.0" />
@@ -49,7 +49,7 @@
             </Label>
             <ColorPicker fx:id="cardBackground" layoutX="91.0" layoutY="168.0" onAction="#setCardBackground" prefHeight="25.0" prefWidth="45.0" style="-fx-color-label-visible: false;" />
             <ColorPicker fx:id="cardFont" layoutX="182.0" layoutY="168.0" onAction="#setCardFont" prefHeight="25.0" prefWidth="45.0" style="-fx-color-label-visible: false;" />
-            <Button fx:id="cardColorReset" layoutX="270.0" layoutY="168.0" mnemonicParsing="false" onAction="#resetCardBackground" prefHeight="25.0" prefWidth="75.0" text="Reset" />
+            <Button fx:id="cardColorReset" layoutX="270.0" layoutY="164.0" mnemonicParsing="false" onAction="#resetCardBackground" prefHeight="25.0" prefWidth="75.0" text="Reset" />
             <Button fx:id="cancelButton" layoutX="-1.0" layoutY="227.0" mnemonicParsing="false" onAction="#closeStage" text="Cancel">
                <font>
                   <Font size="18.0" />

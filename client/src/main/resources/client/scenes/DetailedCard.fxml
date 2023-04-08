@@ -48,7 +48,7 @@
       </StackPane>
       <ScrollPane fx:id="scrollPaneSubTasks" hbarPolicy="NEVER" prefWidth="300.0" style="-fx-fit-to-width: true;" styleClass="scroll" VBox.vgrow="ALWAYS">
          <content>
-            <VBox fx:id="subtaskArea" prefHeight="170.0" />
+            <VBox fx:id="subtaskArea" prefHeight="170.0" style="-fx-border-radius: 10px;" />
          </content>
       </ScrollPane>
       <StackPane>

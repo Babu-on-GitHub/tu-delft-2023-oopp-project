@@ -130,6 +130,9 @@ public class MainPageCtrl implements Initializable {
     @FXML
     private MenuItem leaveBoardMenuItem;
 
+    @FXML
+    private Button addBoardButton;
+
 
     @Inject
     public MainPageCtrl(ServerUtils server, MainCtrl mainCtrl, UserUtils userUtils) {
@@ -328,6 +331,7 @@ public class MainPageCtrl implements Initializable {
         deleteButton.setStyle(styleStr);
         boardListScrollPane.setStyle(styleStr);
         boardsListAnchorPane.setStyle(styleStr);
+        addBoardButton.setStyle(styleStr);
     }
 
     @FXML

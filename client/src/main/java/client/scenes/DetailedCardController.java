@@ -11,10 +11,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
@@ -196,6 +193,7 @@ public class DetailedCardController implements Initializable {
         var textBoxFill =  new Background(new BackgroundFill(colorCode.brighter(), null, null));
 
         description.setBackground(textBoxFill);
+        description.setStyle("-fx-background-color: transparent;");
         subtaskArea.setBackground(textBoxFill);
         tagArea.setBackground(textBoxFill);
         scrollPaneTags.setBackground(textBoxFill);
