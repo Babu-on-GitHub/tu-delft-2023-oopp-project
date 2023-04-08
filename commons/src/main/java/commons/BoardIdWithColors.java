@@ -2,6 +2,7 @@ package commons;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 
@@ -61,34 +62,30 @@ public class BoardIdWithColors implements Serializable, Cloneable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         BoardIdWithColors that = (BoardIdWithColors) o;
-
-        if (boardId != that.boardId) return false;
-        if (!Objects.equals(boardPair, that.boardPair)) return false;
-        if (!Objects.equals(listPair, that.listPair)) return false;
-        return Objects.equals(cardPair, that.cardPair);
+        return boardId == that.boardId && Objects.equals(boardPair, that.boardPair) && Objects.equals(listPair, that.listPair) && Objects.equals(cardPair, that.cardPair) && Objects.equals(cardHighlightColors, that.cardHighlightColors);
     }
 
     @Override
     public int hashCode() {
-        int result = (int) (boardId ^ (boardId >>> 32));
-        result = 31 * result + (boardPair != null ? boardPair.hashCode() : 0);
-        result = 31 * result + (listPair != null ? listPair.hashCode() : 0);
-        result = 31 * result + (cardPair != null ? cardPair.hashCode() : 0);
-        return result;
+        return Objects.hash(boardId, boardPair, listPair, cardPair, cardHighlightColors);
     }
-
 
     @Override
     public BoardIdWithColors clone() throws CloneNotSupportedException {
         // copy the map separetely
         BoardIdWithColors clone = (BoardIdWithColors) super.clone();
-        clone.cardHighlightColors = new HashMap<>(cardHighlightColors);
+        clone.cardHighlightColors = new HashMap<>();
+        for (var entry : cardHighlightColors.entrySet())
+            clone.cardHighlightColors.put(entry.getKey(), entry.getValue().clone());
         clone.boardPair = boardPair.clone();
         clone.listPair = listPair.clone();
         clone.cardPair = cardPair.clone();
 
         return clone;
+    }
+
+    public void setCardHighlightColors(HashMap<Long, ColorPair> objects) {
+        this.cardHighlightColors = objects;
     }
 }

@@ -45,6 +45,7 @@ import java.util.logging.Logger;
 
 import static client.tools.ColorTools.*;
 import static client.tools.ImageTools.*;
+import static client.tools.ImageTools.recolorImage;
 import static client.tools.SceneTools.*;
 
 public class MainPageCtrl implements Initializable {
@@ -303,7 +304,6 @@ public class MainPageCtrl implements Initializable {
         return cardListsContainer;
     }
 
-
     public void setBoardColorFXML(String color) {
         var colorCode = Color.valueOf(color);
         var fill = new Background(new BackgroundFill(colorCode, null, null));
@@ -316,10 +316,7 @@ public class MainPageCtrl implements Initializable {
         cardListsContainer.setBackground(fillDesaturated);
         boardScrollPane.setBackground(fillDesaturated);
         boardListScrollPane.setBackground(fillDesaturated);
-        //deleteBoardMenuItem.setStyle("-fx-fill: " + "blue" + ";");
-
     }
-
 
     public void setBoardFontFXML(String color) {
         var colorCode = Color.valueOf(color);
@@ -329,13 +326,9 @@ public class MainPageCtrl implements Initializable {
         boardName.setStyle(styleStr);
         addListButton.setStyle(styleStr);
         refreshBoardsListButton.setStyle(styleStr);
-        leaveBoardButton.setStyle(styleStr);
-        customizeButton.setStyle(styleStr);
-        changeServerBtn.setStyle(styleStr);
         tagsButton.setStyle(styleStr);
         boardIdLabelText.setStyle(styleStr);
         shareButton.setStyle(styleStr);
-        deleteButton.setStyle(styleStr);
         boardListScrollPane.setStyle(styleStr);
         boardsListAnchorPane.setStyle(styleStr);
         addBoardButton.setStyle(styleStr);
@@ -433,8 +426,6 @@ public class MainPageCtrl implements Initializable {
 
     public void setBoardOverview(long id) throws IOException {
         var res = server.getBoardById(id);
-        System.out.println("asked for .." + id);
-        System.out.println("current id: " + board.getBoard().getId());
         if (res.isEmpty()) {
 
             Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -451,8 +442,6 @@ public class MainPageCtrl implements Initializable {
             showBoardsList();
             return;
         }
-        System.out.println("Received new id: " + res.get().getId());
-        System.out.println("number of children: " + board.getChildren().size());
         board.updateWithNewBoard(res.get());
 
         showBoard();
@@ -639,23 +628,10 @@ public class MainPageCtrl implements Initializable {
 
 
     public ColorPair getCardColor(long id) {
-        var data = userUtils.getUserBoardsIds();
+        var cardData = getColors().getCardHighlightColors().get(id);
 
-        var boardData = data.stream().
-                filter(x -> x.getBoardId() == board.getBoard().
-                        getId()).findFirst();
-
-        if (boardData.isEmpty()) {
-            log.severe("Hmm, something went wrong");
-            return new ColorPair();
-        }
-
-        var cardData = boardData.get().getCardHighlightColors().get(id);
-
-        if (cardData == null) {
-            log.info("No color found for card " + id + " applying default: " +
-                    boardData.get().getCardPair().getBackground());
-            return boardData.get().getCardPair();
+        if (cardData == null) {;
+            return getColors().getCardPair();
         }
 
         return cardData;

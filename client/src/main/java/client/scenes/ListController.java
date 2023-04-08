@@ -269,9 +269,7 @@ public class ListController implements Initializable {
     }
 
     public void updateIcons() {
-        System.out.println("bonk");
         applyToEveryNode(listContainer, (Node x) -> {
-            System.out.println(x.getId());
             if (x instanceof ImageView settable) {
                 var color = getParent().getListColor().getFont();
                 settable.setImage(recolorImage(settable.getImage(), Color.valueOf(color)));

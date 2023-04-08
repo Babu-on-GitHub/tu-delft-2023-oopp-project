@@ -5,6 +5,7 @@ import commons.BoardIdWithColors;
 import commons.User;
 
 import java.io.*;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -98,4 +99,8 @@ public class UserUtils {
     }
 
 
+    public void clearHighlight() {
+        currentBoard.setCardHighlightColors(new HashMap<>());
+        updateSingleBoard(currentBoard);
+    }
 }

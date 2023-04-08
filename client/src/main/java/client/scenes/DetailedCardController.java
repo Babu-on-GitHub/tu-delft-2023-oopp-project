@@ -17,9 +17,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.logging.Logger;
 
 import static client.tools.ColorTools.makeColorString;
@@ -183,7 +181,9 @@ public class DetailedCardController implements Initializable {
         var fontColor = makeColorString(fontPicker.getValue());
         var backColor = makeColorString(backPicker.getValue());
 
-        b.getCardHighlightColors().put(localCard.getId(), new ColorPair(backColor, fontColor));
+        var pair = new ColorPair(backColor, fontColor);
+        if (!pair.equals(boardCtrl.getCardColor(localCard.getId())))
+            b.getCardHighlightColors().put(localCard.getId(), pair);
         userUtils.updateSingleBoard(b);
 
         boardCtrl.globalColorUpdate();
@@ -370,8 +370,9 @@ public class DetailedCardController implements Initializable {
 
         var b = userUtils.getCurrentBoardColors();
         b.setCardPair(new ColorPair(backColor, fontColor));
-        b.getCardHighlightColors().clear();
         userUtils.updateSingleBoard(b);
+
+        userUtils.clearHighlight();
 
         boardCtrl.globalColorUpdate();
     }
