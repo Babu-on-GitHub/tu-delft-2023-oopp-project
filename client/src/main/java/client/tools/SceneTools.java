@@ -3,8 +3,6 @@ package client.tools;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
-import javafx.scene.control.MenuButton;
-import javafx.scene.control.MenuItem;
 
 import java.util.function.Consumer;
 

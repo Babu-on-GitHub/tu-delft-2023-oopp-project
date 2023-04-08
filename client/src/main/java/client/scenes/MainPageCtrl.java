@@ -630,7 +630,7 @@ public class MainPageCtrl implements Initializable {
     public ColorPair getCardColor(long id) {
         var cardData = getColors().getCardHighlightColors().get(id);
 
-        if (cardData == null) {;
+        if (cardData == null) {
             return getColors().getCardPair();
         }
 

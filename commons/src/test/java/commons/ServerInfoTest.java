@@ -33,7 +33,7 @@ public class ServerInfoTest {
     @Test
     void setBoardIds() {
         var s = new ServerInfo();
-        var b = List.of(new BoardIdWithColors());
+        var b = List.of(new BoardIdWithColors(1));
         s.setBoardsIds(b);
         assertEquals(s.getBoardsIds(), b);
     }

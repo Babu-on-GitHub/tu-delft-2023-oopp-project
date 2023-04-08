@@ -136,4 +136,19 @@ public class UserTest {
                 new BoardIdWithColors(3L)), result2);
     }
 
+    @Test
+    void updateSingleBoardForServerTest() {
+        user.updateSingleBoardForServer("http://localhost:8080", new BoardIdWithColors(1L));
+        List<BoardIdWithColors> result = user.getUserBoardsIds("http://localhost:8080");
+        assertEquals(List.of(new BoardIdWithColors(1L)), result);
+
+        user.updateSingleBoardForServer("http://localhost:8081", new BoardIdWithColors(1L));
+        List<BoardIdWithColors> result2 = user.getUserBoardsIds("http://localhost:8081");
+        assertEquals(List.of(new BoardIdWithColors(1L)), result2);
+    }
+
+    @Test
+    void makeDefaultTest() {
+        assertEquals(new BoardIdWithColors(1L), user.getUserBoardsIds("banana").get(0));
+    }
 }

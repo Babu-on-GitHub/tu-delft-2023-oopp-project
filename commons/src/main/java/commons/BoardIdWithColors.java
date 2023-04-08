@@ -2,7 +2,6 @@ package commons;
 
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 
@@ -63,7 +62,10 @@ public class BoardIdWithColors implements Serializable, Cloneable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         BoardIdWithColors that = (BoardIdWithColors) o;
-        return boardId == that.boardId && Objects.equals(boardPair, that.boardPair) && Objects.equals(listPair, that.listPair) && Objects.equals(cardPair, that.cardPair) && Objects.equals(cardHighlightColors, that.cardHighlightColors);
+        return boardId == that.boardId && Objects.equals(boardPair, that.boardPair)
+                && Objects.equals(listPair, that.listPair)
+                && Objects.equals(cardPair, that.cardPair)
+                && Objects.equals(cardHighlightColors, that.cardHighlightColors);
     }
 
     @Override

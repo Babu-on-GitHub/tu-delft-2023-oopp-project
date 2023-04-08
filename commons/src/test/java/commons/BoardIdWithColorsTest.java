@@ -2,6 +2,8 @@ package commons;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.HashMap;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -9,7 +11,7 @@ public class BoardIdWithColorsTest {
 
     @Test
     void constructorTest() {
-        var b = new BoardIdWithColors();
+        var b = new BoardIdWithColors(1);
         assertNotNull(b);
     }
 
@@ -21,7 +23,7 @@ public class BoardIdWithColorsTest {
 
     @Test
     void setBoardId() {
-        var b = new BoardIdWithColors();
+        var b = new BoardIdWithColors(2);
         b.setBoardId(1L);
         assertEquals(b.getBoardId(), 1L);
     }
@@ -66,5 +68,41 @@ public class BoardIdWithColorsTest {
 
         b3.setBoardId(1L);
         assertEquals(b.hashCode(), b3.hashCode());
+    }
+
+    @Test
+    void cloneTest() {
+        var b = new BoardIdWithColors(1L);
+        try {
+            var b2 = b.clone();
+            assertEquals(b, b2);
+        } catch (CloneNotSupportedException e) {
+            fail();
+        }
+    }
+
+    @Test
+    void setCardHighlightColor() {
+        var b = new BoardIdWithColors(1L);
+        var map = new HashMap<Long, ColorPair>();
+        map.put(1L, new ColorPair());
+        b.setCardHighlightColors(map);
+        assertEquals(map, b.getCardHighlightColors());
+    }
+
+    @Test
+    void setListPairTest() {
+        var b = new BoardIdWithColors(1L);
+        var pair = new ColorPair();
+        b.setListPair(pair);
+        assertEquals(pair, b.getListPair());
+    }
+
+    @Test
+    void setCardPairTest() {
+        var b = new BoardIdWithColors(1L);
+        var pair = new ColorPair();
+        b.setCardPair(pair);
+        assertEquals(pair, b.getCardPair());
     }
 }
