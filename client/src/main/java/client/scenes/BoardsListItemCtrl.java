@@ -25,6 +25,8 @@ import java.util.ResourceBundle;
 
 import client.tools.ColorTools;
 
+import static client.tools.ImageTools.recolorImage;
+
 
 public class BoardsListItemCtrl implements Initializable {
 
@@ -66,7 +68,7 @@ public class BoardsListItemCtrl implements Initializable {
 
     private void setImage(ImageView img, String path){
         File file = new File(path);
-        Image image = new Image(file.toURI().toString());
+        Image image = recolorImage(file.toURI().toString(), Color.valueOf(props.getBoardPair().getFont()));
         img.setImage(image);
     }
 
@@ -89,11 +91,7 @@ public class BoardsListItemCtrl implements Initializable {
             showColors();
         }
         boardItemButton.setText(boardName);
-        if(props.getBoardId() == 1){
-            setImage(icon,"src/main/resources/client/icons/PNG/home_FILL0_wght400_GRAD0_opsz48.png");
-        }else{
-            setImage(icon,"src/main/resources/client/icons/PNG/tab_FILL0_wght400_GRAD0_opsz48.png");
-        }
+        updateIcon();
     }
 
     public void showColors() {
@@ -103,5 +101,14 @@ public class BoardsListItemCtrl implements Initializable {
         var font = ColorTools.toHexString(Color.valueOf(props.getBoardPair().getFont()));
         var style = "-fx-text-fill: " + font + ";";
         boardItemButton.setStyle(style);
+        updateIcon();
+    }
+
+    public void updateIcon() {
+        if(props.getBoardId() == 1){
+            setImage(icon,"src/main/resources/client/icons/PNG/home_FILL0_wght400_GRAD0_opsz48.png");
+        }else{
+            setImage(icon,"src/main/resources/client/icons/PNG/tab_FILL0_wght400_GRAD0_opsz48.png");
+        }
     }
 }

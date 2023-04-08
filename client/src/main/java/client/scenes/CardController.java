@@ -14,6 +14,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import client.model.CardModel;
@@ -26,6 +27,8 @@ import static client.scenes.ListController.CARD_ID;
 import static client.scenes.ListController.TARGET_INDEX;
 import static client.scenes.ListController.TARGET_LIST;
 import static client.tools.ColorTools.toHexString;
+import static client.tools.ImageTools.recolorImage;
+import static client.tools.SceneTools.applyToEveryNode;
 
 
 import java.io.IOException;
@@ -295,7 +298,16 @@ public class CardController implements Initializable {
     public void updateCardColors(ColorPair cardColor) {
         setCardColorFXML(cardColor.getBackground());
         setFontColorFXML(cardColor.getFont());
+        updateIcons();
     }
 
+    public void updateIcons() {
+        applyToEveryNode(cardContainer, (Node x) -> {
+            if (x instanceof ImageView settable) {
+                var color = getParent().getParent().getCardColor(card.getCard().getId()).getFont();
+                settable.setImage(recolorImage(settable.getImage(), Color.valueOf(color)));
+            }
+        });
+    }
 
 }

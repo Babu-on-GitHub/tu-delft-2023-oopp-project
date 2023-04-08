@@ -177,7 +177,8 @@ public class DetailedCardController implements Initializable {
     public void setFontColorFXML(ColorPair color){
         var fontColor = Color.valueOf(color.getFont());
         var backgroundColor = Color.valueOf(color.getBackground());
-        var styleStr = "-fx-text-fill: " + toHexString(fontColor) + "; -fx-background-color:" + backgroundColor + ";";
+        var styleStr = "-fx-text-fill: " + toHexString(fontColor) + "; -fx-background-color:" +
+                toHexString(backgroundColor) + ";";
 
         title.setStyle(styleStr);
         tagsTitle.setStyle(styleStr);

@@ -43,7 +43,9 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
-import static client.tools.ColorTools.toHexString;
+import static client.tools.ColorTools.*;
+import static client.tools.ImageTools.*;
+import static client.tools.SceneTools.*;
 
 public class MainPageCtrl implements Initializable {
 
@@ -59,12 +61,14 @@ public class MainPageCtrl implements Initializable {
     private TextField boardName;
 
     @FXML
+    private BorderPane root;
+
+    @FXML
     private HBox cardListsContainer;
 
     @FXML
     private ScrollPane boardScrollPane;
 
-    private BoardModel board;
 
     private List<BoardIdWithColors> boardList;
 
@@ -133,6 +137,8 @@ public class MainPageCtrl implements Initializable {
     @FXML
     private Button addBoardButton;
 
+    private BoardModel board;
+
 
     @Inject
     public MainPageCtrl(ServerUtils server, MainCtrl mainCtrl, UserUtils userUtils) {
@@ -148,7 +154,7 @@ public class MainPageCtrl implements Initializable {
 
     private void setImage(ImageView img, String path) {
         File file = new File(path);
-        Image image = new Image(file.toURI().toString());
+        Image image = recolorImage(file.toURI().toString(), Color.valueOf(getBoardColor().getFont()));
         img.setImage(image);
     }
 
@@ -258,7 +264,8 @@ public class MainPageCtrl implements Initializable {
     }
 
     public void refreshWithBoard(Board b) {
-        board.updateWithNewBoard(b);
+        if (b.getId() == board.getBoard().getId())
+            board.updateWithNewBoard(b);
     }
 
     public void overWriteWithModel() {
@@ -399,8 +406,10 @@ public class MainPageCtrl implements Initializable {
         boardIdPanel.setVisible(false);
         this.board.setController(this);
 
-        this.board.update();
-        this.board.updateChildren();
+        userUtils.setMyId((int) board.getBoard().getId());
+
+        board.update();
+        board.updateChildren();
 
         if (this.board.getChildren().isEmpty()) {
             showEmptyBoardPrompt();
@@ -420,11 +429,12 @@ public class MainPageCtrl implements Initializable {
         } catch (Exception e) {
             log.warning("Websockets failure");
         }
-
     }
 
     public void setBoardOverview(long id) throws IOException {
         var res = server.getBoardById(id);
+        System.out.println("asked for .." + id);
+        System.out.println("current id: " + board.getBoard().getId());
         if (res.isEmpty()) {
 
             Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -441,9 +451,10 @@ public class MainPageCtrl implements Initializable {
             showBoardsList();
             return;
         }
-        userUtils.setMyId((int) res.get().getId());
-        this.board = new BoardModel(res.get(), server);
-        cardListsContainer.getChildren().clear();
+        System.out.println("Received new id: " + res.get().getId());
+        System.out.println("number of children: " + board.getChildren().size());
+        board.updateWithNewBoard(res.get());
+
         showBoard();
     }
 
@@ -677,7 +688,6 @@ public class MainPageCtrl implements Initializable {
     }
 
     public void globalColorUpdate() {
-        updateBoardOverviewColors();
         updateBoardColors(getColors().getBoardPair());
 
         for (var list : board.getChildren()) {
@@ -707,5 +717,21 @@ public class MainPageCtrl implements Initializable {
     public void updateBoardColors(ColorPair pair) {
         setBoardColorFXML(pair.getBackground());
         setBoardFontFXML(pair.getFont());
+        updateIcons();
+
+        updateBoardOverviewColors();
+    }
+
+    public void updateIcons() {
+        applyToEveryNode(root, (Node x) -> {
+            if (x instanceof ImageView settable) {
+                var color = getBoardColor().getFont();
+                settable.setImage(recolorImage(settable.getImage(), Color.valueOf(color)));
+            }
+        });
+    }
+
+    public void destroy() {
+        cardListsContainer.getChildren().clear();
     }
 }

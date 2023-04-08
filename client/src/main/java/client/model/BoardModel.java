@@ -155,6 +155,7 @@ public class BoardModel {
             return;
         }
 
+        controller.destroy();
         board = newBoard;
         children.clear();
         updateChildren();

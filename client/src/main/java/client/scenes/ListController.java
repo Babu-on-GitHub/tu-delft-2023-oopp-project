@@ -11,7 +11,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
+import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
@@ -23,6 +25,8 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import static client.tools.ColorTools.toHexString;
+import static client.tools.ImageTools.recolorImage;
+import static client.tools.SceneTools.applyToEveryNode;
 
 public class ListController implements Initializable {
 
@@ -261,5 +265,17 @@ public class ListController implements Initializable {
     public void updateListColors(ColorPair pair) {
         setListColorFXML(pair.getBackground());
         setFontColorFXML(pair.getFont());
+        updateIcons();
+    }
+
+    public void updateIcons() {
+        System.out.println("bonk");
+        applyToEveryNode(listContainer, (Node x) -> {
+            System.out.println(x.getId());
+            if (x instanceof ImageView settable) {
+                var color = getParent().getListColor().getFont();
+                settable.setImage(recolorImage(settable.getImage(), Color.valueOf(color)));
+            }
+        });
     }
 }
