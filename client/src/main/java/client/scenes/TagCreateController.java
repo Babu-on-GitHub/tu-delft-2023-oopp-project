@@ -21,8 +21,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
-import static client.tools.ColorTools.toHexString;
-
 public class TagCreateController implements Initializable {
 
     private static Logger log = Logger.getLogger(TagCreateController.class.getName());
@@ -87,7 +85,12 @@ public class TagCreateController implements Initializable {
         String fontColor = tag.getColorPair().getFont();
         if(bgColor!=null) backgroundColorPicker.setValue(Color.web(bgColor));
         if(fontColor!=null) fontColorPicker.setValue(Color.web(fontColor));
-        updateColors(tagOverviewCtrl.parent.getBoardColor());
+        if(tagOverviewCtrl != null) {
+            updateColors(tagOverviewCtrl.parent.getBoardColor());
+        }
+        else {
+            updateColors(detailedCardController.getParent().getParent().getParent().getBoardColor());
+        }
     }
 
     @FXML
