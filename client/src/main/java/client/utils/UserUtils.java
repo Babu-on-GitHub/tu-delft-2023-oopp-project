@@ -16,7 +16,7 @@ public class UserUtils {
     private String USER_FILE = "src/main/resources/client/user.data";
     private User user;
 
-    private BoardIdWithColors currentBoard;
+    private BoardIdWithColors currentBoard = new BoardIdWithColors(1L);
 
     @Inject
     public UserUtils(ServerUtils utils) {
