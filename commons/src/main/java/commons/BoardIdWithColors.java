@@ -9,11 +9,11 @@ public class BoardIdWithColors implements Serializable, Cloneable {
 
     long boardId;
 
-    private ColorPair boardPair = new ColorPair("#aaaaff", "#111111");
+    private ColorPair boardPair = new ColorPair("#ffffff", "#000000");
 
-    private ColorPair listPair = new ColorPair("#ffaaaa", "#111111");
+    private ColorPair listPair = new ColorPair("#ffffff", "#000000");
 
-    private ColorPair cardPair = new ColorPair("#aaffaa", "#111111");
+    private ColorPair cardPair = new ColorPair("#ffffff", "#000000");
 
     private Map<Long, ColorPair> cardHighlightColors = new HashMap<>();
 
