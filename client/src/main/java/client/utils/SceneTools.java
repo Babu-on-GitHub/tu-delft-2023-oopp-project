@@ -1,4 +1,4 @@
-package client.tools;
+package client.utils;
 
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -6,8 +6,8 @@ import javafx.scene.control.Button;
 
 import java.util.function.Consumer;
 
-public interface SceneTools {
-    static void applyToEveryNode(Node node, Consumer<Node> consumer) {
+public class SceneTools {
+    public static void applyToEveryNode(Node node, Consumer<Node> consumer) {
         if (node == null)
             return;
 

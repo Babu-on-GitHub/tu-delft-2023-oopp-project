@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.util.Optional;
 import java.util.logging.Logger;
 
-import static client.tools.ColorTools.toHexString;
+import static client.utils.ColorTools.toHexString;
 
 public class AddBoardController implements Initializable {
 

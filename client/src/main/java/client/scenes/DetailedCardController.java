@@ -20,8 +20,8 @@ import java.net.URL;
 import java.util.*;
 import java.util.logging.Logger;
 
-import static client.tools.ColorTools.makeColorString;
-import static client.tools.ColorTools.toHexString;
+import static client.utils.ColorTools.makeColorString;
+import static client.utils.ColorTools.toHexString;
 
 public class DetailedCardController implements Initializable {
     private static Logger log = Logger.getLogger(DetailedCardController.class.getName());

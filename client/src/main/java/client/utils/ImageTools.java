@@ -1,11 +1,11 @@
-package client.tools;
+package client.utils;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 
-public interface ImageTools {
-    static Image recolorImage(Image raw, Color color) {
+public class ImageTools {
+    public static Image recolorImage(Image raw, Color color) {
         WritableImage image = new WritableImage(raw.getPixelReader(), (int) raw.getWidth(), (int) raw.getHeight());
         var writer = image.getPixelWriter();
         var reader = image.getPixelReader();
@@ -23,7 +23,7 @@ public interface ImageTools {
         return image;
     }
 
-    static Image recolorImage(String url, Color color) {
+    public static Image recolorImage(String url, Color color) {
         return recolorImage(new Image(url), color);
     }
 }

@@ -10,8 +10,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
-import static client.tools.ColorTools.makeColorString;
-import static client.tools.ColorTools.toHexString;
+import static client.utils.ColorTools.makeColorString;
+import static client.utils.ColorTools.toHexString;
 
 public class CustomizationMenuController implements Initializable {
 

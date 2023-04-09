@@ -1,18 +1,18 @@
-package client.tools;
+package client.utils;
 
 import javafx.scene.paint.Color;
 
-public interface ColorTools {
-    private static String format(double val) {
+public class ColorTools {
+    public static String format(double val) {
         String in = Integer.toHexString((int) Math.round(val * 255));
         return in.length() == 1 ? "0" + in : in;
     }
 
-    static String toHexString(Color value) {
+    public static String toHexString(Color value) {
         return "#" + (format(value.getRed()) + format(value.getGreen()) + format(value.getBlue()));
     }
 
-    static String makeColorString(Color color) {
+    public static String makeColorString(Color color) {
         int r = ((int) Math.round(color.getRed()     * 255)) << 24;
         int g = ((int) Math.round(color.getGreen()   * 255)) << 16;
         int b = ((int) Math.round(color.getBlue()    * 255)) << 8;

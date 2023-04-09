@@ -23,9 +23,9 @@ import org.apache.commons.lang3.NotImplementedException;
 import static client.scenes.ListController.CARD_ID;
 import static client.scenes.ListController.TARGET_INDEX;
 import static client.scenes.ListController.TARGET_LIST;
-import static client.tools.ColorTools.toHexString;
-import static client.tools.ImageTools.recolorImage;
-import static client.tools.SceneTools.applyToEveryNode;
+import static client.utils.ColorTools.toHexString;
+import static client.utils.ImageTools.recolorImage;
+import static client.utils.SceneTools.applyToEveryNode;
 
 
 import java.io.IOException;

@@ -2,6 +2,7 @@ package client.scenes;
 
 import client.model.BoardModel;
 import client.model.ListModel;
+import client.utils.SceneTools;
 import client.utils.ServerUtils;
 import client.utils.UserUtils;
 import com.google.inject.Inject;
@@ -43,10 +44,9 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
-import static client.tools.ColorTools.*;
-import static client.tools.ImageTools.*;
-import static client.tools.ImageTools.recolorImage;
-import static client.tools.SceneTools.*;
+import static client.utils.ColorTools.toHexString;
+import static client.utils.ImageTools.recolorImage;
+
 
 public class MainPageCtrl implements Initializable {
 
@@ -699,7 +699,7 @@ public class MainPageCtrl implements Initializable {
     }
 
     public void updateIcons() {
-        applyToEveryNode(root, (Node x) -> {
+        SceneTools.applyToEveryNode(root, (Node x) -> {
             if (x instanceof ImageView settable) {
                 var color = getBoardColor().getFont();
                 settable.setImage(recolorImage(settable.getImage(), Color.valueOf(color)));

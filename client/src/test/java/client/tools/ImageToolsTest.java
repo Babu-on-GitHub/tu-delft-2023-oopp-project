@@ -1,6 +1,6 @@
 package client.tools;
 
-import javafx.scene.image.Image;
+import client.utils.ImageTools;
 import javafx.scene.paint.Color;
 import org.junit.jupiter.api.Test;
 

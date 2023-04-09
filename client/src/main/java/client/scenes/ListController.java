@@ -24,9 +24,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-import static client.tools.ColorTools.toHexString;
-import static client.tools.ImageTools.recolorImage;
-import static client.tools.SceneTools.applyToEveryNode;
+import static client.utils.ColorTools.toHexString;
+import static client.utils.ImageTools.recolorImage;
+import static client.utils.SceneTools.applyToEveryNode;
 
 public class ListController implements Initializable {
 

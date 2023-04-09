@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import static client.tools.ColorTools.toHexString;
+import static client.utils.ColorTools.toHexString;
 
 public class TagOverviewCtrl implements Initializable {
     @FXML
