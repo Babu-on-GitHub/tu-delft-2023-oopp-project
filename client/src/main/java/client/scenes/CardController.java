@@ -1,6 +1,7 @@
 package client.scenes;
 
 import client.utils.ServerUtils;
+import commons.ColorPair;
 import commons.Tag;
 import commons.Task;
 import javafx.event.ActionEvent;
@@ -9,29 +10,33 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import client.model.CardModel;
 import javafx.fxml.Initializable;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.apache.commons.lang3.NotImplementedException;
 
 import static client.scenes.ListController.CARD_ID;
 import static client.scenes.ListController.TARGET_INDEX;
 import static client.scenes.ListController.TARGET_LIST;
+import static client.utils.ColorTools.toHexString;
+import static client.utils.ImageTools.recolorImage;
+import static client.utils.SceneTools.applyToEveryNode;
 
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 
 public class CardController implements Initializable {
+
+    static final Logger log = Logger.getLogger(CardController.class.getName());
+
     private Stage secondStage;
     private CardModel card;
 
@@ -188,14 +193,18 @@ public class CardController implements Initializable {
         parent.getCardsContainer().getChildren().remove(cardContainer);
     }
 
-    public void overwriteTitleNode(String text) {
-        cardTitle.setText(text);
+    public void overwriteWithModel() {
+        try {
+            cardTitle.setText(card.getCard().getTitle());
+            descLabel.setText(card.getCard().getDescription());
+            updateSubTaskInfo();
+            showTags();
+            updateCardColors(card.getParent().getParent().getController().getCardColor(card.getCard().getId()));
+            log.info("Overwrote card " + card.getCard().getId() + " with model");
+        } catch (Exception e) {
+            log.info("Ignoring overwrite since not initialized yet (" + card.getCard().getId() + ")");
+        }
     }
-
-    public void overwriteDescriptionNode(String text) {
-        descLabel.setText(text);
-    }
-
     public void updateSubTaskInfo() {
         if (card.getCard().getSubTasks() == null || card.getCard().getSubTasks().size() == 0) {
             subtaskInfo.setText("");
@@ -236,33 +245,31 @@ public class CardController implements Initializable {
     }
 
     public void showTags() throws IOException {
-        tagBar.getChildren().clear();
-        for (Tag tag : card.getCard().getTags()) {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("TagBarTag.fxml"));
-            var controller = new TagBarTagCtrl(tag);
-            loader.setController(controller);
+        try{
+            tagBar.getChildren().clear();
+            for (Tag tag : card.getCard().getTags()) {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("TagBarTag.fxml"));
+                var controller = new TagBarTagCtrl(tag);
+                loader.setController(controller);
 
-            Node newTag = loader.load();
-            tagBar.getChildren().add(newTag);
+                Node newTag = loader.load();
+                tagBar.getChildren().add(newTag);
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        cardTitle.setText(card.getCard().getTitle());
-        descLabel.setText(card.getCard().getDescription());
-        updateSubTaskInfo();
-        try {
-            showTags();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         cardTitle.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
                 updateTitleModel();
             }
         });
+
+        overwriteWithModel();
     }
 
     public String getTasksProgress() {
@@ -271,4 +278,33 @@ public class CardController implements Initializable {
                 .filter(Task::isChecked)
                 .count() + "/" + card.getCard().getSubTasks().size();
     }
+
+    public void setCardColorFXML(String color) {
+        var colorCode = Color.valueOf(color);
+        var fill = new Background(new BackgroundFill(colorCode, new CornerRadii(20), null));
+        cardContainer.setBackground(fill);
+    }
+
+    public void setFontColorFXML(String color) {
+        var colorCode = Color.valueOf(color);
+        cardTitle.setStyle("-fx-text-fill: " + toHexString(colorCode) + "; -fx-background-color: inherit;");
+        descLabel.setTextFill(colorCode);
+        subtaskInfo.setTextFill(colorCode);
+    }
+
+    public void updateCardColors(ColorPair cardColor) {
+        setCardColorFXML(cardColor.getBackground());
+        setFontColorFXML(cardColor.getFont());
+        updateIcons();
+    }
+
+    public void updateIcons() {
+        applyToEveryNode(cardContainer, (Node x) -> {
+            if (x instanceof ImageView settable) {
+                var color = getParent().getParent().getCardColor(card.getCard().getId()).getFont();
+                settable.setImage(recolorImage(settable.getImage(), Color.valueOf(color)));
+            }
+        });
+    }
+
 }

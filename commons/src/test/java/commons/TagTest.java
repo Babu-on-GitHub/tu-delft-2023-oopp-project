@@ -57,9 +57,10 @@ public class TagTest {
     @Test
     public void setColorTest(){
         var t = new Tag("banana");
-        assertNotEquals(t.getColor(),"#bababa");
-        t.setColor("#bababa");
-        assertEquals(t.getColor(),"#bababa");
+        assertNotEquals(t.getColorPair(), new ColorPair("#121212", "343434"));
+        var colors = new ColorPair("#121212", "343434");
+        t.setColorPair(colors);
+        assertEquals(t.getColorPair(), colors);
     }
 
     @Test
@@ -70,13 +71,14 @@ public class TagTest {
 
         var t3 = new Tag("apple");
         t3.setTitle("banana");
-
         assertEquals(t, t3);
-        t.setColor("#bababa");
-        assertNotEquals(t,t2);
-        t2.setColor("#bababa");
+
+        var colors = new ColorPair();
+        t.setColorPair(colors);
         assertEquals(t,t2);
-        t3.setColor("#bbbbbb");
+        t2.setColorPair(colors);
+        assertEquals(t,t2);
+        t3.setColorPair(new ColorPair("#544444","#333333"));
         assertNotEquals(t,t3);
     }
 
@@ -99,13 +101,14 @@ public class TagTest {
 
         var t3 = new Tag("apple");
         t3.setTitle("banana");
-
         assertEquals(t.hashCode(), t3.hashCode());
-        t.setColor("#bababa");
-        assertNotEquals(t.hashCode(),t2.hashCode());
-        t2.setColor("#bababa");
+
+        var colors = new ColorPair();
+        t.setColorPair(colors);
         assertEquals(t.hashCode(),t2.hashCode());
-        t3.setColor("#bbbbbb");
+        t2.setColorPair(colors);
+        assertEquals(t.hashCode(),t2.hashCode());
+        t3.setColorPair(new ColorPair("#bbbbbb", "#aaaaaa"));
         assertNotEquals(t.hashCode(),t3.hashCode());
     }
 

@@ -5,20 +5,28 @@ import client.model.CardModel;
 import client.model.ListModel;
 import client.utils.ServerUtils;
 import commons.Card;
+import commons.ColorPair;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
+import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+
+import static client.utils.ColorTools.toHexString;
+import static client.utils.ImageTools.recolorImage;
+import static client.utils.SceneTools.applyToEveryNode;
 
 public class ListController implements Initializable {
 
@@ -40,6 +48,12 @@ public class ListController implements Initializable {
 
     private ServerUtils server;
 
+    @FXML
+    private AnchorPane listTop;
+
+    @FXML
+    private AnchorPane listBottom;
+
     @SuppressWarnings("unused")
     public ListController() {
     }
@@ -54,6 +68,8 @@ public class ListController implements Initializable {
         listModel.setController(this);
         this.parent = parent;
         server = parent.getServer();
+
+        //todo: add font?
     }
 
     public void recreateChildren(ArrayList<CardModel> temp) throws IOException {
@@ -63,6 +79,9 @@ public class ListController implements Initializable {
     }
 
     public void addCard(CardModel model) throws IOException {
+        var id = model.getCard().getId();
+        // search for the corresponding card color stored in the board controller
+
         insertCard(model, cardListContainer.getChildren().size());
     }
 
@@ -89,6 +108,7 @@ public class ListController implements Initializable {
         CardModel newCard = new CardModel(new Card(), listModel, server);
         addCard(newCard); // keep this order of add card and listModel.addCard
         listModel.addCard(newCard);
+        //newCard.getController().setCardColorFXML(parent.getModel().getBoard().getCardColor());
     }
 
     private int whichIndexToDropIn(double absolutePosition) {
@@ -202,9 +222,12 @@ public class ListController implements Initializable {
         listModel.updateTitle(listTitle.getText());
     }
 
-    public void overwriteTitleNode(String title) {
-        listTitle.setText(title);
+    public void overwriteWithModel() {
+        listTitle.setText(listModel.getCardList().getTitle());
+
+        updateListColors(listModel.getParent().getController().getListColor());
     }
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -214,6 +237,42 @@ public class ListController implements Initializable {
         listTitle.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
                 updateTitleModel();
+            }
+        });
+        overwriteWithModel();
+    }
+
+    public void setListColorFXML(String color) {
+        var colorCode = Color.valueOf(color);
+        var fillTop = new Background(new BackgroundFill(colorCode, new CornerRadii(10, 10, 0, 0, false), null));
+        listTop.setBackground(fillTop);
+
+        var fillBottom = new Background(new BackgroundFill(colorCode, new CornerRadii(0, 0, 10, 10, false), null));
+        listBottom.setBackground(fillBottom);
+
+        var desaturated = colorCode.desaturate().desaturate();
+        var desaturatedFill = new Background(new BackgroundFill(desaturated, null, null));
+        cardListContainer.setBackground(desaturatedFill);
+        scrollPane.setBackground(desaturatedFill);
+    }
+
+
+    public void setFontColorFXML(String color) {
+        var colorCode = Color.valueOf(color);
+        listTitle.setStyle("-fx-text-fill: " + toHexString(colorCode) + " !important; -fx-background-color: inherit;");
+    }
+
+    public void updateListColors(ColorPair pair) {
+        setListColorFXML(pair.getBackground());
+        setFontColorFXML(pair.getFont());
+        updateIcons();
+    }
+
+    public void updateIcons() {
+        applyToEveryNode(listContainer, (Node x) -> {
+            if (x instanceof ImageView settable) {
+                var color = getParent().getListColor().getFont();
+                settable.setImage(recolorImage(settable.getImage(), Color.valueOf(color)));
             }
         });
     }

@@ -6,7 +6,6 @@ import client.utils.ServerUtils;
 import commons.Card;
 import commons.Tag;
 
-import java.io.IOException;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -81,14 +80,7 @@ public class CardModel {
     }
 
     public void updateChildren() {
-        controller.overwriteTitleNode(card.getTitle());
-        try {
-            controller.showTags();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        controller.overwriteDescriptionNode(card.getDescription());
-
+        controller.overwriteWithModel();
     }
 
     public void disown() {
@@ -122,7 +114,7 @@ public class CardModel {
             return;
         }
         card.setTitle(newTitle);
-        controller.overwriteTitleNode(newTitle);
+        controller.overwriteWithModel();
 
         var res = utils.updateCardTitleById(card.getId(), newTitle);
         if (res.isEmpty())
@@ -133,7 +125,7 @@ public class CardModel {
             else {
                 log.severe("Failed to update card title, overwriting new name");
                 card.setTitle(res.get());
-                controller.overwriteTitleNode(card.getTitle());
+                controller.overwriteWithModel();
             }
         }
     }
@@ -147,16 +139,9 @@ public class CardModel {
             return;
         }
         card = res.get();
-        controller.overwriteTitleNode(card.getTitle());
-        controller.overwriteDescriptionNode(card.getDescription());
-        controller.updateSubTaskInfo();
-        try {
-            controller.showTags();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
         update();
+        updateChildren();
     }
 
     public Set<Tag> getAllTags() {

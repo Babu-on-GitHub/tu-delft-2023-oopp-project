@@ -21,6 +21,6 @@ public class TagBarTagCtrl implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        root.setStyle("-fx-background-color: "+tag.getColor()+";");
+        root.setStyle("-fx-background-color: " + tag.getColorPair().getBackground() + ";");
     }
 }
