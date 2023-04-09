@@ -286,7 +286,7 @@ public class BoardService {
 
         var tagToEdit = tagOpt.get();
         tagToEdit.setTitle(tag.getTitle());
-        tagToEdit.setColor(tag.getColor());
+        tagToEdit.setColorPair(tag.getColorPair());
 
         board.sync();
         this.saveBoard(board);

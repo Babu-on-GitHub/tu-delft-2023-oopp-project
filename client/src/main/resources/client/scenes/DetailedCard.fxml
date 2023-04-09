@@ -2,15 +2,17 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ColorPicker?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
 
 <VBox fx:id="detailedCardBox" onKeyPressed="#keyPress" styleClass="vbox" stylesheets="@../css/cardDetail.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <children>
@@ -24,7 +26,7 @@
          </font></TextArea>
       <StackPane fx:id="subtaskStackPane" VBox.vgrow="NEVER">
          <children>
-            <Button mnemonicParsing="false" onAction="#addTask" text="Add subtask" StackPane.alignment="CENTER_RIGHT">
+            <Button fx:id="addSubTaskButton" mnemonicParsing="false" onAction="#addTask" text="Add subtask" StackPane.alignment="CENTER_RIGHT">
                <StackPane.margin>
                   <Insets right="10.0" />
                </StackPane.margin>
@@ -36,32 +38,24 @@
                   </ImageView>
                </graphic>
             </Button>
-            <Text fx:id="subtaskLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="Subtasks" StackPane.alignment="CENTER_LEFT">
+            <Label fx:id="subtasksTitle" text="Subtasks" StackPane.alignment="CENTER_LEFT">
                <font>
                   <Font size="22.0" />
                </font>
                <StackPane.margin>
                   <Insets left="10.0" />
                </StackPane.margin>
-            </Text>
+            </Label>
          </children>
       </StackPane>
       <ScrollPane fx:id="subtaskScrollPane" hbarPolicy="NEVER" prefWidth="300.0" style="-fx-fit-to-width: true;" styleClass="scroll" VBox.vgrow="ALWAYS">
          <content>
-            <VBox fx:id="subtaskArea" prefHeight="170.0" />
+            <VBox fx:id="subtaskArea" prefHeight="170.0" style="-fx-border-radius: 10px; -fx-background-radius: 10px;" />
          </content>
       </ScrollPane>
       <StackPane>
          <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Tags" StackPane.alignment="CENTER_LEFT">
-               <font>
-                  <Font size="22.0" />
-               </font>
-               <StackPane.margin>
-                  <Insets left="10.0" />
-               </StackPane.margin>
-            </Text>
-            <Button mnemonicParsing="false" onAction="#createTag" prefHeight="28.0" prefWidth="108.0" text="Add tag" StackPane.alignment="CENTER_RIGHT">
+            <Button fx:id="addTagButton" mnemonicParsing="false" onAction="#createTag" prefHeight="28.0" prefWidth="108.0" text="Add tag" StackPane.alignment="CENTER_RIGHT">
                <StackPane.margin>
                   <Insets right="10.0" />
                </StackPane.margin>
@@ -73,16 +67,75 @@
                   </ImageView>
                </graphic>
             </Button>
+            <Label fx:id="tagsTitle" text="Tags" StackPane.alignment="CENTER_LEFT">
+               <font>
+                  <Font size="22.0" />
+               </font>
+               <StackPane.margin>
+                  <Insets left="10.0" />
+               </StackPane.margin>
+            </Label>
          </children>
       </StackPane>
-      <ScrollPane hbarPolicy="NEVER" prefWidth="300.0" style="-fx-fit-to-width: true;" styleClass="scroll" VBox.vgrow="ALWAYS">
+      <ScrollPane fx:id="scrollPaneTags" hbarPolicy="NEVER" prefWidth="300.0" style="-fx-fit-to-width: true;" styleClass="scroll" VBox.vgrow="ALWAYS">
          <content>
             <VBox fx:id="tagArea" prefHeight="170.0" styleClass="tag-area" />
          </content>
       </ScrollPane>
+      <StackPane>
+         <children>
+            <Button fx:id="promoteColorButton" mnemonicParsing="false" onAction="#promoteColor" prefHeight="28.0" prefWidth="108.0" text="Promote" StackPane.alignment="CENTER_RIGHT">
+               <StackPane.margin>
+                  <Insets right="10.0" />
+               </StackPane.margin>
+               <graphic>
+                  <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../icons/PNG/refresh_FILL0_wght400_GRAD0_opsz48.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Label fx:id="colorLabel" text="Color" StackPane.alignment="CENTER_LEFT">
+               <font>
+                  <Font size="22.0" />
+               </font>
+               <StackPane.margin>
+                  <Insets left="10.0" />
+               </StackPane.margin>
+            </Label>
+         </children>
+      </StackPane>
+      <HBox>
+         <children>
+            <StackPane prefHeight="60.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <Label fx:id="firstColorLabel" text="Background" StackPane.alignment="TOP_CENTER">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+                  <ColorPicker fx:id="backPicker" StackPane.alignment="BOTTOM_CENTER" />
+               </children>
+            </StackPane>
+            <StackPane prefHeight="50.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <Label fx:id="secondColorLabel" text="Font" StackPane.alignment="TOP_CENTER">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+                  <ColorPicker fx:id="fontPicker" StackPane.alignment="BOTTOM_CENTER" />
+               </children>
+            </StackPane>
+         </children>
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin>
+      </HBox>
       <StackPane maxHeight="63.0" prefHeight="63.0" prefWidth="600.0" VBox.vgrow="ALWAYS">
          <children>
-            <Button mnemonicParsing="false" onAction="#cancel" text="Cancel" StackPane.alignment="BOTTOM_LEFT">
+            <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#cancel" text="Cancel" StackPane.alignment="BOTTOM_LEFT">
                <StackPane.margin>
                   <Insets bottom="10.0" left="10.0" />
                </StackPane.margin>
@@ -90,7 +143,7 @@
                   <Font size="18.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" onAction="#save" text="Save" StackPane.alignment="BOTTOM_RIGHT">
+            <Button fx:id="saveButton" mnemonicParsing="false" onAction="#save" text="Save" StackPane.alignment="BOTTOM_RIGHT">
                <StackPane.margin>
                   <Insets bottom="10.0" right="10.0" />
                </StackPane.margin>
@@ -99,6 +152,9 @@
                </font>
             </Button>
          </children>
+         <VBox.margin>
+            <Insets top="20.0" />
+         </VBox.margin>
       </StackPane>
    </children>
 </VBox>

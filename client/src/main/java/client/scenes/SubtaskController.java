@@ -4,13 +4,18 @@ import commons.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
 
 import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
+
+import static client.utils.ColorTools.toHexString;
+import static client.utils.SceneTools.applyToEveryNode;
 
 public class SubtaskController implements Initializable {
     private DetailedCardController parent;
@@ -52,6 +57,19 @@ public class SubtaskController implements Initializable {
         if (Objects.equals(title.getText(), (new Task()).getTitle())) {
             title.requestFocus();
         }
+
+        var card = parent.getParent();
+        var board = card.getParent().getParent();
+        var backColor = board.getBoardColor().getBackground();
+        var fontColor = board.getBoardColor().getFont();
+
+        var styleStr = "-fx-background-color: " + toHexString(Color.valueOf(backColor)) +
+                "; -fx-text-fill: " + toHexString(Color.valueOf(fontColor)) + ";";
+        applyToEveryNode(subtaskRoot, node -> {
+            if (node instanceof Button btn) {
+                btn.setStyle(styleStr);
+            }
+        });
     }
 
     @FXML

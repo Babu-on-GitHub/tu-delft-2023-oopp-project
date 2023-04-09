@@ -40,7 +40,8 @@ public class DetailedCardTagController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         title.setText(tag.getTitle());
-        tagRoot.setStyle("-fx-background-color: "+tag.getColor()+";");
+        title.setStyle("-fx-fill: "+tag.getColorPair().getFont()+";");
+        tagRoot.setStyle("-fx-background-color: "+tag.getColorPair().getBackground()+";");
 
         status.setSelected(initiallyChecked);
         statusHint(initiallyChecked);

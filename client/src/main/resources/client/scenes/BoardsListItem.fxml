@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="45.0" prefWidth="372.0" style="-fx-border-color: #bababa; -fx-border-width: 1px;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="root" prefHeight="45.0" prefWidth="372.0" style="-fx-border-color: #bababa; -fx-border-width: 1px; -fx-border-radius: 20px;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Button fx:id="boardItemButton" layoutX="48.0" layoutY="5.0" mnemonicParsing="false" onAction="#setBoardButton" prefHeight="32.0" prefWidth="282.0" style="-fx-background-color: inherit;" text="Board" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="47.0" AnchorPane.rightAnchor="43.0" AnchorPane.topAnchor="4.0">
          <font>

@@ -6,6 +6,7 @@ import commons.Board;
 import commons.CardList;
 import commons.Tag;
 
+import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -95,6 +96,7 @@ public class BoardModel {
 
         utils.deleteCardListById(id, board.getId());
 
+        update();
         quietTest();
     }
 
@@ -126,10 +128,8 @@ public class BoardModel {
         if (serverTimestamp.after(localTimestamp)) {
             log.info("Server-side board is newer, overwriting local");
             board = serverBoard;
-            controller.overwriteTitleNode(board.getTitle());
 
             updateChildren();
-
             return true;
         }
 
@@ -155,12 +155,14 @@ public class BoardModel {
             return;
         }
 
+        controller.destroy();
         board = newBoard;
+        children.clear();
         updateChildren();
     }
 
     public void updateChildren() {
-        controller.overwriteTitleNode(board.getTitle());
+        controller.overWriteWithModel();
 
         if (board.getLists() == null) return;
 
@@ -182,6 +184,7 @@ public class BoardModel {
             controller.recreateChildren(temp);
         } catch (IOException e) {
             log.warning("Problems during board children recreation..");
+            e.printStackTrace();
         }
 
         for (ListModel child : children)
@@ -267,7 +270,7 @@ public class BoardModel {
                 log.severe("Board title is not up to date");
 
                 board.setTitle(res.get());
-                controller.overwriteTitleNode(board.getTitle());
+                controller.overWriteWithModel();
             }
         }
     }

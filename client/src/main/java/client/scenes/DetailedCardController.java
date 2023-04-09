@@ -2,6 +2,7 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import commons.Card;
+import commons.ColorPair;
 import commons.Tag;
 import commons.Task;
 import javafx.event.ActionEvent;
@@ -17,6 +18,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -25,6 +29,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
+
+import java.util.*;
+import java.util.logging.Logger;
+
+import static client.utils.ColorTools.makeColorString;
+import static client.utils.ColorTools.toHexString;
 
 public class DetailedCardController implements Initializable {
     private static Logger log = Logger.getLogger(DetailedCardController.class.getName());
@@ -46,9 +56,6 @@ public class DetailedCardController implements Initializable {
     private VBox subtaskArea;
 
     @FXML
-    private Text subtaskLabel;
-
-    @FXML
     private ScrollPane subtaskScrollPane;
 
     @FXML
@@ -59,6 +66,45 @@ public class DetailedCardController implements Initializable {
 
     @FXML
     private TextField title;
+
+    @FXML
+    private ScrollPane scrollPaneTags;
+
+    @FXML
+    private Label subtasksTitle;
+
+    @FXML
+    private Label tagsTitle;
+
+    @FXML
+    private Button addSubTaskButton;
+
+    @FXML
+    private Button addTagButton;
+
+    @FXML
+    private Button promoteColorButton;
+
+    @FXML
+    private Label colorLabel;
+
+    @FXML
+    private Label firstColorLabel;
+
+    @FXML
+    private Label secondColorLabel;
+
+    @FXML
+    private Button saveButton;
+
+    @FXML
+    private Button cancelButton;
+
+    @FXML
+    private ColorPicker fontPicker;
+
+    @FXML
+    private ColorPicker backPicker;
 
     public DetailedCardController(CardController cardController, ServerUtils server) {
         cardController.getModel().update(); // just in case
@@ -162,15 +208,79 @@ public class DetailedCardController implements Initializable {
         localCard.setSubTasks(subtasks);
 
         parent.getModel().overwriteWith(localCard);
+
+        var boardCtrl = parent.getParent().getParent();
+        var userUtils = boardCtrl.getUserUtils();
+        var b = userUtils.getCurrentBoardColors();
+
+        var fontColor = makeColorString(fontPicker.getValue());
+        var backColor = makeColorString(backPicker.getValue());
+
+        var pair = new ColorPair(backColor, fontColor);
+        if (!pair.equals(boardCtrl.getCardColor(localCard.getId())))
+            b.getCardHighlightColors().put(localCard.getId(), pair);
+        userUtils.updateSingleBoard(b);
+
+        boardCtrl.globalColorUpdate();
     }
 
     public void showDetails() throws IOException {
         log.info("Showing details");
 
+        updateCardDetailColors();
+
         title.setText(localCard.getTitle());
         description.setText(localCard.getDescription());
         showSubtasks();
         showTags();
+    }
+
+    public void updateCardDetailColors(){
+        setBackgroundColorFXML(parent.getParent().getParent().getBoardColor());
+        setFontColorFXML(parent.getParent().getParent().getBoardColor());
+    }
+
+    public void setFontColorFXML(ColorPair color){
+        var fontColor = Color.valueOf(color.getFont());
+        var backgroundColor = Color.valueOf(color.getBackground());
+        var styleStr = "-fx-text-fill: " + toHexString(fontColor) + "; -fx-background-color:" +
+                toHexString(backgroundColor) + ";";
+
+        title.setStyle(styleStr);
+        tagsTitle.setStyle(styleStr);
+        subtasksTitle.setStyle(styleStr);
+        colorLabel.setStyle(styleStr);
+        firstColorLabel.setStyle(styleStr);
+        secondColorLabel.setStyle(styleStr);
+    }
+
+    public void setBackgroundColorFXML(ColorPair color){
+        var colorCode = Color.valueOf(color.getBackground());
+        var fill = new Background(new BackgroundFill(colorCode, null, null));
+        detailedCardBox.setBackground(fill);
+        title.setBackground(fill);
+
+        var textBoxFill =  new Background(new BackgroundFill(colorCode.brighter(), null, null));
+
+        description.setBackground(textBoxFill);
+        description.setStyle("-fx-background-color: transparent;");
+        subtaskArea.setBackground(textBoxFill);
+        tagArea.setBackground(textBoxFill);
+        scrollPaneTags.setBackground(textBoxFill);
+        subtaskScrollPane.setBackground(textBoxFill);
+
+        var fontColor = Color.valueOf(color.getFont());
+        var styleStr = "-fx-text-fill: " + toHexString(fontColor) +
+                "; -fx-background-color:" + toHexString(colorCode.darker()) + ";";
+
+        addSubTaskButton.setStyle(styleStr);
+        addTagButton.setStyle(styleStr);
+        saveButton.setStyle(styleStr);
+        cancelButton.setStyle(styleStr);
+        promoteColorButton.setStyle(styleStr);
+
+        fontPicker.setStyle(styleStr);
+        backPicker.setStyle(styleStr);
     }
 
     private void showSubtasks() throws IOException {
@@ -282,9 +392,27 @@ public class DetailedCardController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        var color = parent.getParent().getParent().getCardColor(parent.getModel().getCard().getId());
+        fontPicker.setValue(Color.valueOf(color.getFont()));
+        backPicker.setValue(Color.valueOf(color.getBackground()));
     }
 
-    public void keyPress(KeyEvent event){
+    public void promoteColor() {
+        var backColor = makeColorString(backPicker.getValue());
+        var fontColor = makeColorString(fontPicker.getValue());
+        var boardCtrl = parent.getParent().getParent();
+        var userUtils = boardCtrl.getUserUtils();
+
+        var b = userUtils.getCurrentBoardColors();
+        b.setCardPair(new ColorPair(backColor, fontColor));
+        userUtils.updateSingleBoard(b);
+
+        userUtils.clearHighlight();
+
+        boardCtrl.globalColorUpdate();
+    }
+
+    public void keyPress(KeyEvent event) {
         if (event.getCode() == javafx.scene.input.KeyCode.ESCAPE) {
             System.out.println("Escape key pressed. Exiting...");
             Stage secondStage = (Stage) detailedCardBox.getScene().getWindow();

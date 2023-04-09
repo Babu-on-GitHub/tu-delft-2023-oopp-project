@@ -17,7 +17,7 @@ public class Card implements Serializable, Cloneable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String title = "Unititled card";
+    private String title = "Untitled card";
     private Timestamp timestamp;
 
     private String description;
