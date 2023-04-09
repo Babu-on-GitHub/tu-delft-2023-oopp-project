@@ -720,7 +720,7 @@ public class MainPageCtrl implements Initializable {
     }
 
     public void updateIcons() {
-        SceneTools.applyToEveryNode(root, (Node x) -> {
+        SceneTools.applyToEveryNode(pageRoot, (Node x) -> {
             if (x instanceof ImageView settable) {
                 var color = getBoardColor().getFont();
                 settable.setImage(recolorImage(settable.getImage(), Color.valueOf(color)));
