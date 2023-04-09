@@ -179,6 +179,9 @@ public class MainPageCtrl implements Initializable {
             secondStage.initOwner(boardName.getScene().getWindow());
             secondStage.show();
         }
+        if(event.getCode() == KeyCode.C){
+            showCustomizationMenu();
+        }
     }
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -302,6 +305,10 @@ public class MainPageCtrl implements Initializable {
 
     @FXML
     public void optionsShowCustomizationMenu(ActionEvent event)  {
+        showCustomizationMenu();
+    }
+
+    public void showCustomizationMenu(){
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("CustomizationMenu.fxml"));
             loader.setController(new CustomizationMenuController(this));
