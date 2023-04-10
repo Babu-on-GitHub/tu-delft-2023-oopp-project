@@ -4,6 +4,9 @@ import client.scenes.CardController;
 import client.scenes.DetailedCardController;
 import client.utils.ServerUtils;
 import commons.Card;
+import commons.Tag;
+
+import java.util.Set;
 import java.util.logging.Logger;
 
 public class CardModel {
@@ -52,8 +55,7 @@ public class CardModel {
                 log.warning("Failed to add card");
                 return;
             }
-            var newCard = newCardOpt.get();
-            card = newCard;
+            card = newCardOpt.get();
 
             parent.updateChild(card);
             return;
@@ -61,8 +63,10 @@ public class CardModel {
 
         var fetchedCard = res.get();
 
-        if (fetchedCard.equals(card))
+        if (fetchedCard.equals(card)) {
+            log.info("Card is up to date");
             return;
+        }
 
         var newCard = utils.updateCardById(card.getId(), card);
         if (newCard.isEmpty()) {
@@ -76,9 +80,7 @@ public class CardModel {
     }
 
     public void updateChildren() {
-        //controller.updateTitleModel();
-        controller.overwriteTitleNode(card.getTitle());
-
+        controller.overwriteWithModel();
     }
 
     public void disown() {
@@ -97,10 +99,6 @@ public class CardModel {
         return card;
     }
 
-    public static Logger getLog() {
-        return log;
-    }
-
     public ListModel getParent() {
         return parent;
     }
@@ -116,7 +114,7 @@ public class CardModel {
             return;
         }
         card.setTitle(newTitle);
-        controller.overwriteTitleNode(newTitle);
+        controller.overwriteWithModel();
 
         var res = utils.updateCardTitleById(card.getId(), newTitle);
         if (res.isEmpty())
@@ -127,24 +125,61 @@ public class CardModel {
             else {
                 log.severe("Failed to update card title, overwriting new name");
                 card.setTitle(res.get());
-                controller.overwriteTitleNode(card.getTitle());
+                controller.overwriteWithModel();
             }
         }
     }
 
     public void overwriteWith(Card newCard) {
-        if (newCard.getId() != card.getId()) {
-            log.warning("Overwriting card with different id");
-            newCard.setId(card.getId());
-        }
+        card = newCard;
 
-        var res = utils.updateCardById(newCard.getId(), newCard);
+        var res = utils.updateCardById(card.getId(), card);
         if (res.isEmpty()) {
             log.severe("Failed to update card");
             return;
         }
         card = res.get();
-        controller.overwriteTitleNode(card.getTitle());
+
+        update();
+        updateChildren();
+    }
+
+    public Set<Tag> getAllTags() {
+        return parent.getParent().getBoard().getTags();
+    }
+
+    public void assignTag(Tag tag) {
+        var newTag = utils.addTagToCard(card.getId(), tag);
+        if (newTag.isEmpty()) {
+            log.warning("Failed to add tag to card");
+            return;
+        }
+        card.getTags().add(newTag.get());
+
+        update();
+    }
+
+    public void unassignTag(Tag tag) {
+        var res = utils.deleteTagFromCard(card.getId(), tag.getId());
+        if (res.isEmpty()) {
+            log.warning("Failed to remove tag from card");
+            return;
+        }
+        card.getTags().remove(tag);
+
+        update();
+    }
+
+    public void deleteTag(Tag tag) {
+        unassignTag(tag);
+
+        // but we also want to delete it from the board
+        var res = utils.deleteTagFromBoard(parent.getParent().getBoard().getId(), tag.getId());
+        if (res.isEmpty()) {
+            log.warning("Failed to delete tag from board");
+            return;
+        }
+        parent.getParent().getBoard().getTags().remove(tag);
 
         update();
     }

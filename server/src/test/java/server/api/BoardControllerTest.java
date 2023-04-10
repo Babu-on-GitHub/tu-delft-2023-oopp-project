@@ -1,7 +1,9 @@
 package server.api;
 
 import commons.Board;
+import commons.Card;
 import commons.CardList;
+import commons.Tag;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -11,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import server.services.BoardService;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -108,6 +111,17 @@ public class BoardControllerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(list, response.getBody());
     }
+    @Test
+    public void testAddWithInvalidListId() {
+        List<Card> cards = new ArrayList<>();
+        cards.add(new Card("New Card"));
+        long invalidId = 100;
+        CardList cardList = new CardList(1, "New",cards);
+        when(boardController.add(cardList, invalidId)).thenThrow(new IllegalArgumentException());
+
+        ResponseEntity<CardList> response = boardController.add(cardList, invalidId);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
 
     @Test
     void testDeleteBoard() {
@@ -117,6 +131,15 @@ public class BoardControllerTest {
         verify(boardService, times(1)).deleteBoardById(boardId);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertTrue(response.getBody());
+    }
+
+    @Test
+    public void testDeleteBoardWithException() {
+        long invalidId = 100;
+        when(boardController.delete(invalidId)).thenThrow(new IllegalArgumentException());
+
+        ResponseEntity<Boolean> response = boardController.delete(invalidId);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 
     @Test
@@ -131,6 +154,15 @@ public class BoardControllerTest {
     }
 
     @Test
+    public void testRemoveListWithException() {
+        long invalidId = -10;
+        long invalidBoardId = -10;
+        when(boardController.remove(invalidId,invalidBoardId)).thenThrow(new IllegalArgumentException());
+
+        ResponseEntity<Boolean> response = boardController.remove(invalidId,invalidBoardId);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
+    @Test
     void testUpdateSuccess() {
         long boardId = 1234;
         Board board = new Board();
@@ -143,5 +175,33 @@ public class BoardControllerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(board, response.getBody());
         verify(boardService).update(board, boardId);
+    }
+    @Test
+    public void moveCardWithException() {
+        long invalidId = -10;
+        long invalidBoardId = -10;
+        when(boardController.moveCard(invalidId,-1,-1,invalidBoardId)).thenThrow(new IllegalArgumentException());
+
+        ResponseEntity<Boolean> response = boardController.moveCard(invalidId,-1,-1,invalidBoardId);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
+
+    @Test
+    public void updateBoardWithException() {
+        Board board = new Board(1, "New board", null);
+        when(boardController.update(board,-1)).thenThrow(new IllegalArgumentException());
+
+        ResponseEntity<Board> response = boardController.update(board,-1);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
+
+    @Test
+    public void updateBoardTitleWithException() {
+        long invalidId = -10;
+        long invalidBoardId = -10;
+        when(boardController.updateTitle("New",-1)).thenThrow(new IllegalArgumentException());
+
+        ResponseEntity<String> response = boardController.updateTitle("New",-1);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 }

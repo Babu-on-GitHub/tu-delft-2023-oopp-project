@@ -99,6 +99,12 @@ public class ListModel {
     }
 
     public void moveCard(int from, int to) {
+        if(to<0 || to>=cardList.getCards().size()){
+            return;
+        }
+        if(from<0 || from>=cardList.getCards().size()){
+            return;
+        }
         var card = cardList.getCards().get(from);
         cardList.getCards().remove(from);
         cardList.getCards().add(to, card);
@@ -192,9 +198,10 @@ public class ListModel {
             log.info("Server timestamp is newer, overwriting local list");
             cardList = fetchedCardList;
 
+            //properly update list colors here maybe
+
             updateChildren();
             parent.updateChild(cardList);
-            controller.overwriteTitleNode(cardList.getTitle());
 
             return true;
         }
@@ -236,7 +243,7 @@ public class ListModel {
     }
 
     public void updateChildren() {
-        controller.overwriteTitleNode(cardList.getTitle());
+        controller.overwriteWithModel();
 
         if (cardList.getCards() == null) return;
 
@@ -302,7 +309,7 @@ public class ListModel {
             else {
                 log.severe("Failed to update card list title, overwriting new name");
                 cardList.setTitle(res.get());
-                controller.overwriteTitleNode(cardList.getTitle());
+                controller.overwriteWithModel();
             }
         }
     }

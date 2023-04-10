@@ -94,4 +94,11 @@ public class TaskTest {
         t.setChecked(true);
         assertTrue(t.isChecked());
     }
+
+    @Test
+    public void testClone() throws CloneNotSupportedException {
+        var t = new Task("mango");
+        var t2 = t.clone();
+        assertEquals(t, t2);
+    }
 }

@@ -3,12 +3,16 @@ package server.services;
 import commons.Board;
 import commons.Card;
 import commons.CardList;
+import commons.Tag;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import server.repository.TestBoardRepository;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import java.util.HashSet;
+import java.util.Set;
+
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class BoardServiceTest {
 
@@ -152,7 +156,35 @@ public class BoardServiceTest {
         boards = boardService.findAllBoards();
         assertEquals("test", boards.get(0).getTitle());
     }
+    @Test
+    public void updateBoardWithException() {
+        Board board = new Board(1, "New board", null);
 
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            boardService.update(board,1);
+        });
+
+        String expectedMessage = "Trying to update non existing board " +
+                "Ids are not coherent in board update " +
+                "Something went wrong while updating board";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(expectedMessage.contains(actualMessage));
+    }
+
+    @Test
+    public void updateBoardTitleWithException() {
+        Board board = new Board(1, "New board", null);
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            boardService.updateTitle("new",1);
+        });
+
+        String expectedMessage = "Trying to update non existing board ";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(expectedMessage.contains(actualMessage));
+    }
     @Test
     void testEverythingForNull() {
         assertThrows(IllegalArgumentException.class, () -> boardService.saveBoard(null));
@@ -194,5 +226,111 @@ public class BoardServiceTest {
         assertEquals(2, lists.size());
         assertEquals(1, lists.get(0).getCards().size());
         assertEquals(0, lists.get(1).getCards().size());
+    }
+
+    @Test
+    void tagAddTest() {
+        Tag tag = new Tag("test");
+
+        var board = new Board();
+        board.setId(1L);
+        Set<Tag> set = new HashSet<>();
+        set.add(tag);
+        board.setTags(set);
+
+        boardService.saveBoard(board);
+        var boardId = board.getId();
+
+        var res = boardService.getTags(boardId);
+        assertEquals(1, res.size());
+
+        var tag2 = new Tag(2, "test2");
+        boardService.addTag(tag2, boardId);
+        res = boardService.getTags(boardId);
+        assertEquals(2, res.size());
+
+        assertTrue(res.contains(tag));
+        assertTrue(res.contains(tag2));
+    }
+
+    @Test
+    void tagDeleteTest() {
+        Tag tag = new Tag("test");
+
+        var board = new Board();
+        board.setId(1L);
+        Set<Tag> set = new HashSet<>();
+        set.add(tag);
+        board.setTags(set);
+
+        boardService.saveBoard(board);
+        var boardId = board.getId();
+
+        var res = boardService.getTags(boardId);
+        assertEquals(1, res.size());
+
+        boardService.deleteTag(tag.getId(), boardId);
+        res = boardService.getTags(boardId);
+        assertEquals(0, res.size());
+    }
+
+    @Test
+    void updateTitleTest() {
+        var board = new Board();
+        board.setId(1L);
+        boardService.saveBoard(board);
+        var boardId = board.getId();
+
+        var list = new CardList();
+        list.setId(1L);
+        boardService.saveCardList(list, boardId);
+        var listId = list.getId();
+
+        var boards = boardService.findAllBoards();
+        assertEquals(1, boards.size());
+        assertEquals(1, boards.get(0).getLists().size());
+
+        boardService.updateTitle("test", boardId);
+        boards = boardService.findAllBoards();
+        assertEquals("test", boards.get(0).getTitle());
+    }
+
+    @Test
+    void updateTagTest() {
+        Tag tag = new Tag(32, "test");
+
+        var board = new Board();
+        board.setId(1L);
+        Set<Tag> set = new HashSet<>();
+        set.add(tag);
+        board.setTags(set);
+
+        boardService.saveBoard(board);
+        var boardId = board.getId();
+
+        var res = boardService.getTags(boardId);
+        assertEquals(1, res.size());
+
+        boardService.updateTag(boardId, new Tag(32, "test2"));
+        res = boardService.getTags(boardId);
+        assertEquals(1, res.size());
+        assertEquals("test2", res.iterator().next().getTitle());
+    }
+
+    @Test
+    void updateNonExistentTagTest() {
+        Tag tag = new Tag(32, "test");
+
+        var board = new Board();
+        board.setId(1L);
+        Set<Tag> set = new HashSet<>();
+        set.add(tag);
+        board.setTags(set);
+
+        boardService.saveBoard(board);
+        var boardId = board.getId();
+
+        assertThrows(IllegalArgumentException.class, () ->
+                boardService.updateTag(boardId, new Tag(33, "test2")));
     }
 }

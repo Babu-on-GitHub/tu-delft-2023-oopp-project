@@ -37,10 +37,10 @@ public class WebSocketController {
             return;
         }
 
-
         for (var board : synchronizationService.getBoardsToUpdate()) {
             var index = board.getId();
             log.info("Sending board: " + index + " to all subscribers");
+
             simpMessagingTemplate.convertAndSend("/topic/board/" + index,
                     board);
         }

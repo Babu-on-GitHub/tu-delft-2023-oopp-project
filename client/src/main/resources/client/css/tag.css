@@ -1,0 +1,10 @@
+.checked {
+    -fx-opacity: 0.6;
+}
+
+.tag-root{
+    -fx-background-radius: 15px;
+    -fx-border-color: #bababa;
+    -fx-border-width: 1px;
+    -fx-border-radius: 15px;
+}

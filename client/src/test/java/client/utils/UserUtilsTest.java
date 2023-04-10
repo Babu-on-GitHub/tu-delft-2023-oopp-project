@@ -1,6 +1,7 @@
 package client.utils;
 
 import commons.Board;
+import commons.BoardIdWithColors;
 import commons.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,29 +22,21 @@ public class UserUtilsTest {
         userUtils.setUserFile("file.json");
     }
 
-    @AfterEach
-    public void tearDown() {
-        File file = new File("file.json");
-        if (!file.delete())
-            throw new RuntimeException("Failed to delete file");
+    @Test
+    public void testUpdateSingleBoard() {
+        var board = new BoardIdWithColors(1L);
+        userUtils.updateSingleBoard(board);
+        var boards = userUtils.getUserBoardsIds();
+        assertEquals(1, boards.size());
     }
 
-    /**
-     * Following tests don't work properly so they are commented  out
-     * They are not deleted because the right solution is probably similar to this
-     */
-//    @Test
-//    void getUserBoardsIdsTest() {
-//        var ids = userUtils.getUserBoardsIds();
-//        assertEquals(ids.size(), 1);
-//    }
-//
-//    @Test
-//    void updateUserBoardsTest() {
-//        var ids = userUtils.getUserBoardsIds();
-//        assertEquals(ids.size(), 1);
-//
-//        userUtils.updateUserBoards(List.of(2L, 3L));
-//        assertEquals(ids.size(), 1);
-//    }
+    @Test
+    public void clearHighlightTest() {
+        var board = new BoardIdWithColors(1L);
+        userUtils.updateSingleBoard(board);
+        userUtils.clearHighlight();
+        var boards = userUtils.getUserBoardsIds();
+        assertEquals(1, boards.size());
+        assertEquals(0, boards.get(0).getCardHighlightColors().size());
+    }
 }

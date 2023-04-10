@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane fx:id="root" prefHeight="275.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <TextField fx:id="title" alignment="CENTER" layoutX="20.0" layoutY="14.0" prefHeight="67.0" prefWidth="433.0" text="New Tag" AnchorPane.leftAnchor="22.0" AnchorPane.rightAnchor="22.0" AnchorPane.topAnchor="14.0">
+         <font>
+            <Font size="22.0" />
+         </font>
+      </TextField>
+      <Button fx:id="save" layoutX="295.0" layoutY="147.0" mnemonicParsing="false" onAction="#save" prefHeight="39.0" prefWidth="77.0" text="Save" AnchorPane.bottomAnchor="30.0" AnchorPane.rightAnchor="30.0">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
+      <Button fx:id="cancel" layoutX="23.0" layoutY="147.0" mnemonicParsing="false" onAction="#cancel" text="Cancel" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="30.0">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
+      <ColorPicker fx:id="backgroundColorPicker" layoutX="360.0" layoutY="97.0" prefHeight="39.0" prefWidth="144.0" promptText="Choose background color" style="-fx-background-color: inherit;" AnchorPane.rightAnchor="60.0" AnchorPane.topAnchor="97.0" />
+      <Label fx:id="bgText" layoutX="30.0" layoutY="103.0" text="Choose a background color for the tag:">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <ColorPicker fx:id="fontColorPicker" layoutX="360.0" layoutY="147.0" prefHeight="39.0" prefWidth="144.0" promptText="Choose font color" style="-fx-background-color: inherit;" />
+      <Label fx:id="fontText" layoutX="30.0" layoutY="153.0" text="Choose a font color for the tag:">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

@@ -1,34 +1,43 @@
 package client.scenes;
 
+import client.model.ListModel;
 import client.utils.ServerUtils;
+import commons.ColorPair;
+import commons.Tag;
 import commons.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import client.model.CardModel;
 import javafx.fxml.Initializable;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.apache.commons.lang3.NotImplementedException;
 
 import static client.scenes.ListController.CARD_ID;
 import static client.scenes.ListController.TARGET_INDEX;
 import static client.scenes.ListController.TARGET_LIST;
+import static client.utils.ColorTools.toHexString;
+import static client.utils.ImageTools.recolorImage;
+import static client.utils.SceneTools.applyToEveryNode;
 
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 
 public class CardController implements Initializable {
+
+    static final Logger log = Logger.getLogger(CardController.class.getName());
+
     private Stage secondStage;
     private CardModel card;
 
@@ -58,6 +67,16 @@ public class CardController implements Initializable {
     @FXML
     private Button tagButton;
 
+    @FXML
+    private Label descLabel;
+
+    @FXML
+    private Label subtaskInfo;
+
+    @FXML
+    private HBox tagBar;
+
+
     @SuppressWarnings("unused")
     public CardController() {
     }
@@ -82,19 +101,30 @@ public class CardController implements Initializable {
     @FXML
     void checkDoubleClick(MouseEvent event) throws IOException {
         if (event.getClickCount() == 2) {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("DetailedCard.fxml"));
-            var detailedCardController = new DetailedCardController(this, server);
-            card.setDetailedController(detailedCardController);
-            loader.setController(detailedCardController);
-
-            Parent root = loader.load();
-            secondStage = new Stage();
-            secondStage.setScene(new Scene(root));
-            secondStage.initOwner(cardContainer.getScene().getWindow());
-            secondStage.show();
-
-            detailedCardController.showDetails();
+            showDetailedCardScene(false);
         }
+    }
+
+    void showDetailedCardScene(boolean showOnlyTag) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("DetailedCard.fxml"));
+        var detailedCardController = new DetailedCardController(this, server);
+        card.setDetailedController(detailedCardController);
+        loader.setController(detailedCardController);
+
+        Parent root = loader.load();
+        secondStage = new Stage();
+        secondStage.setScene(new Scene(root));
+        secondStage.initOwner(cardContainer.getScene().getWindow());
+
+        if (showOnlyTag) {
+            detailedCardController.hideProperties();
+
+        }
+
+        secondStage.show();
+
+        getModel().getParent().getParent().update();
+        detailedCardController.showDetails();
     }
 
     @FXML
@@ -156,6 +186,143 @@ public class CardController implements Initializable {
         }
     }
 
+    @FXML
+    void keyPress(KeyEvent event) throws IOException {
+        if (event.getCode() == KeyCode.BACK_SPACE || event.getCode() == KeyCode.DELETE) {
+            deleteCard();
+        }
+        if (event.getCode() == KeyCode.E && !event.isShortcutDown()) {
+            cardTitle.requestFocus();
+        }
+        if (event.getCode() == KeyCode.ENTER) {
+            showDetailedCardScene(false);
+        }
+        if (event.getCode() ==KeyCode.T) {
+            showDetailedCardScene(true);
+
+        }
+        up(event);
+        down(event);
+        right(event);
+        left(event);
+    }
+
+    private void right(KeyEvent event){
+        if(event.getCode() == KeyCode.RIGHT){
+            var l = card.getParent();
+            var b = card.getParent().getParent();
+            var lists = b.getChildren();
+            int lIndex = lists.indexOf(l);
+            for(int i = lIndex +1; i< lists.size(); i++){
+                if(lists.get(i).getChildren()!=null){
+                    for(CardModel c: lists.get(i).getChildren()){
+                        c.getController().focus();
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
+    private void left(KeyEvent event){
+        if(event.getCode() == KeyCode.LEFT){
+            var l = card.getParent();
+            var b = card.getParent().getParent();
+            var lists = b.getChildren();
+            int lIndex = lists.indexOf(l);
+            for(int i = lIndex -1; i>=0; i--){
+                if(lists.get(i).getChildren()!=null){
+                    for(CardModel c: lists.get(i).getChildren()){
+                        c.getController().focus();
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
+
+    private void down(KeyEvent event) throws IOException {
+        if(event.getCode() == KeyCode.DOWN){
+            int index = card.getParent().getCardList().getCards().indexOf(this.card.getCard());
+            if(index>=card.getParent().getCardList().getCards().size()-1) return;
+            if(event.isShiftDown()){
+                var board = getParent().getParent();
+                var model = board.getModel();
+
+                ListModel targetList = this.getModel().getParent();
+                var newParentController = targetList.getController();
+
+                parent.getCardsContainer().getChildren().remove(cardContainer);
+                newParentController.moveCard(
+                        card,
+                        index+1
+                );
+                parent = newParentController;
+
+                model.moveCard(
+                        card,
+                        targetList,
+                        index+1
+                );
+
+                card.getController().focus();
+            }else{
+                long id = card.getParent().getCardList().getCards().get(index+1).getId();
+                CardController c = card.getParent().getChildren().stream()
+                        .filter(q->q.getCard().getId()==id)
+                        .findFirst().
+                        get().getController();
+                c.focus();
+            }
+        }
+    }
+
+    private void up(KeyEvent event) throws IOException {
+        if(event.getCode() == KeyCode.UP){
+            int index = card.getParent().getCardList().getCards().indexOf(this.card.getCard());
+            if(index<=0) return;
+            if(event.isShiftDown()){
+                var board = getParent().getParent();
+                var model = board.getModel();
+
+                ListModel targetList = this.getModel().getParent();
+                var newParentController = targetList.getController();
+
+                parent.getCardsContainer().getChildren().remove(cardContainer);
+                newParentController.moveCard(
+                        card,
+                        index-1
+                );
+                parent = newParentController;
+
+                model.moveCard(
+                        card,
+                        targetList,
+                        index-1
+                );
+
+                card.getController().focus();
+            }else{
+                long id = card.getParent().getCardList().getCards().get(index-1).getId();
+                CardController c = card.getParent().getChildren().stream()
+                        .filter(q->q.getCard().getId()==id)
+                        .findFirst().
+                        get().getController();
+                c.focus();
+            }
+        }
+    }
+
+    @FXML
+    void highlight(MouseEvent event) {
+        focus();
+    }
+
+    public void focus(){
+        cardContainer.requestFocus();
+    }
+
     public void deleteCardButton(ActionEvent event) {
         deleteCard();
     }
@@ -165,8 +332,24 @@ public class CardController implements Initializable {
         parent.getCardsContainer().getChildren().remove(cardContainer);
     }
 
-    public void overwriteTitleNode(String text) {
-        cardTitle.setText(text);
+    public void overwriteWithModel() {
+        try {
+            cardTitle.setText(card.getCard().getTitle());
+            descLabel.setText(card.getCard().getDescription());
+            updateSubTaskInfo();
+            showTags();
+            updateCardColors(card.getParent().getParent().getController().getCardColor(card.getCard().getId()));
+            log.info("Overwrote card " + card.getCard().getId() + " with model");
+        } catch (Exception e) {
+            log.info("Ignoring overwrite since not initialized yet (" + card.getCard().getId() + ")");
+        }
+    }
+    public void updateSubTaskInfo() {
+        if (card.getCard().getSubTasks() == null || card.getCard().getSubTasks().size() == 0) {
+            subtaskInfo.setText("");
+        } else {
+            subtaskInfo.setText(getTasksProgress());
+        }
     }
 
     public void updateTitleModel() {
@@ -200,21 +383,67 @@ public class CardController implements Initializable {
         cardContainer.getStyleClass().add("default-border");
     }
 
+    public void showTags() throws IOException {
+        try{
+            tagBar.getChildren().clear();
+            for (Tag tag : card.getCard().getTags()) {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("TagBarTag.fxml"));
+                var controller = new TagBarTagCtrl(tag);
+                loader.setController(controller);
+
+                Node newTag = loader.load();
+                tagBar.getChildren().add(newTag);
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        cardTitle.setText(card.getCard().getTitle());
-
         cardTitle.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
                 updateTitleModel();
             }
         });
+
+        overwriteWithModel();
     }
 
-    protected String getTasksProgress() {
+    public String getTasksProgress() {
         // number of subtasks completed + "/" + number of subtasks
         return card.getCard().getSubTasks().stream()
                 .filter(Task::isChecked)
                 .count() + "/" + card.getCard().getSubTasks().size();
     }
+
+    public void setCardColorFXML(String color) {
+        var colorCode = Color.valueOf(color);
+        var fill = new Background(new BackgroundFill(colorCode, new CornerRadii(20), null));
+        cardContainer.setBackground(fill);
+    }
+
+    public void setFontColorFXML(String color) {
+        var colorCode = Color.valueOf(color);
+        cardTitle.setStyle("-fx-text-fill: " + toHexString(colorCode) + "; -fx-background-color: inherit;");
+        descLabel.setTextFill(colorCode);
+        subtaskInfo.setTextFill(colorCode);
+    }
+
+    public void updateCardColors(ColorPair cardColor) {
+        setCardColorFXML(cardColor.getBackground());
+        setFontColorFXML(cardColor.getFont());
+        updateIcons();
+    }
+
+    public void updateIcons() {
+        applyToEveryNode(cardContainer, (Node x) -> {
+            if (x instanceof ImageView settable) {
+                var color = getParent().getParent().getCardColor(card.getCard().getId()).getFont();
+                settable.setImage(recolorImage(settable.getImage(), Color.valueOf(color)));
+            }
+        });
+    }
+
 }

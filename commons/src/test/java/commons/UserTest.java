@@ -20,24 +20,27 @@ public class UserTest {
 
     @Test
     void testGetServerBoardsPairs() {
-        final List<User.ServerInfo> expectedResult = new ArrayList<>();
-        final List<User.ServerInfo> result = user.getServerBoardsPairs();
+        final List<ServerInfo> expectedResult = new ArrayList<>();
+        final List<ServerInfo> result = user.getServerBoardsPairs();
         assertEquals(expectedResult, result);
     }
 
     @Test
     void testSetServerBoardsPairs() {
-        final List<User.ServerInfo> serverBoardsPairs = new ArrayList<>();
+        final List<ServerInfo> serverBoardsPairs = new ArrayList<>();
         user.setServerBoardsPairs(serverBoardsPairs);
         assertEquals(serverBoardsPairs, user.getServerBoardsPairs());
     }
 
     @Test
     void testSaveAndLoad() throws IOException, ClassNotFoundException {
-        final List<User.ServerInfo> serverBoardsPairs = new ArrayList<>();
-        serverBoardsPairs.add(new User.ServerInfo("http://localhost:8080"));
+        final List<ServerInfo> serverBoardsPairs = new ArrayList<>();
+        serverBoardsPairs.add(new ServerInfo("http://localhost:8080"));
         serverBoardsPairs.add(
-                new User.ServerInfo("http://localhost:8081", List.of(1L, 2L, 3L))
+                new ServerInfo("http://localhost:8081",
+                        List.of(new BoardIdWithColors(1L),
+                                new BoardIdWithColors(2L),
+                                new BoardIdWithColors(3L)))
         );
 
         user.setServerBoardsPairs(serverBoardsPairs);
@@ -67,10 +70,13 @@ public class UserTest {
 
     @Test
     void testConstructorWithBoards() {
-        final List<User.ServerInfo> servers = new ArrayList<>();
-        servers.add(new User.ServerInfo("http://localhost:8080"));
+        final List<ServerInfo> servers = new ArrayList<>();
+        servers.add(new ServerInfo("http://localhost:8080"));
         servers.add(
-                new User.ServerInfo("http://localhost:8081", List.of(1L, 2L, 3L))
+                new ServerInfo("http://localhost:8081",
+                        List.of(new BoardIdWithColors(1L),
+                                new BoardIdWithColors(2L),
+                                new BoardIdWithColors(3L)))
         );
 
         final User result = new User(servers);
@@ -79,36 +85,70 @@ public class UserTest {
 
     @Test
     void getUserBoardIdsTest() {
-        final List<User.ServerInfo> servers = new ArrayList<>();
-        servers.add(new User.ServerInfo("http://localhost:8080"));
+        final List<ServerInfo> servers = new ArrayList<>();
+        servers.add(new ServerInfo("http://localhost:8080",
+                List.of(new BoardIdWithColors(1L))));
         servers.add(
-                new User.ServerInfo("http://localhost:8081", List.of(1L, 2L, 3L))
+                new ServerInfo("http://localhost:8081",
+                        List.of(new BoardIdWithColors(1L),
+                                new BoardIdWithColors(2L),
+                                new BoardIdWithColors(3L)))
         );
         user.setServerBoardsPairs(servers);
 
-        final List<Long> result = user.getUserBoardsIds("http://localhost:8080");
-        assertEquals(List.of(1L), result);
+        final List<BoardIdWithColors> result = user.getUserBoardsIds("http://localhost:8080");
+        assertEquals(List.of(new BoardIdWithColors(1L)), result);
 
-        final List<Long> result2 = user.getUserBoardsIds("http://localhost:8081");
-        assertEquals(List.of(1L, 2L, 3L), result2);
+        final List<BoardIdWithColors> result2 = user.getUserBoardsIds("http://localhost:8081");
+        assertEquals(List.of(new BoardIdWithColors(1L),
+                new BoardIdWithColors(2L),
+                new BoardIdWithColors(3L)), result2);
     }
 
     @Test
     void setUserBoardsForServerTest() {
-        final List<User.ServerInfo> servers = new ArrayList<>();
-        servers.add(new User.ServerInfo("http://localhost:8080"));
+        final List<ServerInfo> servers = new ArrayList<>();
+        servers.add(new ServerInfo("http://localhost:8080"));
         servers.add(
-                new User.ServerInfo("http://localhost:8081", List.of(1L, 2L, 3L))
+                new ServerInfo("http://localhost:8081",
+                        List.of(new BoardIdWithColors(1L),
+                        new BoardIdWithColors(2L),
+                        new BoardIdWithColors(3L)))
         );
         user.setServerBoardsPairs(servers);
 
-        user.setUserBoardsForServer("http://localhost:8080", List.of(1L, 2L, 3L));
-        final List<Long> result = user.getUserBoardsIds("http://localhost:8080");
-        assertEquals(List.of(1L, 2L, 3L), result);
+        user.setUserBoardsForServer("http://localhost:8080",
+                List.of(new BoardIdWithColors(1L),
+                        new BoardIdWithColors(2L),
+                        new BoardIdWithColors(3L)));
+        final List<BoardIdWithColors> result = user.getUserBoardsIds("http://localhost:8080");
+        assertEquals(List.of(new BoardIdWithColors(1L),
+                new BoardIdWithColors(2L),
+                new BoardIdWithColors(3L)), result);
 
-        user.setUserBoardsForServer("http://localhost:8081", List.of(1L, 2L, 3L, 4L));
-        final List<Long> result2 = user.getUserBoardsIds("http://localhost:8081");
-        assertEquals(List.of(1L, 2L, 3L, 4L), result2);
+        user.setUserBoardsForServer("http://localhost:8081",
+                List.of(new BoardIdWithColors(1L),
+                        new BoardIdWithColors(2L),
+                        new BoardIdWithColors(3L)));
+        final List<BoardIdWithColors> result2 = user.getUserBoardsIds("http://localhost:8081");
+        assertEquals(List.of(new BoardIdWithColors(1L),
+                new BoardIdWithColors(2L),
+                new BoardIdWithColors(3L)), result2);
     }
 
+    @Test
+    void updateSingleBoardForServerTest() {
+        user.updateSingleBoardForServer("http://localhost:8080", new BoardIdWithColors(1L));
+        List<BoardIdWithColors> result = user.getUserBoardsIds("http://localhost:8080");
+        assertEquals(List.of(new BoardIdWithColors(1L)), result);
+
+        user.updateSingleBoardForServer("http://localhost:8081", new BoardIdWithColors(1L));
+        List<BoardIdWithColors> result2 = user.getUserBoardsIds("http://localhost:8081");
+        assertEquals(List.of(new BoardIdWithColors(1L)), result2);
+    }
+
+    @Test
+    void makeDefaultTest() {
+        assertEquals(new BoardIdWithColors(1L), user.getUserBoardsIds("banana").get(0));
+    }
 }

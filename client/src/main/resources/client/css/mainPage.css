@@ -11,6 +11,7 @@
 
 /* Makes the boards fill width of the board list */
 .boards-view {
+    -fx-padding: 8px;
     -fx-fit-to-width: true;
 }
 

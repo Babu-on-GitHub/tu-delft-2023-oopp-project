@@ -28,6 +28,7 @@ public class CardController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Card> getById(@PathVariable("id") long id) {
+        log.info("getById(" + id + ")");
         try {
             var card = cardService.getCardById(id);
             return ResponseEntity.ok(card);
@@ -39,16 +40,17 @@ public class CardController {
 
     @PostMapping(path = "/add")
     public ResponseEntity<Card> add(@RequestBody Card card) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("The operation is not supported");
     }
 
     @DeleteMapping(path = "/delete/{id}")
     public ResponseEntity<Boolean> remove(@PathVariable("id") long id) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("The operation is not supported");
     }
 
     @PutMapping(path = "/update/{id}")
     public ResponseEntity<Card> update(@RequestBody Card card, @PathVariable("id") long id) {
+        log.info("update(" + id + ")");
         try {
             var saved = cardService.update(card, id);
             return ResponseEntity.ok(saved);
@@ -60,6 +62,7 @@ public class CardController {
 
     @PutMapping(path = "/updateTitle/{id}")
     public ResponseEntity<String> updateTitle(@RequestBody String title, @PathVariable("id") long id) {
+        log.info("updateTitle(" + title + ", " + id + ")");
         try {
             var saved = cardService.updateTitle(id, title);
             return ResponseEntity.ok(saved);
@@ -69,13 +72,27 @@ public class CardController {
         }
     }
 
-    @PostMapping(path = "/add/{id}")
+    @PostMapping(path = "/assignTag/{id}")
     public ResponseEntity<Tag> addTag(@RequestBody Tag tag, @PathVariable("id") long cardId) {
-        throw new UnsupportedOperationException();
+        log.info("addTag(" + tag + ", " + cardId + ")");
+        try {
+            var saved = cardService.addTag(cardId, tag);
+            return ResponseEntity.ok(saved);
+        } catch (IllegalArgumentException e) {
+            log.warning(e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
     }
 
-    @DeleteMapping(path = "/delete/{tagId}/from/{cardId}")
+    @DeleteMapping(path = "/deleteTag/{tagId}/from/{cardId}")
     public ResponseEntity<Boolean> removeTag(@PathVariable("tagId") long tagId, @PathVariable("cardId") long cardId) {
-        throw new UnsupportedOperationException();
+        log.info("removeTag(" + tagId + ", " + cardId + ")");
+        try {
+            cardService.removeTag(cardId, tagId);
+            return ResponseEntity.ok(true);
+        } catch (IllegalArgumentException e) {
+            log.warning(e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
     }
 }

@@ -8,12 +8,16 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
+//import javafx.scene.paint.Color;
 
 import static org.apache.commons.lang3.builder.ToStringStyle.MULTI_LINE_STYLE;
 
 @Entity
-public class Board implements Serializable {
+public class Board implements Serializable, Cloneable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,9 +31,13 @@ public class Board implements Serializable {
     @OrderColumn
     private List<CardList> lists;
 
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<Tag> tags;
+
     @SuppressWarnings("unused")
     public Board() {
         lists = new ArrayList<>();
+        tags = new HashSet<>();
     }
 
     /**
@@ -43,6 +51,7 @@ public class Board implements Serializable {
         this.id = id;
         this.title = title;
         this.lists = lists;
+        tags = new HashSet<>();
     }
 
     /**
@@ -54,6 +63,7 @@ public class Board implements Serializable {
     public Board(String title, List<CardList> lists) {
         this.title = title;
         this.lists = lists;
+        tags = new HashSet<>();
     }
 
     /**
@@ -64,7 +74,7 @@ public class Board implements Serializable {
     public Board(String title) {
         this.title = title;
         lists = new ArrayList<>();
-
+        tags = new HashSet<>();
     }
 
     public Timestamp getTimestamp() {
@@ -123,6 +133,21 @@ public class Board implements Serializable {
         this.lists = lists;
     }
 
+    /**
+     * Getter for tags
+     */
+    public Set<Tag> getTags() {
+        return tags;
+    }
+
+    /**
+     * Setter for tags
+     *
+     * @param tags Value for tags
+     */
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags;
+    }
 
     public void add(CardList list) {
         if(lists == null) lists = new ArrayList<>();
@@ -156,5 +181,18 @@ public class Board implements Serializable {
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this, MULTI_LINE_STYLE);
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        Board board = (Board) super.clone();
+        board.lists = new ArrayList<>();
+        board.tags = new HashSet<>();
+        for (CardList cardList : lists)
+            board.lists.add((CardList) cardList.clone());
+
+        for (Tag tag : tags)
+            board.tags.add((Tag) tag.clone());
+        return board;
     }
 }

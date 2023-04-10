@@ -6,6 +6,11 @@ import org.junit.jupiter.api.Test;
 //import java.util.HashSet;
 //import java.util.List;
 //import java.util.Set;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 
@@ -22,6 +27,14 @@ public class CardTest {
         var c = new Card("banana");
         c.setTitle("apple");
         assertEquals(c.getTitle(), "apple");
+    }
+
+    @Test
+    void fullConstructorTest() {
+        var c = new Card(1L, "banana", "desc", List.of(new Task()), Set.of(new Tag()));
+        assertNotNull(c);
+        assertEquals(c.getDescription(), "desc");
+        assertEquals(c.getId(), 1L);
     }
 
     @Test
@@ -91,5 +104,15 @@ public class CardTest {
         c2.sync();
 
         assertFalse(c.getTimestamp().after(c2.getTimestamp()));
+    }
+
+    @Test
+    public void testClone() throws CloneNotSupportedException {
+        var c = new Card("orange");
+        c.setTags(new HashSet<>());
+        c.getTags().add(new Tag("tag1"));
+
+        var c2 = c.clone();
+        assertEquals(c, c2);
     }
 }

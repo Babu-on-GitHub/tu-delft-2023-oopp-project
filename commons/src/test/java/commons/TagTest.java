@@ -55,6 +55,15 @@ public class TagTest {
     }
 
     @Test
+    public void setColorTest(){
+        var t = new Tag("banana");
+        assertNotEquals(t.getColorPair(), new ColorPair("#121212", "343434"));
+        var colors = new ColorPair("#121212", "343434");
+        t.setColorPair(colors);
+        assertEquals(t.getColorPair(), colors);
+    }
+
+    @Test
     public void equalsPositiveTest() {
         var t = new Tag("banana");
         var t2 = new Tag("banana");
@@ -62,8 +71,15 @@ public class TagTest {
 
         var t3 = new Tag("apple");
         t3.setTitle("banana");
-
         assertEquals(t, t3);
+
+        var colors = new ColorPair();
+        t.setColorPair(colors);
+        assertEquals(t,t2);
+        t2.setColorPair(colors);
+        assertEquals(t,t2);
+        t3.setColorPair(new ColorPair("#544444","#333333"));
+        assertNotEquals(t,t3);
     }
 
     @Test
@@ -85,7 +101,21 @@ public class TagTest {
 
         var t3 = new Tag("apple");
         t3.setTitle("banana");
-
         assertEquals(t.hashCode(), t3.hashCode());
+
+        var colors = new ColorPair();
+        t.setColorPair(colors);
+        assertEquals(t.hashCode(),t2.hashCode());
+        t2.setColorPair(colors);
+        assertEquals(t.hashCode(),t2.hashCode());
+        t3.setColorPair(new ColorPair("#bbbbbb", "#aaaaaa"));
+        assertNotEquals(t.hashCode(),t3.hashCode());
+    }
+
+    @Test
+    public void testClone() throws CloneNotSupportedException {
+        var t = new Tag("banana");
+        var t2 = t.clone();
+        assertEquals(t, t2);
     }
 }
