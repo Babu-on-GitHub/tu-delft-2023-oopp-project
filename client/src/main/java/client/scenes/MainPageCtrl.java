@@ -25,6 +25,11 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
@@ -68,6 +73,9 @@ public class MainPageCtrl implements Initializable {
     private HBox cardListsContainer;
 
     @FXML
+    private BorderPane pageRoot;
+
+    @FXML
     private ScrollPane boardScrollPane;
 
 
@@ -100,6 +108,7 @@ public class MainPageCtrl implements Initializable {
     private Button addListButton;
 
     private boolean admin = false;
+    private Stage secondStage;
 
     @FXML
     private AnchorPane boardTop;
@@ -158,7 +167,22 @@ public class MainPageCtrl implements Initializable {
         Image image = recolorImage(file.toURI().toString(), Color.valueOf(getBoardColor().getFont()));
         img.setImage(image);
     }
+    @FXML
+    public void keyPressBoard(KeyEvent event) throws IOException {
+        if (event.isShiftDown() && event.getCode() == KeyCode.SLASH) {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("HelpScreen.fxml"));
 
+            Parent root = loader.load();
+
+            secondStage = new Stage();
+            secondStage.setScene(new Scene(root));
+            secondStage.initOwner(boardName.getScene().getWindow());
+            secondStage.show();
+        }
+        if(event.getCode() == KeyCode.C){
+            showCustomizationMenu();
+        }
+    }
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         boardName.setText("Default board");
@@ -176,11 +200,11 @@ public class MainPageCtrl implements Initializable {
     }
 
     @FXML
-    void tagOverviewButton(ActionEvent event){
+    void tagOverviewButton(ActionEvent event) {
         showTagOverview();
     }
 
-    public void showTagOverview(){
+    public void showTagOverview() {
 
     }
 
@@ -192,7 +216,7 @@ public class MainPageCtrl implements Initializable {
         return board.getBoard();
     }
 
-    public void initializeServerStuff(){
+    public void initializeServerStuff() {
         try {
             initializeBoard();
 
@@ -240,10 +264,10 @@ public class MainPageCtrl implements Initializable {
     }
 
     public void refresh() {
-        if(admin){
+        if (admin) {
             refreshBoardsListButton.setVisible(true);
             leaveBoardButton.setVisible(false);
-        }else{
+        } else {
             refreshBoardsListButton.setVisible(false);
             leaveBoardButton.setVisible(true);
         }
@@ -281,6 +305,10 @@ public class MainPageCtrl implements Initializable {
 
     @FXML
     public void optionsShowCustomizationMenu(ActionEvent event)  {
+        showCustomizationMenu();
+    }
+
+    public void showCustomizationMenu(){
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("CustomizationMenu.fxml"));
             loader.setController(new CustomizationMenuController(this));
@@ -507,9 +535,9 @@ public class MainPageCtrl implements Initializable {
     public void addBoardButton(ActionEvent event) throws IOException {
         if (admin) {
             var b = server.addBoard(new Board());
-            if(b.isEmpty()){
+            if (b.isEmpty()) {
                 log.warning("Failed to add board");
-            }else{
+            } else {
                 setBoardOverview(b.get().getId());
                 showBoardsList();
             }
@@ -699,7 +727,7 @@ public class MainPageCtrl implements Initializable {
     }
 
     public void updateIcons() {
-        SceneTools.applyToEveryNode(root, (Node x) -> {
+        SceneTools.applyToEveryNode(pageRoot, (Node x) -> {
             if (x instanceof ImageView settable) {
                 var color = getBoardColor().getFont();
                 settable.setImage(recolorImage(settable.getImage(), Color.valueOf(color)));

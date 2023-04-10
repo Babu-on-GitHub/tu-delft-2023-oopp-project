@@ -1,5 +1,6 @@
 package client.scenes;
 
+import client.model.ListModel;
 import client.utils.ServerUtils;
 import commons.ColorPair;
 import commons.Tag;
@@ -100,16 +101,11 @@ public class CardController implements Initializable {
     @FXML
     void checkDoubleClick(MouseEvent event) throws IOException {
         if (event.getClickCount() == 2) {
-            showDetailedCardScene();
+            showDetailedCardScene(false);
         }
     }
 
-    @FXML
-    public void editButtonAction(ActionEvent event) throws IOException {
-        showDetailedCardScene();
-    }
-
-    void showDetailedCardScene() throws IOException {
+    void showDetailedCardScene(boolean showOnlyTag) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("DetailedCard.fxml"));
         var detailedCardController = new DetailedCardController(this, server);
         card.setDetailedController(detailedCardController);
@@ -119,6 +115,12 @@ public class CardController implements Initializable {
         secondStage = new Stage();
         secondStage.setScene(new Scene(root));
         secondStage.initOwner(cardContainer.getScene().getWindow());
+
+        if (showOnlyTag) {
+            detailedCardController.hideProperties();
+
+        }
+
         secondStage.show();
 
         getModel().getParent().getParent().update();
@@ -182,6 +184,143 @@ public class CardController implements Initializable {
                     index
             );
         }
+    }
+
+    @FXML
+    void keyPress(KeyEvent event) throws IOException {
+        if (event.getCode() == KeyCode.BACK_SPACE || event.getCode() == KeyCode.DELETE) {
+            deleteCard();
+        }
+        if (event.getCode() == KeyCode.E && !event.isShortcutDown()) {
+            cardTitle.requestFocus();
+        }
+        if (event.getCode() == KeyCode.ENTER) {
+            showDetailedCardScene(false);
+        }
+        if (event.getCode() ==KeyCode.T) {
+            showDetailedCardScene(true);
+
+        }
+        up(event);
+        down(event);
+        right(event);
+        left(event);
+    }
+
+    private void right(KeyEvent event){
+        if(event.getCode() == KeyCode.RIGHT){
+            var l = card.getParent();
+            var b = card.getParent().getParent();
+            var lists = b.getChildren();
+            int lIndex = lists.indexOf(l);
+            for(int i = lIndex +1; i< lists.size(); i++){
+                if(lists.get(i).getChildren()!=null){
+                    for(CardModel c: lists.get(i).getChildren()){
+                        c.getController().focus();
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
+    private void left(KeyEvent event){
+        if(event.getCode() == KeyCode.LEFT){
+            var l = card.getParent();
+            var b = card.getParent().getParent();
+            var lists = b.getChildren();
+            int lIndex = lists.indexOf(l);
+            for(int i = lIndex -1; i>=0; i--){
+                if(lists.get(i).getChildren()!=null){
+                    for(CardModel c: lists.get(i).getChildren()){
+                        c.getController().focus();
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
+
+    private void down(KeyEvent event) throws IOException {
+        if(event.getCode() == KeyCode.DOWN){
+            int index = card.getParent().getCardList().getCards().indexOf(this.card.getCard());
+            if(index>=card.getParent().getCardList().getCards().size()-1) return;
+            if(event.isShiftDown()){
+                var board = getParent().getParent();
+                var model = board.getModel();
+
+                ListModel targetList = this.getModel().getParent();
+                var newParentController = targetList.getController();
+
+                parent.getCardsContainer().getChildren().remove(cardContainer);
+                newParentController.moveCard(
+                        card,
+                        index+1
+                );
+                parent = newParentController;
+
+                model.moveCard(
+                        card,
+                        targetList,
+                        index+1
+                );
+
+                card.getController().focus();
+            }else{
+                long id = card.getParent().getCardList().getCards().get(index+1).getId();
+                CardController c = card.getParent().getChildren().stream()
+                        .filter(q->q.getCard().getId()==id)
+                        .findFirst().
+                        get().getController();
+                c.focus();
+            }
+        }
+    }
+
+    private void up(KeyEvent event) throws IOException {
+        if(event.getCode() == KeyCode.UP){
+            int index = card.getParent().getCardList().getCards().indexOf(this.card.getCard());
+            if(index<=0) return;
+            if(event.isShiftDown()){
+                var board = getParent().getParent();
+                var model = board.getModel();
+
+                ListModel targetList = this.getModel().getParent();
+                var newParentController = targetList.getController();
+
+                parent.getCardsContainer().getChildren().remove(cardContainer);
+                newParentController.moveCard(
+                        card,
+                        index-1
+                );
+                parent = newParentController;
+
+                model.moveCard(
+                        card,
+                        targetList,
+                        index-1
+                );
+
+                card.getController().focus();
+            }else{
+                long id = card.getParent().getCardList().getCards().get(index-1).getId();
+                CardController c = card.getParent().getChildren().stream()
+                        .filter(q->q.getCard().getId()==id)
+                        .findFirst().
+                        get().getController();
+                c.focus();
+            }
+        }
+    }
+
+    @FXML
+    void highlight(MouseEvent event) {
+        focus();
+    }
+
+    public void focus(){
+        cardContainer.requestFocus();
     }
 
     public void deleteCardButton(ActionEvent event) {

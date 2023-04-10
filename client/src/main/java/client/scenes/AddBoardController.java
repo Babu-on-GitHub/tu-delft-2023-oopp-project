@@ -128,7 +128,7 @@ public class AddBoardController implements Initializable {
 
         var styleStr = "-fx-text-fill: " + toHexString(colorCode) + " !important; " +
                 "-fx-background-color: inherit !important;" +
-                "-fx-border-radius: 10px !important; " ;
+                "-fx-border-radius: 10px !important;"+"-fx-border-width: 1px;" + "-fx-border-color: #bababa;" ;
         var styleStrWithoutBorder = "-fx-text-fill: " + toHexString(colorCode) + " !important; " +
                 "-fx-background-color: inherit !important;" ;
         addLabel.setStyle(styleStrWithoutBorder);
@@ -136,8 +136,8 @@ public class AddBoardController implements Initializable {
         createLabel.setStyle(styleStrWithoutBorder);
         joinButton.setStyle(styleStr);
         createButton.setStyle(styleStr);
-        titleBar.setStyle(styleStrWithoutBorder);
-        idBar.setStyle(styleStrWithoutBorder);
+        titleBar.setStyle(styleStr);
+        idBar.setStyle(styleStr);
     }
 
     public void setAddBoardBackgroundFXML(String color) {

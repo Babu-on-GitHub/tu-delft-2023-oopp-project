@@ -10,6 +10,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -17,6 +24,11 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
+import java.util.logging.Logger;
+
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -37,22 +49,25 @@ public class DetailedCardController implements Initializable {
     private TextArea description;
 
     @FXML
-    private TextField title;
-
-    @FXML
     private VBox detailedCardBox;
 
     @FXML
     private VBox subtaskArea;
 
     @FXML
+    private ScrollPane subtaskScrollPane;
+
+    @FXML
+    private StackPane subtaskStackPane;
+
+    @FXML
     private VBox tagArea;
 
     @FXML
-    private ScrollPane scrollPaneTags;
+    private TextField title;
 
     @FXML
-    private ScrollPane scrollPaneSubTasks;
+    private ScrollPane scrollPaneTags;
 
     @FXML
     private Label subtasksTitle;
@@ -104,8 +119,24 @@ public class DetailedCardController implements Initializable {
         subtaskControllers = new ArrayList<>();
     }
 
+    public void hideProperties() {
+        title.setEditable(false);
+
+        description.setVisible(false);
+        description.setManaged(false);
+
+        subtaskArea.setVisible(false);
+        subtaskArea.setManaged(false);
+
+        subtaskStackPane.setVisible(false);
+        subtaskStackPane.setManaged(false);
+
+        subtaskScrollPane.setVisible(false);
+        subtaskScrollPane.setManaged(false);
+    }
     /**
      * Adds a new subtask to the card. This is called by the FXML event listener, for this controller.
+     *
      * @param event the event that triggered this method
      * @throws IOException if the FXML file cannot be loaded
      */
@@ -136,6 +167,7 @@ public class DetailedCardController implements Initializable {
 
     /**
      * Removes a subtask from the card. This is called by the subtask controller when the user clicks the delete button.
+     *
      * @param controller the controller containing task to remove
      */
     @FXML
@@ -146,6 +178,7 @@ public class DetailedCardController implements Initializable {
 
     /**
      * Closes the detailed card view. Since all the changes are stored locally, we don't need to do anything else.
+     *
      * @param event the event that triggered this action
      */
     @FXML
@@ -156,7 +189,8 @@ public class DetailedCardController implements Initializable {
 
     /**
      * Saves the changes made to the card. This includes just overwriting
-     *          the state of the card in the parent controller with the local copy.
+     * the state of the card in the parent controller with the local copy.
+     *
      * @param event the event that triggered this action
      */
     @FXML
@@ -232,7 +266,7 @@ public class DetailedCardController implements Initializable {
         subtaskArea.setBackground(textBoxFill);
         tagArea.setBackground(textBoxFill);
         scrollPaneTags.setBackground(textBoxFill);
-        scrollPaneSubTasks.setBackground(textBoxFill);
+        subtaskScrollPane.setBackground(textBoxFill);
 
         var fontColor = Color.valueOf(color.getFont());
         var styleStr = "-fx-text-fill: " + toHexString(fontColor) +
@@ -375,5 +409,13 @@ public class DetailedCardController implements Initializable {
         userUtils.clearHighlight();
 
         boardCtrl.globalColorUpdate();
+    }
+
+    public void keyPress(KeyEvent event) {
+        if (event.getCode() == javafx.scene.input.KeyCode.ESCAPE) {
+            System.out.println("Escape key pressed. Exiting...");
+            Stage secondStage = (Stage) detailedCardBox.getScene().getWindow();
+            secondStage.close();
+        }
     }
 }

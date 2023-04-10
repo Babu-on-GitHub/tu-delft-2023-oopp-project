@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="root" prefHeight="400.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="root" prefHeight="400.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label fx:id="addLabel" layoutX="179.0" layoutY="14.0" text="Add Board" textAlignment="CENTER">
          <font>
             <Font size="30.0" />
          </font>
       </Label>
-      <TextField fx:id="idBar" layoutX="39.0" layoutY="122.0" prefHeight="45.0" prefWidth="412.0" />
+      <TextField fx:id="idBar" layoutX="39.0" layoutY="122.0" prefHeight="45.0" prefWidth="412.0" style="-fx-border-color: #bababa; -fx-border-width: 1px;" />
       <Label fx:id="joinLabel" layoutX="39.0" layoutY="91.0" prefHeight="17.0" prefWidth="412.0" text="Join with ID">
          <font>
             <Font size="18.0" />
          </font></Label>
       <Button fx:id="joinButton" layoutX="350.0" layoutY="183.0" mnemonicParsing="false" onAction="#joinButton" prefHeight="34.0" prefWidth="101.0" text="Join" />
-      <TextField fx:id="titleBar" layoutX="39.0" layoutY="260.0" prefHeight="45.0" prefWidth="412.0" />
+      <TextField fx:id="titleBar" layoutX="39.0" layoutY="260.0" prefHeight="45.0" prefWidth="412.0" style="-fx-border-color: #bababa; -fx-border-width: 1px;" />
       <Label fx:id="createLabel" layoutX="39.0" layoutY="230.0" prefHeight="17.0" prefWidth="412.0" text="Create new with title">
          <font>
             <Font size="18.0" />

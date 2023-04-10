@@ -18,4 +18,5 @@
 
 .tag-area {
     -fx-spacing: 10px;
+    -fx-background-radius: 10px;
 }

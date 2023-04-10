@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="detailedCardBox" styleClass="vbox" stylesheets="@../css/cardDetail.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fx:id="detailedCardBox" onKeyPressed="#keyPress" styleClass="vbox" stylesheets="@../css/cardDetail.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <TextField fx:id="title" alignment="CENTER" prefHeight="30.0" prefWidth="600.0" promptText="Card Title" style="-fx-background-color: inherit;">
          <font>
@@ -24,7 +24,7 @@
          <font>
             <Font size="16.0" />
          </font></TextArea>
-      <StackPane VBox.vgrow="NEVER">
+      <StackPane fx:id="subtaskStackPane" VBox.vgrow="NEVER">
          <children>
             <Button fx:id="addSubTaskButton" mnemonicParsing="false" onAction="#addTask" text="Add subtask" StackPane.alignment="CENTER_RIGHT">
                <StackPane.margin>
@@ -48,9 +48,9 @@
             </Label>
          </children>
       </StackPane>
-      <ScrollPane fx:id="scrollPaneSubTasks" hbarPolicy="NEVER" prefWidth="300.0" style="-fx-fit-to-width: true;" styleClass="scroll" VBox.vgrow="ALWAYS">
+      <ScrollPane fx:id="subtaskScrollPane" hbarPolicy="NEVER" prefWidth="300.0" style="-fx-fit-to-width: true;" styleClass="scroll" VBox.vgrow="ALWAYS">
          <content>
-            <VBox fx:id="subtaskArea" prefHeight="170.0" style="-fx-border-radius: 10px;" />
+            <VBox fx:id="subtaskArea" prefHeight="170.0" style="-fx-border-radius: 10px; -fx-background-radius: 10px;" />
          </content>
       </ScrollPane>
       <StackPane>
