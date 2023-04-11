@@ -53,7 +53,7 @@
             <VBox fx:id="subtaskArea" prefHeight="170.0" style="-fx-border-radius: 10px; -fx-background-radius: 10px;" />
          </content>
       </ScrollPane>
-      <StackPane>
+      <StackPane fx:id="tagScrollPane">
          <children>
             <Button fx:id="addTagButton" mnemonicParsing="false" onAction="#createTag" prefHeight="28.0" prefWidth="108.0" text="Add tag" StackPane.alignment="CENTER_RIGHT">
                <StackPane.margin>
@@ -77,12 +77,12 @@
             </Label>
          </children>
       </StackPane>
-      <ScrollPane fx:id="scrollPaneTags" hbarPolicy="NEVER" prefWidth="300.0" style="-fx-fit-to-width: true;" styleClass="scroll" VBox.vgrow="ALWAYS">
+      <ScrollPane fx:id="tagPane" hbarPolicy="NEVER" prefWidth="300.0" style="-fx-fit-to-width: true;" styleClass="scroll" VBox.vgrow="ALWAYS">
          <content>
             <VBox fx:id="tagArea" prefHeight="170.0" styleClass="tag-area" />
          </content>
       </ScrollPane>
-      <StackPane>
+      <StackPane fx:id="colorPane">
          <children>
             <Button fx:id="promoteColorButton" mnemonicParsing="false" onAction="#promoteColor" prefHeight="28.0" prefWidth="108.0" text="Promote" StackPane.alignment="CENTER_RIGHT">
                <StackPane.margin>
@@ -106,9 +106,9 @@
             </Label>
          </children>
       </StackPane>
-      <HBox>
+      <HBox fx:id="colorBox">
          <children>
-            <StackPane prefHeight="60.0" HBox.hgrow="ALWAYS">
+            <StackPane minHeight="60.0" prefHeight="60.0" HBox.hgrow="ALWAYS">
                <children>
                   <Label fx:id="firstColorLabel" text="Background" StackPane.alignment="TOP_CENTER">
                      <font>
@@ -118,7 +118,7 @@
                   <ColorPicker fx:id="backPicker" StackPane.alignment="BOTTOM_CENTER" />
                </children>
             </StackPane>
-            <StackPane prefHeight="50.0" HBox.hgrow="ALWAYS">
+            <StackPane minHeight="60.0" prefHeight="50.0" HBox.hgrow="ALWAYS">
                <children>
                   <Label fx:id="secondColorLabel" text="Font" StackPane.alignment="TOP_CENTER">
                      <font>

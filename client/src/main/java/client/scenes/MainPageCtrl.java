@@ -179,9 +179,6 @@ public class MainPageCtrl implements Initializable {
             secondStage.initOwner(boardName.getScene().getWindow());
             secondStage.show();
         }
-        if(event.getCode() == KeyCode.C){
-            showCustomizationMenu();
-        }
     }
     @Override
     public void initialize(URL location, ResourceBundle resources) {

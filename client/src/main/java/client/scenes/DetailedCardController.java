@@ -38,6 +38,10 @@ import static client.utils.ColorTools.toHexString;
 public class DetailedCardController implements Initializable {
     private static Logger log = Logger.getLogger(DetailedCardController.class.getName());
 
+    private boolean saveOnlyColors = false;
+
+    private boolean saveOnlyTag = false;
+
     private CardController parent;
     private Card localCard;
     private ServerUtils server;
@@ -58,7 +62,19 @@ public class DetailedCardController implements Initializable {
     private ScrollPane subtaskScrollPane;
 
     @FXML
+    private HBox colorsArea;
+
+    @FXML
     private StackPane subtaskStackPane;
+
+    @FXML
+    private ScrollPane tagPane;
+
+    @FXML
+    private HBox colorBox;
+
+    @FXML
+    private StackPane colorPane;
 
     @FXML
     private VBox tagArea;
@@ -67,7 +83,7 @@ public class DetailedCardController implements Initializable {
     private TextField title;
 
     @FXML
-    private ScrollPane scrollPaneTags;
+    private StackPane tagScrollPane;
 
     @FXML
     private Label subtasksTitle;
@@ -119,7 +135,12 @@ public class DetailedCardController implements Initializable {
         subtaskControllers = new ArrayList<>();
     }
 
-    public void hideProperties() {
+    public void setToBeSave(boolean saveOnlyTag, boolean saveOnlyColors) {
+        this.saveOnlyColors = saveOnlyColors;
+        this.saveOnlyTag = saveOnlyTag;
+    }
+
+    public void hideProperties(boolean forColors) {
         title.setEditable(false);
 
         description.setVisible(false);
@@ -133,6 +154,20 @@ public class DetailedCardController implements Initializable {
 
         subtaskScrollPane.setVisible(false);
         subtaskScrollPane.setManaged(false);
+
+        if (forColors) {
+            tagPane.setVisible(false);
+            tagPane.setManaged(false);
+
+            tagScrollPane.setVisible(false);
+            tagScrollPane.setManaged(false);
+        } else {
+            colorPane.setVisible(false);
+            colorPane.setManaged(false);
+
+            colorBox.setVisible(false);
+            colorBox.setManaged(false);
+        }
     }
     /**
      * Adds a new subtask to the card. This is called by the FXML event listener, for this controller.
@@ -208,19 +243,21 @@ public class DetailedCardController implements Initializable {
 
         parent.getModel().overwriteWith(localCard);
 
-        var boardCtrl = parent.getParent().getParent();
-        var userUtils = boardCtrl.getUserUtils();
-        var b = userUtils.getCurrentBoardColors();
+        if (!saveOnlyTag) {
+            var boardCtrl = parent.getParent().getParent();
+            var userUtils = boardCtrl.getUserUtils();
+            var b = userUtils.getCurrentBoardColors();
 
-        var fontColor = makeColorString(fontPicker.getValue());
-        var backColor = makeColorString(backPicker.getValue());
+            var fontColor = makeColorString(fontPicker.getValue());
+            var backColor = makeColorString(backPicker.getValue());
 
-        var pair = new ColorPair(backColor, fontColor);
-        if (!pair.equals(boardCtrl.getCardColor(localCard.getId())))
-            b.getCardHighlightColors().put(localCard.getId(), pair);
-        userUtils.updateSingleBoard(b);
+            var pair = new ColorPair(backColor, fontColor);
+            if (!pair.equals(boardCtrl.getCardColor(localCard.getId())))
+                b.getCardHighlightColors().put(localCard.getId(), pair);
+            userUtils.updateSingleBoard(b);
 
-        boardCtrl.globalColorUpdate();
+            boardCtrl.globalColorUpdate();
+        }
     }
 
     public void showDetails() throws IOException {
@@ -265,7 +302,7 @@ public class DetailedCardController implements Initializable {
         description.setStyle("-fx-background-color: transparent;");
         subtaskArea.setBackground(textBoxFill);
         tagArea.setBackground(textBoxFill);
-        scrollPaneTags.setBackground(textBoxFill);
+        tagScrollPane.setBackground(textBoxFill);
         subtaskScrollPane.setBackground(textBoxFill);
 
         var fontColor = Color.valueOf(color.getFont());
