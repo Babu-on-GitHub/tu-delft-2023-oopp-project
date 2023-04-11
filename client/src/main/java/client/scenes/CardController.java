@@ -5,6 +5,7 @@ import client.utils.ServerUtils;
 import commons.ColorPair;
 import commons.Tag;
 import commons.Task;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -101,11 +102,12 @@ public class CardController implements Initializable {
     @FXML
     void checkDoubleClick(MouseEvent event) throws IOException {
         if (event.getClickCount() == 2) {
-            showDetailedCardScene(false);
+            showDetailedCardScene(false, false);
         }
     }
 
-    void showDetailedCardScene(boolean showOnlyTag) throws IOException {
+    void showDetailedCardScene(boolean showOnlyTag,
+                               boolean showOnlyColors) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("DetailedCard.fxml"));
         var detailedCardController = new DetailedCardController(this, server);
         card.setDetailedController(detailedCardController);
@@ -116,9 +118,10 @@ public class CardController implements Initializable {
         secondStage.setScene(new Scene(root));
         secondStage.initOwner(cardContainer.getScene().getWindow());
 
-        if (showOnlyTag) {
-            detailedCardController.hideProperties();
+        detailedCardController.setToBeSave(showOnlyTag, showOnlyColors);
 
+        if (showOnlyTag || showOnlyColors) {
+            detailedCardController.hideProperties(showOnlyColors);
         }
 
         secondStage.show();
@@ -192,14 +195,19 @@ public class CardController implements Initializable {
             deleteCard();
         }
         if (event.getCode() == KeyCode.E && !event.isShortcutDown()) {
-            cardTitle.requestFocus();
+            Platform.runLater(() -> {
+                cardTitle.requestFocus();
+                cardTitle.setText(card.getCard().getTitle());
+            });
         }
         if (event.getCode() == KeyCode.ENTER) {
-            showDetailedCardScene(false);
+            showDetailedCardScene(false, false);
         }
         if (event.getCode() ==KeyCode.T) {
-            showDetailedCardScene(true);
-
+            showDetailedCardScene(true, false);
+        }
+        if (event.getCode() ==KeyCode.C) {
+            showDetailedCardScene(false, true);
         }
         up(event);
         down(event);
@@ -365,13 +373,11 @@ public class CardController implements Initializable {
 
     public void highlightBottom() {
         cardContainer.getStyleClass().remove("default-border");
-        // highlight the bottom border of the card
         cardContainer.getStyleClass().add("highlight-bottom");
     }
 
     public void highlightTop() {
         cardContainer.getStyleClass().remove("default-border");
-        // highlight the top border of the card
         cardContainer.getStyleClass().add("highlight-top");
     }
 

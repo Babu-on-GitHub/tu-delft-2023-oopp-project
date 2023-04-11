@@ -5,6 +5,7 @@ import commons.Card;
 import commons.ColorPair;
 import commons.Tag;
 import commons.Task;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -38,6 +39,10 @@ import static client.utils.ColorTools.toHexString;
 public class DetailedCardController implements Initializable {
     private static Logger log = Logger.getLogger(DetailedCardController.class.getName());
 
+    private boolean saveOnlyColors = false;
+
+    private boolean saveOnlyTag = false;
+
     private CardController parent;
     private Card localCard;
     private ServerUtils server;
@@ -58,7 +63,19 @@ public class DetailedCardController implements Initializable {
     private ScrollPane subtaskScrollPane;
 
     @FXML
+    private HBox colorsArea;
+
+    @FXML
     private StackPane subtaskStackPane;
+
+    @FXML
+    private ScrollPane tagPane;
+
+    @FXML
+    private HBox colorBox;
+
+    @FXML
+    private StackPane colorPane;
 
     @FXML
     private VBox tagArea;
@@ -67,7 +84,7 @@ public class DetailedCardController implements Initializable {
     private TextField title;
 
     @FXML
-    private ScrollPane scrollPaneTags;
+    private StackPane tagScrollPane;
 
     @FXML
     private Label subtasksTitle;
@@ -119,7 +136,12 @@ public class DetailedCardController implements Initializable {
         subtaskControllers = new ArrayList<>();
     }
 
-    public void hideProperties() {
+    public void setToBeSave(boolean saveOnlyTag, boolean saveOnlyColors) {
+        this.saveOnlyColors = saveOnlyColors;
+        this.saveOnlyTag = saveOnlyTag;
+    }
+
+    public void hideProperties(boolean forColors) {
         title.setEditable(false);
 
         description.setVisible(false);
@@ -133,7 +155,22 @@ public class DetailedCardController implements Initializable {
 
         subtaskScrollPane.setVisible(false);
         subtaskScrollPane.setManaged(false);
+
+        if (forColors) {
+            tagPane.setVisible(false);
+            tagPane.setManaged(false);
+
+            tagScrollPane.setVisible(false);
+            tagScrollPane.setManaged(false);
+        } else {
+            colorPane.setVisible(false);
+            colorPane.setManaged(false);
+
+            colorBox.setVisible(false);
+            colorBox.setManaged(false);
+        }
     }
+
     /**
      * Adds a new subtask to the card. This is called by the FXML event listener, for this controller.
      *
@@ -208,19 +245,21 @@ public class DetailedCardController implements Initializable {
 
         parent.getModel().overwriteWith(localCard);
 
-        var boardCtrl = parent.getParent().getParent();
-        var userUtils = boardCtrl.getUserUtils();
-        var b = userUtils.getCurrentBoardColors();
+        if (!saveOnlyTag) {
+            var boardCtrl = parent.getParent().getParent();
+            var userUtils = boardCtrl.getUserUtils();
+            var b = userUtils.getCurrentBoardColors();
 
-        var fontColor = makeColorString(fontPicker.getValue());
-        var backColor = makeColorString(backPicker.getValue());
+            var fontColor = makeColorString(fontPicker.getValue());
+            var backColor = makeColorString(backPicker.getValue());
 
-        var pair = new ColorPair(backColor, fontColor);
-        if (!pair.equals(boardCtrl.getCardColor(localCard.getId())))
-            b.getCardHighlightColors().put(localCard.getId(), pair);
-        userUtils.updateSingleBoard(b);
+            var pair = new ColorPair(backColor, fontColor);
+            if (!pair.equals(boardCtrl.getCardColor(localCard.getId())))
+                b.getCardHighlightColors().put(localCard.getId(), pair);
+            userUtils.updateSingleBoard(b);
 
-        boardCtrl.globalColorUpdate();
+            boardCtrl.globalColorUpdate();
+        }
     }
 
     public void showDetails() throws IOException {
@@ -234,12 +273,12 @@ public class DetailedCardController implements Initializable {
         showTags();
     }
 
-    public void updateCardDetailColors(){
+    public void updateCardDetailColors() {
         setBackgroundColorFXML(parent.getParent().getParent().getBoardColor());
         setFontColorFXML(parent.getParent().getParent().getBoardColor());
     }
 
-    public void setFontColorFXML(ColorPair color){
+    public void setFontColorFXML(ColorPair color) {
         var fontColor = Color.valueOf(color.getFont());
         var backgroundColor = Color.valueOf(color.getBackground());
         var styleStr = "-fx-text-fill: " + toHexString(fontColor) + "; -fx-background-color:" +
@@ -253,19 +292,19 @@ public class DetailedCardController implements Initializable {
         secondColorLabel.setStyle(styleStr);
     }
 
-    public void setBackgroundColorFXML(ColorPair color){
+    public void setBackgroundColorFXML(ColorPair color) {
         var colorCode = Color.valueOf(color.getBackground());
         var fill = new Background(new BackgroundFill(colorCode, null, null));
         detailedCardBox.setBackground(fill);
         title.setBackground(fill);
 
-        var textBoxFill =  new Background(new BackgroundFill(colorCode.brighter(), null, null));
+        var textBoxFill = new Background(new BackgroundFill(colorCode.brighter(), null, null));
 
         description.setBackground(textBoxFill);
         description.setStyle("-fx-background-color: transparent;");
         subtaskArea.setBackground(textBoxFill);
         tagArea.setBackground(textBoxFill);
-        scrollPaneTags.setBackground(textBoxFill);
+        tagScrollPane.setBackground(textBoxFill);
         subtaskScrollPane.setBackground(textBoxFill);
 
         var fontColor = Color.valueOf(color.getFont());
@@ -394,6 +433,35 @@ public class DetailedCardController implements Initializable {
         var color = parent.getParent().getParent().getCardColor(parent.getModel().getCard().getId());
         fontPicker.setValue(Color.valueOf(color.getFont()));
         backPicker.setValue(Color.valueOf(color.getBackground()));
+
+        server.getPollingUtils().longPollCard("/api/card/poll",
+                c -> {
+                    if (c == null || c.getId() != localCard.getId()) {
+                        return;
+                    }
+                    localCard = c;
+                    parent.getModel().setCard(localCard);
+                    parent.getModel().update();
+                    parent.getModel().updateChildren();
+                    Platform.runLater(() -> {
+                        try {
+                            showDetails();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    });
+                });
+
+        server.getPollingUtils().longPollId("/api/list/poll/deletions",
+                c -> {
+                    if (c == null || c != localCard.getId()) {
+                        return;
+                    }
+                    Platform.runLater(() -> {
+                        Stage secondStage = (Stage) detailedCardBox.getScene().getWindow();
+                        secondStage.close();
+                    });
+                });
     }
 
     public void promoteColor() {
