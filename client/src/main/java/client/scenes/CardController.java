@@ -5,6 +5,7 @@ import client.utils.ServerUtils;
 import commons.ColorPair;
 import commons.Tag;
 import commons.Task;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -192,7 +193,10 @@ public class CardController implements Initializable {
             deleteCard();
         }
         if (event.getCode() == KeyCode.E && !event.isShortcutDown()) {
-            cardTitle.requestFocus();
+            Platform.runLater(() -> {
+                cardTitle.requestFocus();
+                cardTitle.setText(card.getCard().getTitle());
+            });
         }
         if (event.getCode() == KeyCode.ENTER) {
             showDetailedCardScene(false);
