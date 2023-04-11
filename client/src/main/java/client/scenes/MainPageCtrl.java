@@ -271,10 +271,6 @@ public class MainPageCtrl implements Initializable {
             refreshBoardsListButton.setVisible(false);
             leaveBoardButton.setVisible(true);
         }
-        //boardListWithClors = userUtils.getUserBoardsIds();
-        //this.setBoardsColors(boardListWithColors.get(this.board.id));
-        //this.setBoardListColors(boardListWithColors);
-
 
         try {
             showBoardsList();
@@ -386,7 +382,6 @@ public class MainPageCtrl implements Initializable {
         model.setController(controller);
 
         Node newList = loader.load();
-        //controller.setListColorFXML(model.getParent().getBoard().getListColor());
         cardListsContainer.getChildren().add(newList);
     }
 
@@ -463,10 +458,8 @@ public class MainPageCtrl implements Initializable {
 
             boardList.removeIf((board) -> board.getBoardId() == id);
             userUtils.updateUserBoards(boardList);
-            ///showBoardsList();
 
             initializeBoard();
-            //getAllBoardsIds();
             showBoardsList();
             return;
         }
@@ -563,7 +556,6 @@ public class MainPageCtrl implements Initializable {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Warning");
             alert.setHeaderText("Default board cannot be deleted");
-            //alert.setContentText("Default board cannot be deleted");
 
             alert.showAndWait();
             return;
@@ -600,7 +592,6 @@ public class MainPageCtrl implements Initializable {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Warning");
             alert.setHeaderText("Cannot leave default board");
-            //alert.setContentText("Default board cannot be deleted");
 
             alert.showAndWait();
             return;
