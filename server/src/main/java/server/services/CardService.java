@@ -2,6 +2,7 @@ package server.services;
 
 import commons.Card;
 import commons.Tag;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import server.database.CardRepository;
 

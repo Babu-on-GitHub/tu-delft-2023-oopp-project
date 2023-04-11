@@ -1,10 +1,12 @@
 package client.scenes;
 
+import client.model.CardModel;
 import client.utils.ServerUtils;
 import commons.Card;
 import commons.ColorPair;
 import commons.Tag;
 import commons.Task;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -394,6 +396,21 @@ public class DetailedCardController implements Initializable {
         var color = parent.getParent().getParent().getCardColor(parent.getModel().getCard().getId());
         fontPicker.setValue(Color.valueOf(color.getFont()));
         backPicker.setValue(Color.valueOf(color.getBackground()));
+
+        server.getPollingUtils().longPollCard("/api/card/poll",
+                c -> {
+                    if(c==null||c.getId()!=localCard.getId()){
+                        return;
+                    }
+                    localCard = c;
+                    Platform.runLater(()->{
+                        try {
+                            showDetails();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    });
+                });
     }
 
     public void promoteColor() {
