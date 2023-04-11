@@ -26,7 +26,7 @@
          </font></TextArea>
       <StackPane fx:id="subtaskStackPane" VBox.vgrow="NEVER">
          <children>
-            <Button fx:id="addSubTaskButton" mnemonicParsing="false" onAction="#addTask" text="Add subtask" StackPane.alignment="CENTER_RIGHT">
+            <Button fx:id="addSubTaskButton" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#addTask" prefHeight="34.0" prefWidth="150.0" text="Add subtask" StackPane.alignment="CENTER_RIGHT">
                <StackPane.margin>
                   <Insets right="10.0" />
                </StackPane.margin>
@@ -55,7 +55,7 @@
       </ScrollPane>
       <StackPane>
          <children>
-            <Button fx:id="addTagButton" mnemonicParsing="false" onAction="#createTag" prefHeight="28.0" prefWidth="108.0" text="Add tag" StackPane.alignment="CENTER_RIGHT">
+            <Button fx:id="addTagButton" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#createTag" prefHeight="34.0" prefWidth="150.0" text="Add tag" StackPane.alignment="CENTER_RIGHT">
                <StackPane.margin>
                   <Insets right="10.0" />
                </StackPane.margin>
@@ -84,7 +84,7 @@
       </ScrollPane>
       <StackPane>
          <children>
-            <Button fx:id="promoteColorButton" mnemonicParsing="false" onAction="#promoteColor" prefHeight="28.0" prefWidth="108.0" text="Promote" StackPane.alignment="CENTER_RIGHT">
+            <Button fx:id="promoteColorButton" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#promoteColor" prefHeight="34.0" prefWidth="150.0" text="Promote" StackPane.alignment="CENTER_RIGHT">
                <StackPane.margin>
                   <Insets right="10.0" />
                </StackPane.margin>
