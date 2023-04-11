@@ -2,11 +2,16 @@ package server.api;
 
 import commons.Card;
 import commons.CardList;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.async.DeferredResult;
 import server.services.CardListService;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
 import java.util.logging.Logger;
 
 @RestController
@@ -51,11 +56,16 @@ public class CardListController {
         }
     }
 
+    private Map<Object, Consumer<Long>> deletionListeners = new HashMap<>();
+
     @DeleteMapping(path = "/delete/{cardId}/from/{listId}")
     public ResponseEntity<Boolean> remove(@PathVariable("cardId") long cardId, @PathVariable("listId") long listId) {
         log.info("Deleting card: " + cardId + " from list: " + listId);
         try {
             cardListService.removeCard(cardId, listId);
+            deletionListeners.forEach((k, v) -> {
+                v.accept(cardId);
+            });
             return ResponseEntity.ok(true);
         } catch (IllegalArgumentException e) {
             log.warning(e.getMessage());
@@ -87,5 +97,22 @@ public class CardListController {
             log.warning(e.getMessage());
             return ResponseEntity.badRequest().build();
         }
+    }
+
+    @GetMapping(path = "/poll/deletions")
+    public DeferredResult<ResponseEntity<Long>> poll() {
+        var nothing = ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        var r = new DeferredResult<ResponseEntity<Long>>(1000L, nothing);
+        Object key = new Object();
+        deletionListeners.put(key, x -> {
+            r.setResult(ResponseEntity.ok(x));
+            System.out.println("put a listener ");
+        });
+        r.onCompletion(() -> {
+            deletionListeners.remove(key);
+            System.out.println("removed the listener ");
+        });
+
+        return r;
     }
 }

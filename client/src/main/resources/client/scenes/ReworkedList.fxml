@@ -27,7 +27,7 @@
          <children>
             <Button fx:id="ab" contentDisplay="TOP" graphicTextGap="0.0" layoutX="199.0" layoutY="16.0" mnemonicParsing="false" onAction="#addCardButton" prefHeight="70.0" prefWidth="87.0" style="-fx-background-color: inherit;" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="20.0">
                <graphic>
-                  <ImageView fx:id="x" fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true" fx:id="x">
                      <image>
                         <Image url="@../icons/PNG/note_add_FILL0_wght400_GRAD0_opsz48.png" />
                      </image>
@@ -45,7 +45,7 @@
       </AnchorPane>
    </bottom>
    <center>
-      <ScrollPane fx:id="scrollPane" prefHeight="484.0" prefWidth="300.0" BorderPane.alignment="CENTER">
+      <ScrollPane fx:id="scrollPane" fitToHeight="true" hbarPolicy="NEVER" prefHeight="484.0" prefWidth="300.0" BorderPane.alignment="CENTER">
          <content>
             <VBox fx:id="cardListContainer" onDragDone="#dragDone" onDragDropped="#drop" onDragOver="#dragOver" prefHeight="484.0" styleClass="card-container" />
          </content>
