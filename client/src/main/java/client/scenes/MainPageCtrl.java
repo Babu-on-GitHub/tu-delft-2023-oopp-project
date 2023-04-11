@@ -479,6 +479,9 @@ public class MainPageCtrl implements Initializable {
             board = new BoardModel(added.get(), server);
             board.setController(this);
         }
+
+        board.update();
+        board.updateChildren();
     }
 
     public void getAllBoardsIds() {
