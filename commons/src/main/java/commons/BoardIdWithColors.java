@@ -75,7 +75,7 @@ public class BoardIdWithColors implements Serializable, Cloneable {
 
     @Override
     public BoardIdWithColors clone() throws CloneNotSupportedException {
-        // copy the map separetely
+        // copy the map separately
         BoardIdWithColors clone = (BoardIdWithColors) super.clone();
         clone.cardHighlightColors = new HashMap<>();
         for (var entry : cardHighlightColors.entrySet())

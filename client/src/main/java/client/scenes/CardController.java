@@ -365,13 +365,11 @@ public class CardController implements Initializable {
 
     public void highlightBottom() {
         cardContainer.getStyleClass().remove("default-border");
-        // highlight the bottom border of the card
         cardContainer.getStyleClass().add("highlight-bottom");
     }
 
     public void highlightTop() {
         cardContainer.getStyleClass().remove("default-border");
-        // highlight the top border of the card
         cardContainer.getStyleClass().add("highlight-top");
     }
 
