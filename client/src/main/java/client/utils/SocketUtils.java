@@ -42,7 +42,7 @@ public class SocketUtils {
     }
 
     public void disconnect() {
-        if (session != null)
+        if (session != null && session.isConnected())
             session.disconnect();
     }
 
