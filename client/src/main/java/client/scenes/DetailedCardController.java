@@ -403,6 +403,9 @@ public class DetailedCardController implements Initializable {
                         return;
                     }
                     localCard = c;
+                    parent.getModel().setCard(localCard);
+                    parent.getModel().update();
+                    parent.getModel().updateChildren();
                     Platform.runLater(()->{
                         try {
                             showDetails();

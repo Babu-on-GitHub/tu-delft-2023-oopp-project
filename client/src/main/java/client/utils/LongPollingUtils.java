@@ -67,24 +67,26 @@ public class LongPollingUtils {
         }, 0, 5, java.util.concurrent.TimeUnit.SECONDS);
     }
 
-    private static final ExecutorService EXEC = Executors.newSingleThreadScheduledExecutor();
+    private static ScheduledExecutorService EXEC = Executors.newSingleThreadScheduledExecutor();
 
     public void longPollCard(String dest, Consumer<Card> callback){
+        RestTemplate restTemplate = new RestTemplateBuilder()
+                .setConnectTimeout(Duration.ofSeconds(1L))
+                .setReadTimeout(Duration.ofSeconds(1L))
+                .build();
 
-        EXEC.submit(()->{
-           while(!Thread.interrupted()){
-               var res = ClientBuilder.newClient(new ClientConfig())
-                       .target(server).path("/api/card/poll")
-                       .request(APPLICATION_JSON)
-                       .accept(APPLICATION_JSON)
-                       .get(Response.class);
-               if(res.getStatus() == 204){
-                   continue;
-               }
-               var q = res.readEntity(Card.class);
-               callback.accept(q);
-           }
-        });
+        if(EXEC!=null){
+            EXEC.shutdownNow();
+        }
+        EXEC = Executors.newSingleThreadScheduledExecutor();
+        EXEC.scheduleAtFixedRate(() -> {
+            try {
+                Card res = restTemplate.exchange(server + dest, HttpMethod.GET, null,Card.class).getBody();
+                callback.accept(res);
+            } catch (Exception e) {
+                callback.accept(null);
+            }
+        }, 0, 1, java.util.concurrent.TimeUnit.SECONDS);
     }
 
     public void stopCardPolling(){

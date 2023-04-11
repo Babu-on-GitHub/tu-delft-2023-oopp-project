@@ -115,7 +115,7 @@ public class CardController {
     @GetMapping(path = "/poll")
     public DeferredResult<ResponseEntity<Card>> poll(){
         var nothing = ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        var r = new DeferredResult<ResponseEntity<Card>>(5000L,nothing);
+        var r = new DeferredResult<ResponseEntity<Card>>(1000L,nothing);
         Object key = new Object();
         listeners.put(key,x -> {
             r.setResult(ResponseEntity.ok(x));
