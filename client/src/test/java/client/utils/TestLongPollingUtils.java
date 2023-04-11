@@ -20,17 +20,17 @@ public class TestLongPollingUtils {
     }
     @Test
     void wrapWithLongPollingProtocolTest() {
-        assertEquals("http://test/long",
+        assertEquals("http://test",
                 LongPollingUtils.wrapWithLongPollingProtocol("test"));
     }
     @Test
     void wrapWithLongPollingProtocolTest2() {
-        assertEquals("http://test/long",
+        assertEquals("http://test",
                 LongPollingUtils.wrapWithLongPollingProtocol("https://test"));
     }
     @Test
     void wrapWithLongPollingProtocolTest3() {
-        assertEquals("http://test/long",
+        assertEquals("http://test",
                 LongPollingUtils.wrapWithLongPollingProtocol("http://test"));
     }
 

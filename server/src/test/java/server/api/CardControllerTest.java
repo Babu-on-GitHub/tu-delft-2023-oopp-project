@@ -23,7 +23,7 @@ public class CardControllerTest {
     @BeforeEach
     public void setUp() {
         cardService = mock(CardService.class);
-        cardController = new CardController(cardService, null);
+        cardController = new CardController(cardService);
     }
 
     @Test

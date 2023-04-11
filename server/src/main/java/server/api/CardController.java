@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.async.DeferredResult;
-import server.services.CardPollingService;
 import server.services.CardService;
 
 import java.util.HashMap;
@@ -23,11 +22,9 @@ public class CardController {
 
     private CardService cardService;
 
-    private CardPollingService cardPollingService;
 
-    public CardController(CardService cardService, CardPollingService cardPollingService) {
+    public CardController(CardService cardService) {
         this.cardService = cardService;
-        this.cardPollingService = cardPollingService;
     }
 
     @GetMapping(path = {"", "/"})
@@ -52,6 +49,7 @@ public class CardController {
         throw new UnsupportedOperationException("The operation is not supported");
     }
 
+
     @DeleteMapping(path = "/delete/{id}")
     public ResponseEntity<Boolean> remove(@PathVariable("id") long id) {
         throw new UnsupportedOperationException("The operation is not supported");
@@ -64,7 +62,9 @@ public class CardController {
         log.info("update(" + id + ")");
         try {
             var saved = cardService.update(card, id);
-            listeners.forEach((k,v)->{v.accept(saved);});
+            listeners.forEach((k, v) -> {
+                v.accept(saved);
+            });
             return ResponseEntity.ok(saved);
         } catch (IllegalArgumentException e) {
             log.warning(e.getMessage());
@@ -78,7 +78,7 @@ public class CardController {
         try {
             var saved = cardService.updateTitle(id, title);
             var card = cardService.getCardById(id);
-            listeners.forEach((k,v)->{
+            listeners.forEach((k, v) -> {
                 v.accept(card);
             });
             return ResponseEntity.ok(saved);
@@ -113,11 +113,11 @@ public class CardController {
     }
 
     @GetMapping(path = "/poll")
-    public DeferredResult<ResponseEntity<Card>> poll(){
+    public DeferredResult<ResponseEntity<Card>> poll() {
         var nothing = ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        var r = new DeferredResult<ResponseEntity<Card>>(1000L,nothing);
+        var r = new DeferredResult<ResponseEntity<Card>>(1000L, nothing);
         Object key = new Object();
-        listeners.put(key,x -> {
+        listeners.put(key, x -> {
             r.setResult(ResponseEntity.ok(x));
             System.out.println("put a listener ");
         });

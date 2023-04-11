@@ -1,6 +1,5 @@
 package client.scenes;
 
-import client.model.CardModel;
 import client.utils.ServerUtils;
 import commons.Card;
 import commons.ColorPair;
@@ -136,6 +135,7 @@ public class DetailedCardController implements Initializable {
         subtaskScrollPane.setVisible(false);
         subtaskScrollPane.setManaged(false);
     }
+
     /**
      * Adds a new subtask to the card. This is called by the FXML event listener, for this controller.
      *
@@ -236,12 +236,12 @@ public class DetailedCardController implements Initializable {
         showTags();
     }
 
-    public void updateCardDetailColors(){
+    public void updateCardDetailColors() {
         setBackgroundColorFXML(parent.getParent().getParent().getBoardColor());
         setFontColorFXML(parent.getParent().getParent().getBoardColor());
     }
 
-    public void setFontColorFXML(ColorPair color){
+    public void setFontColorFXML(ColorPair color) {
         var fontColor = Color.valueOf(color.getFont());
         var backgroundColor = Color.valueOf(color.getBackground());
         var styleStr = "-fx-text-fill: " + toHexString(fontColor) + "; -fx-background-color:" +
@@ -255,13 +255,13 @@ public class DetailedCardController implements Initializable {
         secondColorLabel.setStyle(styleStr);
     }
 
-    public void setBackgroundColorFXML(ColorPair color){
+    public void setBackgroundColorFXML(ColorPair color) {
         var colorCode = Color.valueOf(color.getBackground());
         var fill = new Background(new BackgroundFill(colorCode, null, null));
         detailedCardBox.setBackground(fill);
         title.setBackground(fill);
 
-        var textBoxFill =  new Background(new BackgroundFill(colorCode.brighter(), null, null));
+        var textBoxFill = new Background(new BackgroundFill(colorCode.brighter(), null, null));
 
         description.setBackground(textBoxFill);
         description.setStyle("-fx-background-color: transparent;");
@@ -399,19 +399,30 @@ public class DetailedCardController implements Initializable {
 
         server.getPollingUtils().longPollCard("/api/card/poll",
                 c -> {
-                    if(c==null||c.getId()!=localCard.getId()){
+                    if (c == null || c.getId() != localCard.getId()) {
                         return;
                     }
                     localCard = c;
                     parent.getModel().setCard(localCard);
                     parent.getModel().update();
                     parent.getModel().updateChildren();
-                    Platform.runLater(()->{
+                    Platform.runLater(() -> {
                         try {
                             showDetails();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
+                    });
+                });
+
+        server.getPollingUtils().longPollId("/api/list/poll/deletions",
+                c -> {
+                    if (c == null || c != localCard.getId()) {
+                        return;
+                    }
+                    Platform.runLater(() -> {
+                        Stage secondStage = (Stage) detailedCardBox.getScene().getWindow();
+                        secondStage.close();
                     });
                 });
     }

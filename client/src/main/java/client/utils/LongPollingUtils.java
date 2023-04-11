@@ -3,21 +3,15 @@ package client.utils;
 import java.time.Duration;
 
 import commons.Card;
-import jakarta.ws.rs.client.ClientBuilder;
-import jakarta.ws.rs.core.Response;
-import org.glassfish.jersey.client.ClientConfig;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.*;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
 
-import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
 public class LongPollingUtils {
 
@@ -52,13 +46,13 @@ public class LongPollingUtils {
                 .setReadTimeout(Duration.ofSeconds(10L))
                 .build();
 
-        if(executor!=null){
+        if (executor != null) {
             executor.shutdownNow();
         }
         executor = Executors.newSingleThreadScheduledExecutor();
         executor.scheduleAtFixedRate(() -> {
             try {
-                String res = restTemplate.exchange(server + dest, HttpMethod.GET, null,String.class).getBody();
+                String res = restTemplate.exchange(server + dest, HttpMethod.GET, null, String.class).getBody();
                 //T res = restTemplate.getForObject(server + dest, T.class);
                 callback.accept(Optional.ofNullable(res));
             } catch (Exception e) {
@@ -67,21 +61,21 @@ public class LongPollingUtils {
         }, 0, 5, java.util.concurrent.TimeUnit.SECONDS);
     }
 
-    private static ScheduledExecutorService EXEC = Executors.newSingleThreadScheduledExecutor();
+    private static ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
 
-    public void longPollCard(String dest, Consumer<Card> callback){
+    public void longPollCard(String dest, Consumer<Card> callback) {
         RestTemplate restTemplate = new RestTemplateBuilder()
                 .setConnectTimeout(Duration.ofSeconds(1L))
                 .setReadTimeout(Duration.ofSeconds(1L))
                 .build();
 
-        if(EXEC!=null){
-            EXEC.shutdownNow();
+        if (exec != null) {
+            exec.shutdownNow();
         }
-        EXEC = Executors.newSingleThreadScheduledExecutor();
-        EXEC.scheduleAtFixedRate(() -> {
+        exec = Executors.newSingleThreadScheduledExecutor();
+        exec.scheduleAtFixedRate(() -> {
             try {
-                Card res = restTemplate.exchange(server + dest, HttpMethod.GET, null,Card.class).getBody();
+                Card res = restTemplate.exchange(server + dest, HttpMethod.GET, null, Card.class).getBody();
                 callback.accept(res);
             } catch (Exception e) {
                 callback.accept(null);
@@ -89,12 +83,39 @@ public class LongPollingUtils {
         }, 0, 1, java.util.concurrent.TimeUnit.SECONDS);
     }
 
-    public void stopCardPolling(){
-        EXEC.shutdown();
+    private static ScheduledExecutorService execLong = Executors.newSingleThreadScheduledExecutor();
+
+    public void longPollId(String dest, Consumer<Long> callback) {
+        RestTemplate restTemplate = new RestTemplateBuilder()
+                .setConnectTimeout(Duration.ofSeconds(1L))
+                .setReadTimeout(Duration.ofSeconds(1L))
+                .build();
+
+        if (execLong != null) {
+            execLong.shutdownNow();
+        }
+        execLong = Executors.newSingleThreadScheduledExecutor();
+        execLong.scheduleAtFixedRate(() -> {
+            try {
+                Long res = restTemplate.exchange(server + dest, HttpMethod.GET, null, Long.class).getBody();
+                callback.accept(res);
+            } catch (Exception e) {
+                callback.accept(null);
+            }
+        }, 0, 1, java.util.concurrent.TimeUnit.SECONDS);
+    }
+
+    public void stopIdPolling() {
+        execLong.shutdownNow();
+    }
+
+    public void stopCardPolling() {
+        exec.shutdownNow();
     }
 
     public void stopLongPolling() {
         executor.shutdownNow();
         stopCardPolling();
+        stopIdPolling();
     }
 }
