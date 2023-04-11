@@ -150,6 +150,9 @@ public class ListController implements Initializable {
             );
 
             var children = listModel.getChildren();
+            if (children.isEmpty())
+                return;
+            
             if (index == 0)
                 children.get(0).getController().highlightTop();
             else if (index == listModel.getChildren().size())
