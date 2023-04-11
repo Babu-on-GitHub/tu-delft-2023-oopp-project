@@ -20,17 +20,17 @@ public class TestLongPollingUtils {
     }
     @Test
     void wrapWithLongPollingProtocolTest() {
-        assertEquals("http://test/long",
+        assertEquals("http://test",
                 LongPollingUtils.wrapWithLongPollingProtocol("test"));
     }
     @Test
     void wrapWithLongPollingProtocolTest2() {
-        assertEquals("http://test/long",
+        assertEquals("http://test",
                 LongPollingUtils.wrapWithLongPollingProtocol("https://test"));
     }
     @Test
     void wrapWithLongPollingProtocolTest3() {
-        assertEquals("http://test/long",
+        assertEquals("http://test",
                 LongPollingUtils.wrapWithLongPollingProtocol("http://test"));
     }
 
@@ -43,6 +43,33 @@ public class TestLongPollingUtils {
         });
         Thread.sleep(10000L);
         utils.stopLongPolling();
+
+        assertTrue(wasCalled.get());
+    }
+
+
+    @Test
+    void longPollingTestCard() throws InterruptedException {
+        AtomicBoolean wasCalled = new AtomicBoolean(false);
+        utils.longPollCard("test", (s) -> {
+            Assertions.assertTrue(s == null);
+            wasCalled.set(true);
+        });
+        Thread.sleep(10000L);
+        utils.stopCardPolling();
+
+        assertTrue(wasCalled.get());
+    }
+
+    @Test
+    void longPollingTestId() throws InterruptedException {
+        AtomicBoolean wasCalled = new AtomicBoolean(false);
+        utils.longPollId("test", (s) -> {
+            Assertions.assertTrue(s == null);
+            wasCalled.set(true);
+        });
+        Thread.sleep(10000L);
+        utils.stopIdPolling();
 
         assertTrue(wasCalled.get());
     }
