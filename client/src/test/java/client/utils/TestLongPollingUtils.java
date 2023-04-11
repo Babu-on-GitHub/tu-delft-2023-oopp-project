@@ -46,4 +46,31 @@ public class TestLongPollingUtils {
 
         assertTrue(wasCalled.get());
     }
+
+
+    @Test
+    void longPollingTestCard() throws InterruptedException {
+        AtomicBoolean wasCalled = new AtomicBoolean(false);
+        utils.longPollCard("test", (s) -> {
+            Assertions.assertTrue(s == null);
+            wasCalled.set(true);
+        });
+        Thread.sleep(10000L);
+        utils.stopCardPolling();
+
+        assertTrue(wasCalled.get());
+    }
+
+    @Test
+    void longPollingTestId() throws InterruptedException {
+        AtomicBoolean wasCalled = new AtomicBoolean(false);
+        utils.longPollId("test", (s) -> {
+            Assertions.assertTrue(s == null);
+            wasCalled.set(true);
+        });
+        Thread.sleep(10000L);
+        utils.stopIdPolling();
+
+        assertTrue(wasCalled.get());
+    }
 }
